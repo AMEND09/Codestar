@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { DragEvent, FormEvent } from 'react'
-import { Check, Flame, Gem, Heart, Lock, LogOut, Play, X } from 'lucide-react'
+import { Check, Flame, Gem, Heart, LogOut, Play, Star, X } from 'lucide-react'
 import { Highlight, themes } from 'prism-react-renderer'
 import Prism from 'prismjs'
 import PocketBase, { type RecordModel } from 'pocketbase'
@@ -106,12 +106,6 @@ function stripMarkdown(text: string) {
     .replaceAll('**', '')
     .replaceAll('*', '')
     .trim()
-}
-
-function lessonLabel(title: string) {
-  const normalized = title.replace(/\u2014/g, '-')
-  const parts = normalized.split('-')
-  return parts.length > 1 ? parts.slice(1).join('-').trim() : normalized
 }
 
 function sanitizeForCompare(value: string) {
@@ -553,7 +547,27 @@ function App() {
       setArrangePool(shuffleBlocks(arrangedBlocks))
       setArrangeAnswer([])
     }
+
+    // Reset feedback state when the question changes so the UI always starts with "Check"
+    setLessonFeedback('')
+    setFeedbackMessage('')
+    setFeedbackCorrect(false)
+    setFeedbackVisible(false)
   }, [currentQuestion])
+
+  useEffect(() => {
+    if (screen !== 'home') return
+    if (!nextLessonId) return
+
+    const scrollToCurrent = () => {
+      const el = document.getElementById(`lesson-${nextLessonId}`)
+      if (!el) return
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+
+    const timeout = window.setTimeout(scrollToCurrent, 50)
+    return () => window.clearTimeout(timeout)
+  }, [screen, nextLessonId])
 
   function parseArrangeDragPayload(event: DragEvent<HTMLElement>) {
     try {
@@ -616,6 +630,16 @@ function App() {
       event.dataTransfer.setData('text/plain', JSON.stringify({ zone, id: block.id }))
       event.dataTransfer.effectAllowed = 'move'
     }
+  }
+
+  function moveArrangeToAnswer(block: ArrangeBlock) {
+    setArrangePool((prev) => prev.filter((item) => item.id !== block.id))
+    setArrangeAnswer((prev) => [...prev, block])
+  }
+
+  function moveArrangeToPool(block: ArrangeBlock) {
+    setArrangeAnswer((prev) => prev.filter((item) => item.id !== block.id))
+    setArrangePool((prev) => [...prev, block])
   }
 
   const outOfLives = lives <= 0 && lastLifeRefillDate === todayKey()
@@ -1153,28 +1177,24 @@ json.dumps(results)
 
                 <div className="unit-path">
                   {unit.lessons.map((lesson, index) => {
-                    const overall = lessonTrack.findIndex((item) => item.id === lesson.id)
                     const done = completedLessons.includes(lesson.id)
                     const current = lesson.id === nextLessonId
                     const locked = !done && (!current || outOfLives)
-                    const offset = index % 2 === 0 ? 'left' : 'right'
+                    
+                    const cycleIndex = index % 8
+                    const offsets = [0, 45, 75, 45, 0, -45, -75, -45]
+                    const translateX = offsets[cycleIndex]
 
                     return (
-                      <div key={lesson.id} className={`path-item ${offset}`}>
+                      <div key={lesson.id} className="path-item" style={{ transform: `translateX(${translateX}px)` }}>
                         <button
+                          id={`lesson-${lesson.id}`}
                           className={`lesson-node ${done ? 'done' : ''} ${current ? 'current' : ''} ${locked ? 'locked' : ''}`}
                           type="button"
                           onClick={() => (locked ? undefined : startLesson(lesson.id))}
                         >
-                          {done ? (
-                            <Check size={18} />
-                          ) : current ? (
-                            <span className="symbol-mascot">{STRINGS[overall % STRINGS.length]}</span>
-                          ) : (
-                            <Lock size={16} />
-                          )}
+                          <Star size={34} fill="currentColor" opacity={locked ? 0.3 : 1} strokeWidth={locked ? 0 : 2} />
                         </button>
-                        <div className="lesson-name">{lessonLabel(lesson.title)}</div>
                       </div>
                     )
                   })}
@@ -1230,7 +1250,8 @@ json.dumps(results)
                   style={{
                     fontFamily: 'var(--mono)',
                     fontSize: '0.95rem',
-                    minHeight: '220px',
+                    height: '100%',
+                    minHeight: '120px'
                   }}
                 />
               </div>
@@ -1285,6 +1306,7 @@ json.dumps(results)
                         className="arrange-block"
                         draggable
                         onDragStart={handleArrangeDragStart('pool', line)}
+                        onClick={() => moveArrangeToAnswer(line)}
                       >
                         {line.text}
                       </div>
@@ -1314,6 +1336,7 @@ json.dumps(results)
                           className="arrange-block arrange-block-answer"
                           draggable
                           onDragStart={handleArrangeDragStart('answer', line)}
+                          onClick={() => moveArrangeToPool(line)}
                         >
                           {line.text}
                         </div>
@@ -1326,32 +1349,48 @@ json.dumps(results)
               </div>
             </div>
           ) : null}
-
-          {!lessonFeedback ? (
-            <button
-              className="primary-btn"
-              type="button"
-              onClick={checkLesson}
-              disabled={
-                (currentQuestion.type === 'multiple_choice' && !lessonChoice) ||
-                (currentQuestion.type === 'fill_blank' && !blankAnswer.trim()) ||
-                (currentQuestion.type === 'arrange_blocks' &&
-                  arrangeAnswer.length !== (currentQuestion.arrangeCorrectOrder?.length ?? 0)) ||
-                (currentQuestion.type === 'code_challenge' && (!pyodideReady || codeChecking))
-              }
-            >
-              {currentQuestion.type === 'code_challenge'
-                ? codeChecking
-                  ? 'Running...'
-                  : 'Check'
-                : 'Check'}
-            </button>
-          ) : (
-            <button className="primary-btn" type="button" onClick={nextQuestion}>
-              Continue
-            </button>
-          )}
         </section>
+
+        <div className="lesson-footer">
+          <div className="lesson-footer-content">
+            {currentQuestion.type === 'code_challenge' ? (
+              <div className="code-actions">
+                {!feedbackCorrect ? (
+                  <button
+                    className="primary-btn"
+                    type="button"
+                    onClick={checkLesson}
+                    disabled={!pyodideReady || codeChecking}
+                  >
+                    {codeChecking ? 'Running...' : 'Check'}
+                  </button>
+                ) : (
+                  <button className="primary-btn secondary-btn" type="button" onClick={nextQuestion}>
+                    Continue
+                  </button>
+                )}
+              </div>
+            ) : !lessonFeedback ? (
+              <button
+                className="primary-btn"
+                type="button"
+                onClick={checkLesson}
+                disabled={
+                  (currentQuestion.type === 'multiple_choice' && !lessonChoice) ||
+                  (currentQuestion.type === 'fill_blank' && !blankAnswer.trim()) ||
+                  (currentQuestion.type === 'arrange_blocks' &&
+                    arrangeAnswer.length !== (currentQuestion.arrangeCorrectOrder?.length ?? 0))
+                }
+              >
+                Check
+              </button>
+            ) : (
+              <button className="primary-btn" type="button" onClick={nextQuestion}>
+                Continue
+              </button>
+            )}
+          </div>
+        </div>
 
         <FeedbackBar
           visible={feedbackVisible}
@@ -1432,7 +1471,7 @@ function TopBar({ stats, onClose, onLogout }: TopBarProps) {
   const mascot = STRINGS[(stats.streak + stats.gems) % STRINGS.length]
 
   return (
-    <header className="top-bar">
+    <header className={`top-bar ${onLogout ? 'home' : ''}`}>
       <div className="top-bar-left">
         {onClose ? (
           <button className="close-btn" type="button" onClick={onClose} aria-label="Close lesson">
@@ -1443,7 +1482,7 @@ function TopBar({ stats, onClose, onLogout }: TopBarProps) {
             <span className="logo-owl" aria-hidden="true">
               {mascot}
             </span>
-            <span>CodeOwl</span>
+            <span>Codestar</span>
           </div>
         )}
       </div>

@@ -31,12 +31,40 @@
 
 .lesson-body {
   flex: 1;
-  padding: 28px 20px 100px;
+  padding: 28px 20px 40px;
   max-width: 660px;
   margin: 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.lesson-footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  border-top: 2px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg); /* Match app background to look clean */
+  padding: 1rem 20px 1.5rem;
+  z-index: 50;
+}
+
+.lesson-footer-content {
+  max-width: 660px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: stretch;
+}
+
+.lesson-footer-content .primary-btn {
+  width: 100%;
+}
+
+.code-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
 .placement-mascot,
@@ -125,17 +153,28 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.code-editor-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  overflow: auto;
 }
 
 .code-editor {
   width: 100%;
-  min-height: 220px;
-  background: rgba(0, 0, 0, 0.4) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
+  flex: 1;
+  background: transparent !important;
+  border: none;
   color: rgba(255, 255, 255, 0.92);
   outline: none;
-  overflow: hidden; /* So resize handle doesn't break border-radius */
 }
 
 .code-editor-textarea {
@@ -150,6 +189,31 @@
 .code-hint {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.65);
+}
+
+.code-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.06);
+  color: #d5ecff;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.secondary-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: none;
+  border-color: rgba(28, 176, 246, 0.65);
+  background: rgba(28, 176, 246, 0.12);
+}
+
+.secondary-btn:not(:disabled):active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .answer-list {
@@ -359,6 +423,8 @@
 }
 
 .top-bar {
+  /* Used by the home page unit headers to offset sticky positioning */
+  --top-bar-height: 72px;
   position: sticky;
   top: 0;
   z-index: 60;
@@ -369,6 +435,26 @@
   padding: 16px 20px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+}
+
+@media (max-width: 560px) {
+  /* Hide the wordmark on smaller screens */
+  .top-bar.home .logo {
+    display: none;
+  }
+
+  /* Move stats to the left and logout to the right on mobile */
+  .top-bar.home .top-bar-stats {
+    order: 0;
+  }
+
+  .top-bar.home .top-bar-left {
+    order: 1;
+  }
+
+  .top-bar.home .logout-btn {
+    order: 2;
+  }
 }
 
 .top-bar-left {
@@ -526,6 +612,9 @@
 }
 
 .unit-header {
+  position: sticky;
+  top: calc(var(--top-bar-height, 64px) + 0.5rem);
+  z-index: 30;
   border: 2px solid rgba(0, 0, 0, 0.1);
   border-radius: 18px;
   padding: 1.2rem 1.2rem;
@@ -581,22 +670,6 @@
   align-items: center;
 }
 
-.path-item.left .lesson-node {
-  margin-right: 28%;
-}
-
-.path-item.right .lesson-node {
-  margin-left: 28%;
-}
-
-.path-item.left .lesson-name {
-  margin-right: 28%;
-}
-
-.path-item.right .lesson-name {
-  margin-left: 28%;
-}
-
 .lesson-node {
   width: 78px;
   height: 78px;
@@ -604,22 +677,24 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #d9dee9;
-  color: #66708b;
-  box-shadow: 0 8px 0 #b4bbce;
+  background: #e5e5e5; /* flat gray for locked nodes */
+  color: #ffffff;
+  box-shadow: 0 8px 0 #cfcfcf;
   cursor: pointer;
+  transition: transform 0.1s;
 }
 
 .lesson-node.done {
   background: #58cc02;
-  color: #154000;
+  color: #ffffff;
   box-shadow: 0 8px 0 #4ea903;
 }
 
 .lesson-node.current {
-  background: #7ce61e;
-  color: #154000;
-  box-shadow: 0 8px 0 #58b709;
+  background: #58cc02; /* Match the 'done' green for current */
+  color: #ffffff;
+  box-shadow: 0 8px 0 #4ea903, 0 0 0 10px rgba(88, 204, 2, 0.2);
+  transform: scale(1.1);
   animation: pulse 2.2s ease-in-out infinite;
 }
 
@@ -627,19 +702,15 @@
   cursor: not-allowed;
 }
 
+.lesson-node.locked svg {
+  color: #afafaf; /* locked star color inside the gray node */
+  fill: #b5b5b5;
+}
+
 .symbol-mascot {
   font-family: var(--mono);
   font-weight: 900;
   font-size: 1.1rem;
-}
-
-.lesson-name {
-  margin-top: 0.45rem;
-  font-size: 0.8rem;
-  color: #626c84;
-  font-weight: 800;
-  text-align: center;
-  max-width: 132px;
 }
 
 .lesson-top {
