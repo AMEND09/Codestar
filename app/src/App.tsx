@@ -1,518 +1,878 @@
-import { type ReactNode, useMemo, useState } from 'react';
-import {
-  ArrowLeft,
-  BookOpen,
-  CheckCircle2,
-  Flame,
-  Gem,
-  Heart,
-  Lock,
-  Play,
-  Shield,
-  Stars,
-} from 'lucide-react';
-import courseData from './data/course.json';
-import type {
-  Character,
-  CourseData,
-  Lesson,
-  LessonQuestion,
-  Placement,
-  PlacementLevel,
-  PlacementQuestion,
-  Unit,
-} from './types';
-import './App.css';
+import { useEffect, useMemo, useState } from 'react'
+import { Check, Flame, Gem, Heart, Lock, Play, X } from 'lucide-react'
+import { Highlight, themes } from 'prism-react-renderer'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-python'
+import 'prismjs/themes/prism-tomorrow.css'
+import EditorLib from 'react-simple-code-editor'
+const Editor = (EditorLib as any).default || EditorLib
+import './App.css'
 
-type View = 'placement' | 'home' | 'lesson';
+type CourseQuestion = {
+  id: string
+  title: string
+  type: string
+  prompt: string
+  code: string
+  functionName?: string
+  tests?: CodeTest[]
+  choices: Array<{ key: string; text: string; isCorrect: boolean }>
+  correctAnswer: string
+  feedback: string
+}
 
-const data = courseData as CourseData;
+type CourseLesson = {
+  id: string
+  index: number
+  title: string
+  conceptIntroduced: string
+  questions: CourseQuestion[]
+}
 
-interface Stats {
-  streak: number;
-  hearts: number;
-  gems: number;
-  xp: number;
+type CourseUnit = {
+  id: string
+  number: number
+  topic: string
+  title: string
+  lessons: CourseLesson[]
+}
+
+type PlacementQuestion = {
+  id: string
+  title: string
+  prompt: string
+  code: string
+  choices: Array<{ id: string; text: string }>
+  correctAnswer: string
+  feedback: string
+}
+
+type CourseData = {
+  units: CourseUnit[]
+  placementQuiz: PlacementQuestion[]
+}
+
+type Screen = 'loading' | 'placement' | 'home' | 'lesson' | 'results'
+
+type CodeTest = {
+  call: string
+  expected: string
+}
+
+type PlayQuestion = {
+  id: string
+  title: string
+  prompt: string
+  code: string
+  type: 'multiple_choice' | 'fill_blank' | 'insight' | 'code_challenge'
+  choices?: Array<{ id: string; text: string }>
+  correctAnswer?: string
+  feedback: string
+  xp: number
+  functionName?: string
+  tests?: CodeTest[]
+}
+
+const STRINGS = ['{}', '()', ';', '[]', '</>', '=>', '!=', '::']
+
+function stripMarkdown(text: string) {
+  return text
+    .replaceAll('`', '')
+    .replaceAll('**', '')
+    .replaceAll('*', '')
+    .replaceAll('✅', '')
+    .trim()
+}
+
+function lessonLabel(title: string) {
+  const parts = title.split('—')
+  return parts.length > 1 ? parts[1].trim() : title
+}
+
+function sanitizeForCompare(value: string) {
+  return stripMarkdown(value).toLowerCase().replaceAll(' ', '')
 }
 
 function App() {
-  const [view, setView] = useState<View>('placement');
-  const [recommendedUnit, setRecommendedUnit] = useState<string>('unit-1');
-  const [unlockedUnits, setUnlockedUnits] = useState<Set<string>>(new Set(['unit-1']));
-  const [selectedLesson, setSelectedLesson] = useState<{ unitId: string; lesson: Lesson } | null>(null);
-  const [stats, setStats] = useState<Stats>({ streak: 3, hearts: 5, gems: 150, xp: 0 });
+  const [screen, setScreen] = useState<Screen>('loading')
+  const [course, setCourse] = useState<CourseData | null>(null)
+  
+  const [streak, setStreak] = useState(() => {
+    const val = localStorage.getItem('cs_streak')
+    return val !== null ? Number(val) : 7
+  })
+  const [lives, setLives] = useState(() => {
+    const val = localStorage.getItem('cs_lives')
+    return val !== null ? Number(val) : 5
+  })
+  const [gems, setGems] = useState(() => {
+    const val = localStorage.getItem('cs_gems')
+    return val !== null ? Number(val) : 120
+  })
 
-  const unlockChain = (unitId: string) => {
-    const index = data.units.findIndex((u) => u.id === unitId);
-    if (index === -1) return;
-    const next = new Set<string>();
-    data.units.slice(0, index + 1).forEach((u) => next.add(u.id));
-    setUnlockedUnits(next);
-  };
+  const [placementIndex, setPlacementIndex] = useState(0)
+  const [placementScore, setPlacementScore] = useState(0)
+  const [placementChoice, setPlacementChoice] = useState<string>('')
+  const [placementFeedback, setPlacementFeedback] = useState('')
 
-  const handlePlacementComplete = (_score: number, unitId: string) => {
-    setRecommendedUnit(unitId);
-    unlockChain(unitId);
-    setView('home');
-  };
+  const [feedbackVisible, setFeedbackVisible] = useState(false)
+  const [feedbackCorrect, setFeedbackCorrect] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState('')
 
-  const handleStartLesson = (unitId: string, lesson: Lesson) => {
-    setSelectedLesson({ unitId, lesson });
-    setView('lesson');
-  };
+  const [pyodide, setPyodide] = useState<any | null>(null)
+  const [pyodideReady, setPyodideReady] = useState(false)
+  const [codeAnswer, setCodeAnswer] = useState('')
+  const [codeChecking, setCodeChecking] = useState(false)
 
-  const handleLessonComplete = (earnedXp: number) => {
-    setStats((prev) => ({
-      ...prev,
-      xp: prev.xp + earnedXp,
-      gems: prev.gems + 15,
-      streak: prev.streak + 1,
-    }));
-    setSelectedLesson(null);
-    setView('home');
-  };
+  const [startLessonId, setStartLessonId] = useState<string>(() => localStorage.getItem('cs_startLessonId') || '')
+  const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
+    const val = localStorage.getItem('cs_completedLessons')
+    return val ? JSON.parse(val) : []
+  })
 
-  const handleMiss = () => {
-    setStats((prev) => ({ ...prev, hearts: Math.max(prev.hearts - 1, 0) }));
-  };
+  const [activeLessonId, setActiveLessonId] = useState('')
+  const [lessonIndex, setLessonIndex] = useState(0)
+  const [lessonChoice, setLessonChoice] = useState('')
+  const [blankAnswer, setBlankAnswer] = useState('')
+  const [lessonFeedback, setLessonFeedback] = useState('')
+  const [lessonCorrect, setLessonCorrect] = useState(0)
+  const [lastLessonTotal, setLastLessonTotal] = useState(0)
 
-  const decoratedUnits: Unit[] = useMemo(
-    () =>
-      data.units.map((unit) => ({
-        ...unit,
-        status: unlockedUnits.has(unit.id) ? 'unlocked' : 'locked',
+  useEffect(() => {
+    async function loadCourse() {
+      const response = await fetch('/data/curriculum.json')
+      const payload = (await response.json()) as CourseData
+      setCourse(payload)
+      if (localStorage.getItem('cs_startLessonId')) {
+        setScreen('home')
+      } else {
+        setScreen('placement')
+      }
+    }
+
+    loadCourse().catch(() => setScreen('loading'))
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('cs_streak', streak.toString())
+    localStorage.setItem('cs_lives', lives.toString())
+    localStorage.setItem('cs_gems', gems.toString())
+    localStorage.setItem('cs_startLessonId', startLessonId)
+    localStorage.setItem('cs_completedLessons', JSON.stringify(completedLessons))
+  }, [streak, lives, gems, startLessonId, completedLessons])
+
+  useEffect(() => {
+    async function initPyodide() {
+      if (pyodideReady) return
+
+      if (typeof (window as any).loadPyodide !== 'function') {
+        await new Promise<void>((resolve) => {
+          const script = document.createElement('script')
+          script.src = 'https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js'
+          script.async = true
+          script.onload = () => resolve()
+          document.body.appendChild(script)
+        })
+      }
+
+      const py = await (window as any).loadPyodide({
+        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.23.4/full/',
+      })
+      setPyodide(py)
+      setPyodideReady(true)
+    }
+
+    initPyodide().catch(() => {
+      console.warn('Failed to load Pyodide; code challenges will be disabled.')
+    })
+  }, [pyodideReady])
+
+  const lessonTrack = useMemo(() => {
+    if (!course) return []
+
+    return course.units.flatMap((unit) =>
+      unit.lessons.map((lesson) => ({
+        ...lesson,
+        unitNumber: unit.number,
+        unitTitle: unit.topic,
       })),
-    [unlockedUnits],
-  );
+    )
+  }, [course])
 
-  return (
-    <div className="app-shell">
-      <header className="hero-bar">
-        <div className="brand-mark">
-          <div className="brand-glyph">{'{ }'}</div>
-          <div>
-            <p className="eyebrow">CodeQuest</p>
-            <h1>Codestar</h1>
-            <p className="subtitle">{data.tagline}</p>
-          </div>
-        </div>
-        {view !== 'placement' && <StatsHeader stats={stats} />}
-      </header>
+  const startIndex = useMemo(() => {
+    if (!startLessonId) return 0
+    const found = lessonTrack.findIndex((lesson) => lesson.id === startLessonId)
+    return found < 0 ? 0 : found
+  }, [lessonTrack, startLessonId])
 
-      {view === 'placement' && (
-        <PlacementScreen
-          placement={data.placement}
-          characters={data.characters}
-          onComplete={handlePlacementComplete}
-        />
-      )}
+  const nextLessonId = useMemo(() => {
+    const upcoming = lessonTrack.find((lesson, index) => {
+      if (index < startIndex) return false
+      return !completedLessons.includes(lesson.id)
+    })
 
-      {view === 'home' && (
-        <HomeScreen
-          units={decoratedUnits}
-          recommendedUnit={recommendedUnit}
-          characters={data.characters}
-          onSelectLesson={handleStartLesson}
-        />
-      )}
+    return upcoming ? upcoming.id : ''
+  }, [completedLessons, lessonTrack, startIndex])
 
-      {view === 'lesson' && selectedLesson && (
-        <LessonPlayer
-          lesson={selectedLesson.lesson}
-          character={data.characters.find((c) => c.id === selectedLesson.lesson.mascot)!}
-          onExit={() => setView('home')}
-          onComplete={() => handleLessonComplete(selectedLesson.lesson.xp)}
-          onMiss={handleMiss}
-          stats={stats}
-        />
-      )}
-    </div>
-  );
-}
+  const activeLesson = useMemo(
+    () => lessonTrack.find((lesson) => lesson.id === activeLessonId),
+    [lessonTrack, activeLessonId],
+  )
 
-function StatsHeader({ stats }: { stats: Stats }) {
-  return (
-    <div className="stat-row">
-      <StatPill icon={<Flame />} label="Streak" value={`${stats.streak} day`} tone="warm" />
-      <StatPill icon={<Heart />} label="Lives" value={`${stats.hearts}`} tone="danger" />
-      <StatPill icon={<Gem />} label="Gems" value={`${stats.gems}`} tone="accent" />
-    </div>
-  );
-}
+  const playableQuestions = useMemo<PlayQuestion[]>(() => {
+    if (!activeLesson) return []
 
-function StatPill({
-  icon,
-  label,
-  value,
-  tone = 'base',
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-  tone?: 'base' | 'accent' | 'warm' | 'danger';
-}) {
-  return (
-    <div className={`pill pill-${tone}`}>
-      <div className="pill-icon">{icon}</div>
-      <div>
-        <p className="pill-label">{label}</p>
-        <p className="pill-value">{value}</p>
-      </div>
-    </div>
-  );
-}
+    return activeLesson.questions.map((question) => {
+      const hasTests = Array.isArray(question.tests) && question.tests.length > 0
+      const hasChoices = question.choices.length > 1
+      const hasBlank = question.type === 'fill_blank' && question.correctAnswer
 
-function PlacementScreen({
-  placement,
-  characters,
-  onComplete,
-}: {
-  placement: Placement;
-  characters: Character[];
-  onComplete: (score: number, unitId: string) => void;
-}) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [responses, setResponses] = useState<Record<string, string | number>>({});
-  const [revealed, setRevealed] = useState(false);
+      if (hasTests) {
+        return {
+          id: question.id,
+          title: stripMarkdown(question.title),
+          prompt: stripMarkdown(question.prompt),
+          code: question.code,
+          type: 'code_challenge',
+          functionName: question.functionName || '',
+          tests: question.tests,
+          feedback: stripMarkdown(question.feedback),
+          xp: 18,
+        }
+      }
 
-  const question = placement.questions[currentIndex];
-  const percent = Math.round(((currentIndex + 1) / placement.questions.length) * 100);
+      if (hasChoices) {
+        return {
+          id: question.id,
+          title: stripMarkdown(question.title),
+          prompt: stripMarkdown(question.prompt),
+          code: question.code,
+          type: 'multiple_choice',
+          choices: question.choices.map((choice) => ({
+            id: choice.key,
+            text: stripMarkdown(choice.text),
+          })),
+          correctAnswer: question.correctAnswer,
+          feedback: stripMarkdown(question.feedback),
+          xp: 10,
+        }
+      }
 
-  const handleSelect = (value: string | number) => {
-    setResponses((prev) => ({ ...prev, [question.id]: value }));
-    setRevealed(false);
-  };
+      if (hasBlank) {
+        return {
+          id: question.id,
+          title: stripMarkdown(question.title),
+          prompt: stripMarkdown(question.prompt),
+          code: question.code,
+          type: 'fill_blank',
+          choices: [],
+          correctAnswer: stripMarkdown(question.correctAnswer),
+          feedback: stripMarkdown(question.feedback),
+          xp: 12,
+        }
+      }
 
-  const isCorrect = () => {
-    const response = responses[question.id];
-    if (question.type === 'fill_in') {
-      return typeof response === 'string' && response.trim() === (question.answerText ?? '');
+      return {
+        id: question.id,
+        title: stripMarkdown(question.title),
+        prompt: stripMarkdown(question.prompt) || 'Read the snippet and lock in the pattern.',
+        code: question.code,
+        type: 'insight',
+        choices: [],
+        correctAnswer: 'understood',
+        feedback: stripMarkdown(question.feedback) || 'Great. You are now ready for the next challenge.',
+        xp: 8,
+      }
+    })
+  }, [activeLesson])
+
+  const currentPlacement = course?.placementQuiz[placementIndex]
+  const currentQuestion = playableQuestions[lessonIndex]
+  const progressPercent = playableQuestions.length
+    ? Math.round((lessonIndex / playableQuestions.length) * 100)
+    : 0
+
+  useEffect(() => {
+    if (currentQuestion?.type === 'code_challenge') {
+      setCodeAnswer(currentQuestion.code)
     }
-    return response === question.answerIndex;
-  };
+  }, [currentQuestion])
 
-  const handleContinue = () => {
-    const response = responses[question.id];
-    const noResponse = response === undefined || response === null || response === '';
-    if (noResponse) {
-      setRevealed(true);
-      return;
+  function finishPlacement() {
+    if (!course) return
+
+    const percentage = course.placementQuiz.length
+      ? (placementScore / course.placementQuiz.length) * 100
+      : 0
+
+    let targetUnit = 1
+    if (percentage >= 88) targetUnit = 11
+    else if (percentage >= 75) targetUnit = 9
+    else if (percentage >= 60) targetUnit = 6
+    else if (percentage >= 45) targetUnit = 4
+    else if (percentage >= 30) targetUnit = 2
+
+    const target = lessonTrack.find((lesson) => lesson.unitNumber >= targetUnit)
+    const start = target ? target.id : lessonTrack[0]?.id ?? ''
+    const startAt = lessonTrack.findIndex((lesson) => lesson.id === start)
+
+    setStartLessonId(start)
+    setCompletedLessons(lessonTrack.slice(0, Math.max(startAt, 0)).map((lesson) => lesson.id))
+    setScreen('home')
+    setPlacementIndex(0)
+    setPlacementChoice('')
+    setPlacementFeedback('')
+  }
+
+  function checkPlacementQuestion() {
+    if (!currentPlacement || !placementChoice) return
+
+    const correct = placementChoice === currentPlacement.correctAnswer
+    if (correct) setPlacementScore((score) => score + 1)
+
+    const feedback = correct
+      ? 'Nice work — your reading is on point.'
+      : stripMarkdown(currentPlacement.feedback) || 'Not quite — check the pattern and try again.'
+
+    setPlacementFeedback(feedback)
+    setFeedbackCorrect(correct)
+    setFeedbackMessage(feedback)
+    setFeedbackVisible(true)
+  }
+
+  function continuePlacement() {
+    if (!course) return
+
+    const next = placementIndex + 1
+    if (next >= course.placementQuiz.length) {
+      finishPlacement()
+      return
     }
-    if (currentIndex < placement.questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-      setRevealed(false);
-      return;
+
+    setPlacementIndex(next)
+    setPlacementChoice('')
+    setPlacementFeedback('')
+    setFeedbackVisible(false)
+  }
+
+  function startLesson(lessonId: string) {
+    setFeedbackVisible(false)
+    setActiveLessonId(lessonId)
+    setLessonIndex(0)
+    setLessonChoice('')
+    setBlankAnswer('')
+    setLessonFeedback('')
+    setLessonCorrect(0)
+    setScreen('lesson')
+  }
+
+  async function runCodeChallenge() {
+    if (!currentQuestion || !pyodide) return
+
+    setCodeChecking(true)
+    setFeedbackVisible(false)
+
+    try {
+      const tests = currentQuestion.tests ?? []
+      const fnName = currentQuestion.functionName || ''
+      const code = codeAnswer || currentQuestion.code
+
+      const pyCode = `
+import json, traceback
+ns = {}
+results = []
+fn_name = ${JSON.stringify(fnName)}
+try:
+    exec(${JSON.stringify(code)}, ns)
+    fn = ns.get(fn_name)
+    if fn is None:
+        raise NameError('Function ' + fn_name + ' not defined')
+
+    for t in ${JSON.stringify(tests)}:
+        try:
+            res = eval(t['call'], ns)
+            expected = eval(t['expected'], ns)
+            results.append({
+                'ok': res == expected,
+                'call': t['call'],
+                'result': res,
+                'expected': expected,
+            })
+        except Exception as e:
+            results.append({
+                'ok': False,
+                'call': t.get('call', ''),
+                'error': str(e),
+            })
+except Exception as e:
+    results = [{'ok': False, 'error': traceback.format_exc()}]
+
+json.dumps(results)
+      `
+
+      const resultJson = await pyodide.runPythonAsync(pyCode)
+      const results = JSON.parse(resultJson as string)
+      const failed = results.find((r: any) => !r.ok)
+
+      if (failed) {
+        const error = failed.error ? `${failed.error}` : ''
+        const call = failed.call ? `\nTest: ${failed.call}` : ''
+        const msg = `Not quite. ${error}${call}`
+        setLessonFeedback(msg)
+        setFeedbackCorrect(false)
+        setFeedbackMessage(msg)
+        setFeedbackVisible(true)
+        setLives((value) => Math.max(0, value - 1))
+      } else {
+        setLessonCorrect((count) => count + 1)
+        setGems((value) => value + currentQuestion.xp)
+        const msg = currentQuestion.feedback || 'Nice work — tests passed.'
+        setLessonFeedback(msg)
+        setFeedbackCorrect(true)
+        setFeedbackMessage(msg)
+        setFeedbackVisible(true)
+      }
+    } catch (err) {
+      const msg = `Error running code: ${err}`
+      setLessonFeedback(msg)
+      setFeedbackCorrect(false)
+      setFeedbackMessage(msg)
+      setFeedbackVisible(true)
+      setLives((value) => Math.max(0, value - 1))
+    } finally {
+      setCodeChecking(false)
+    }
+  }
+
+  function checkLesson() {
+    if (!currentQuestion) return
+
+    if (currentQuestion.type === 'insight') {
+      setLessonCorrect((count) => count + 1)
+      const msg = currentQuestion.feedback
+      setLessonFeedback(msg)
+      setFeedbackCorrect(true)
+      setFeedbackMessage(msg)
+      setFeedbackVisible(true)
+      return
     }
 
-    const score = placement.questions.reduce((total, q) => {
-      const response = responses[q.id];
-      const correct =
-        q.type === 'fill_in'
-          ? typeof response === 'string' && response.trim() === (q.answerText ?? '')
-          : response === q.answerIndex;
-      return correct ? total + q.weight : total;
-    }, 0);
+    if (currentQuestion.type === 'code_challenge') {
+      void runCodeChallenge()
+      return
+    }
 
-    const level: PlacementLevel =
-      placement.scoring
-        .slice()
-        .sort((a, b) => b.minScore - a.minScore)
-        .find((option) => score >= option.minScore) ?? placement.scoring[0];
+    if (currentQuestion.type === 'multiple_choice' && !lessonChoice) return
+    if (currentQuestion.type === 'fill_blank' && !blankAnswer.trim()) return
 
-    onComplete(score, level.unitId);
-  };
+    let correct = false
+    if (currentQuestion.type === 'multiple_choice') {
+      correct = lessonChoice === currentQuestion.correctAnswer
+    } else if (currentQuestion.type === 'fill_blank') {
+      correct =
+        sanitizeForCompare(blankAnswer) ===
+        sanitizeForCompare(currentQuestion.correctAnswer ?? '')
+    }
 
-  return (
-    <section className="placement">
-      <div className="placement-card">
-        <div className="placement-head">
-          <div>
-            <p className="eyebrow">Placement quiz</p>
-            <h2>Find your starting point</h2>
-            <p className="muted">{placement.lead}</p>
-            <div className="progress">
-              <div className="progress-fill" style={{ width: `${percent}%` }} />
-            </div>
+    if (correct) {
+      setLessonCorrect((count) => count + 1)
+      setGems((value) => value + currentQuestion.xp)
+      const msg = currentQuestion.feedback || 'Correct. Keep climbing.'
+      setLessonFeedback(msg)
+      setFeedbackCorrect(true)
+      setFeedbackMessage(msg)
+      setFeedbackVisible(true)
+      return
+    }
+
+    setLives((value) => Math.max(0, value - 1))
+    const msg = currentQuestion.feedback || 'Not quite. Read the pattern and retry.'
+    setLessonFeedback(msg)
+    setFeedbackCorrect(false)
+    setFeedbackMessage(msg)
+    setFeedbackVisible(true)
+  }
+
+  function nextQuestion() {
+    const next = lessonIndex + 1
+    if (next >= playableQuestions.length) {
+      if (activeLessonId) {
+        setCompletedLessons((prev) => [...new Set([...prev, activeLessonId])])
+      }
+      setLastLessonTotal(playableQuestions.length)
+      setStreak((value) => value + 1)
+      setFeedbackVisible(false)
+      setScreen('results')
+      return
+    }
+
+    setLessonIndex(next)
+    setLessonChoice('')
+    setBlankAnswer('')
+    setLessonFeedback('')
+    setFeedbackVisible(false)
+  }
+
+  function closeLesson() {
+    setFeedbackVisible(false)
+    setScreen('home')
+  }
+
+  if (screen === 'loading') {
+    return <main className="app-shell">Loading curriculum...</main>
+  }
+
+  if (screen === 'placement' && currentPlacement) {
+    return (
+      <main className="app-shell app-placement">
+        <section className="placement-card">
+          <div className="placement-mascot">{'</>'}</div>
+          <h1>Placement Quiz</h1>
+          <p>Answer a few code questions so your roadmap starts at the right level.</p>
+
+          <div className="placement-progress">
+            <div
+              className="placement-progress-fill"
+              style={{ width: `${((placementIndex + 1) / (course?.placementQuiz.length || 1)) * 100}%` }}
+            />
           </div>
-          <CharacterStack characters={characters.slice(0, 3)} />
-        </div>
 
-        <QuestionCard
-          question={question}
-          response={responses[question.id]}
-          onSelect={handleSelect}
-          reveal={revealed}
-        />
+          <div className="question-label">{currentPlacement.title}</div>
+          <div className="question-prompt">{stripMarkdown(currentPlacement.prompt)}</div>
 
-        <div className="placement-actions">
-          <button className="ghost-btn" onClick={() => setRevealed(true)}>
-            <Shield size={18} />
-            Mark unsure
-          </button>
-          <button className="primary-btn" onClick={handleContinue}>
-            {currentIndex === placement.questions.length - 1 ? 'See my placement' : 'Next question'}
-          </button>
-        </div>
-        {revealed && responses[question.id] && (
-          <div className={`feedback ${isCorrect() ? 'feedback-good' : 'feedback-bad'}`}>
-            <Stars size={18} />
-            <span>{isCorrect() ? 'On track — moving you up.' : 'Not quite — we will start with more support.'}</span>
+          {currentPlacement.code ? <CodePanel code={currentPlacement.code} /> : null}
+
+          <div className="answer-list">
+            {currentPlacement.choices.map((choice) => (
+              <button
+                key={choice.id}
+                className={`choice ${placementChoice === choice.id ? 'selected' : ''}`}
+                onClick={() => setPlacementChoice(choice.id)}
+                type="button"
+              >
+                <span className="choice-key">{choice.id}</span>
+                <span>{stripMarkdown(choice.text)}</span>
+              </button>
+            ))}
           </div>
-        )}
-      </div>
-    </section>
-  );
-}
 
-function CharacterStack({ characters }: { characters: Character[] }) {
-  return (
-    <div className="character-stack">
-      {characters.map((character) => (
-        <div key={character.id} className="mascot-pill" style={{ background: character.color }}>
-          <span className="mascot-glyph">{character.glyph}</span>
-          <span className="mascot-eyes" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function QuestionCard({
-  question,
-  response,
-  onSelect,
-  reveal,
-}: {
-  question: PlacementQuestion | LessonQuestion;
-  response: string | number | undefined;
-  onSelect: (value: string | number) => void;
-  reveal?: boolean;
-}) {
-  return (
-    <div className="question-card">
-      <div className="question-meta">
-        <BookOpen size={16} />
-        <span>{question.prompt}</span>
-      </div>
-
-      {question.code && (
-        <pre className="code-block">
-          {question.code.map((line) => (
-            <code key={line}>{line}</code>
-          ))}
-        </pre>
-      )}
-
-      {question.type === 'multiple_choice' && question.choices && (
-        <div className="choice-grid">
-          {question.choices.map((choice, idx) => (
+          {!placementFeedback ? (
             <button
-              key={choice}
-              className={`choice ${response === idx ? 'choice-selected' : ''}`}
-              onClick={() => onSelect(idx)}
+              className="primary-btn"
+              type="button"
+              onClick={checkPlacementQuestion}
+              disabled={!placementChoice}
             >
-              {choice}
+              Check
             </button>
-          ))}
-        </div>
-      )}
+          ) : (
+            <button className="primary-btn" type="button" onClick={continuePlacement}>
+              Continue
+            </button>
+          )}
 
-      {question.type === 'fill_in' && (
-        <input
-          className="input-field"
-          placeholder="Type your answer"
-          value={typeof response === 'string' ? response : ''}
-          onChange={(e) => onSelect(e.target.value)}
+          <FeedbackBar
+            visible={feedbackVisible}
+            correct={feedbackCorrect}
+            message={feedbackMessage}
+            onClose={() => setFeedbackVisible(false)}
+          />
+        </section>
+      </main>
+    )
+  }
+
+  if (screen === 'home' && course) {
+    return (
+      <main className="app-shell app-home">
+        <TopBar stats={{ streak, lives, gems }} />
+
+        <div className="main-content">
+          <section className="roadmap">
+            {course.units.map((unit) => (
+              <article key={unit.id} className="unit-card">
+                <div className="unit-header">
+                  <div className="unit-tag">Unit {unit.number}</div>
+                  <h2>{unit.topic}</h2>
+                </div>
+
+                  <div className="unit-path">
+                    {unit.lessons.map((lesson, index) => {
+                      const overall = lessonTrack.findIndex((item) => item.id === lesson.id)
+                      const done = completedLessons.includes(lesson.id)
+                      const current = lesson.id === nextLessonId
+                      const locked = !done && !current
+                      const offset = index % 2 === 0 ? 'left' : 'right'
+
+                      return (
+                        <div key={lesson.id} className={`path-item ${offset}`}>
+                          <button
+                            className={`lesson-node ${done ? 'done' : ''} ${current ? 'current' : ''} ${locked ? 'locked' : ''}`}
+                            type="button"
+                            onClick={() => (locked ? undefined : startLesson(lesson.id))}
+                          >
+                            {done ? (
+                              <Check size={18} />
+                            ) : current ? (
+                              <span className="symbol-mascot">{STRINGS[overall % STRINGS.length]}</span>
+                            ) : (
+                              <Lock size={16} />
+                            )}
+                          </button>
+                          <div className="lesson-name">{lessonLabel(lesson.title)}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </article>
+              ))}
+            </section>
+          </div>
+
+          <FeedbackBar
+            visible={feedbackVisible}
+            correct={feedbackCorrect}
+            message={feedbackMessage}
+            onClose={() => setFeedbackVisible(false)}
+          />
+      </main>
+    )
+  }
+
+  if (screen === 'lesson' && activeLesson && currentQuestion) {
+    return (
+      <main className="app-shell app-lesson">
+        <header className="lesson-top">
+          <button className="close-btn" onClick={closeLesson} aria-label="Close lesson">
+            <X size={24} />
+          </button>
+          <div className="lesson-progress">
+            <div className="lesson-progress-fill" style={{ width: `${progressPercent}%` }} />
+          </div>
+          <div className="hearts-display" title={`${lives} lives remaining`}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span key={i} className={`heart ${i >= lives ? 'lost' : ''}`}>
+                ❤️
+              </span>
+            ))}
+          </div>
+        </header>
+
+          <section className="lesson-body">
+            <div className="question-label">{currentQuestion.title}</div>
+            <h2 className="question-prompt">{currentQuestion.prompt}</h2>
+
+            {currentQuestion.type === 'code_challenge' ? (
+              <div className="code-editor-wrapper">
+                <div className="code-editor-container">
+                  <Editor
+                    className="code-editor"
+                    value={codeAnswer}
+                    onValueChange={(code: string) => setCodeAnswer(code)}
+                    highlight={(code: string) => Prism.highlight(code, Prism.languages.python, 'python')}
+                    padding={16}
+                    textareaClassName="code-editor-textarea"
+                    style={{
+                      fontFamily: 'var(--mono)',
+                      fontSize: '0.95rem',
+                      minHeight: '220px',
+                    }}
+                  />
+                </div>
+                <div className="code-hint">Write your function and press Check to run tests.</div>
+              </div>
+            ) : currentQuestion.code ? (
+              <CodePanel code={currentQuestion.code} />
+            ) : null}
+
+          {currentQuestion.type === 'multiple_choice' ? (
+            <div className="answer-list">
+              {currentQuestion.choices?.map((choice) => (
+                <button
+                  key={choice.id}
+                  className={`choice ${lessonChoice === choice.id ? 'selected' : ''}`}
+                  type="button"
+                  onClick={() => setLessonChoice(choice.id)}
+                >
+                  <span className="choice-key">{choice.id}</span>
+                  <span>{choice.text}</span>
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          {currentQuestion.type === 'fill_blank' ? (
+            <input
+              className="blank-input"
+              value={blankAnswer}
+              onChange={(event) => setBlankAnswer(event.target.value)}
+              placeholder="Type your answer"
+            />
+          ) : null}
+
+          {currentQuestion.type === 'insight' ? (
+            <div className="insight-box">Read this pattern carefully, then continue.</div>
+          ) : null}
+
+          {!lessonFeedback ? (
+            <button
+              className="primary-btn"
+              type="button"
+              onClick={checkLesson}
+              disabled={
+                (currentQuestion.type === 'multiple_choice' && !lessonChoice) ||
+                (currentQuestion.type === 'fill_blank' && !blankAnswer.trim()) ||
+                (currentQuestion.type === 'code_challenge' && (!pyodideReady || codeChecking))
+              }
+            >
+              {currentQuestion.type === 'code_challenge'
+                ? codeChecking
+                  ? 'Running…'
+                  : 'Check'
+                : 'Check'}
+            </button>
+          ) : (
+            <button className="primary-btn" type="button" onClick={nextQuestion}>
+              Continue
+            </button>
+          )}
+        </section>
+
+        <FeedbackBar
+          visible={feedbackVisible}
+          correct={feedbackCorrect}
+          message={feedbackMessage}
+          onClose={() => setFeedbackVisible(false)}
         />
-      )}
+      </main>
+    )
+  }
 
-      {reveal && <p className="muted">Choose an option or type an answer to continue.</p>}
-    </div>
-  );
+  return (
+    <main className="app-shell app-results">
+      <section className="results-card">
+        <div className="results-mascot">{'{}'}</div>
+        <h2>Lesson Complete</h2>
+        <div className="result-grid">
+          <article>
+            <strong>{lastLessonTotal ? Math.round((lessonCorrect / lastLessonTotal) * 100) : 0}%</strong>
+            <span>accuracy</span>
+          </article>
+          <article>
+            <strong>+{lessonCorrect * 10}</strong>
+            <span>gems</span>
+          </article>
+          <article>
+            <strong>{streak}</strong>
+            <span>streak</span>
+          </article>
+        </div>
+
+        {nextLessonId ? (
+          <button className="primary-btn" type="button" onClick={() => setScreen('home')}>
+            <Play size={16} />
+            Back to Roadmap
+          </button>
+        ) : (
+          <button className="primary-btn" type="button" onClick={() => setScreen('home')}>
+            Course Completed
+          </button>
+        )}
+      </section>
+    </main>
+  )
 }
 
-function HomeScreen({
-  units,
-  recommendedUnit,
-  characters,
-  onSelectLesson,
-}: {
-  units: Unit[];
-  recommendedUnit: string;
-  characters: Character[];
-  onSelectLesson: (unitId: string, lesson: Lesson) => void;
-}) {
+function CodePanel({ code }: { code: string }) {
   return (
-    <section className="home">
-      <div className="roadmap">
-        {units.map((unit, unitIndex) => {
-          const isRecommended = unit.id === recommendedUnit;
-          const firstLesson = unit.lessons[0];
-          return (
-            <div key={unit.id} className={`roadmap-card ${unit.status === 'locked' ? 'roadmap-locked' : ''}`}>
-              <div className="roadmap-head">
-                <div className="unit-pill">
-                  <span>Unit {unitIndex + 1}</span>
-                  {unit.status === 'locked' ? <Lock size={14} /> : <Play size={14} />}
-                </div>
-                <p className="unit-title">{unit.title}</p>
-                <p className="muted">{unit.tagline}</p>
-                <div className="unit-meta">
-                  <span>{unit.xp} XP</span>
-                  {isRecommended && <span className="chip chip-accent">Placed here</span>}
-                </div>
-              </div>
-
-              <div className="lesson-path">
-                {unit.lessons.length === 0 && (
-                  <p className="muted">Content coming from the syllabus.</p>
-                )}
-                {unit.lessons.map((lesson, lessonIdx) => (
-                  <div key={lesson.id} className="lesson-node">
-                    <div className="node-connector" />
-                    <button
-                      className={`node ${unit.status === 'locked' ? 'node-locked' : ''}`}
-                      disabled={unit.status === 'locked'}
-                      onClick={() => onSelectLesson(unit.id, lesson)}
-                    >
-                      <NodeFace character={characters.find((c) => c.id === lesson.mascot)} fallback={lessonIdx + 1} />
-                      <div>
-                        <p className="node-title">{lesson.title}</p>
-                        <p className="muted">{lesson.focus}</p>
-                      </div>
-                    </button>
-                  </div>
+    <div className="code-panel">
+      <Highlight theme={themes.vsDark} code={code} language="python">
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className} style={style}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })}>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
                 ))}
               </div>
-
-              {unit.status === 'unlocked' && firstLesson && (
-                <button className="primary-btn block-btn" onClick={() => onSelectLesson(unit.id, firstLesson)}>
-                  Continue
-                </button>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function NodeFace({ character, fallback }: { character?: Character; fallback: number }) {
-  return (
-    <div
-      className="node-face"
-      style={{ background: character?.color ?? '#6de100', boxShadow: 'inset 0 -8px 0 rgba(0,0,0,0.08)' }}
-    >
-      <span className="node-eyes" />
-      <span className="node-glyph">{character?.glyph ?? fallback}</span>
+            ))}
+          </pre>
+        )}
+      </Highlight>
     </div>
-  );
+  )
 }
 
-function LessonPlayer({
-  lesson,
-  character,
-  onExit,
-  onComplete,
-  onMiss,
-  stats,
-}: {
-  lesson: Lesson;
-  character: Character;
-  onExit: () => void;
-  onComplete: () => void;
-  onMiss: () => void;
-  stats: Stats;
-}) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [responses, setResponses] = useState<Record<string, string | number>>({});
-  const [showFeedback, setShowFeedback] = useState(false);
-  const question = lesson.questions[currentIndex];
+type TopBarProps = {
+  stats: {
+    streak: number
+    lives: number
+    gems: number
+  }
+  onClose?: () => void
+}
 
-  const handleSelect = (value: string | number) => {
-    setResponses((prev) => ({ ...prev, [question.id]: value }));
-  };
-
-  const answerIsCorrect = () => {
-    const response = responses[question.id];
-    if (question.type === 'fill_in') {
-      return typeof response === 'string' && response.trim() === (question.answerText ?? '');
-    }
-    return response === question.answerIndex;
-  };
-
-  const handleCheck = () => {
-    const response = responses[question.id];
-    const noResponse = response === undefined || response === null || response === '';
-    if (noResponse) {
-      setShowFeedback(true);
-      return;
-    }
-
-    if (answerIsCorrect()) {
-      const next = currentIndex + 1;
-      if (next >= lesson.questions.length) {
-        onComplete();
-      } else {
-        setCurrentIndex(next);
-        setShowFeedback(false);
-      }
-    } else {
-      onMiss();
-      setShowFeedback(true);
-    }
-  };
-
-  const progress = Math.round(((currentIndex + 1) / lesson.questions.length) * 100);
+function TopBar({ stats, onClose }: TopBarProps) {
+  const mascot = STRINGS[(stats.streak + stats.gems) % STRINGS.length]
 
   return (
-    <section className="lesson">
-      <div className="lesson-head">
-        <button className="ghost-btn" onClick={onExit}>
-          <ArrowLeft size={16} />
-          Back to roadmap
-        </button>
-        <div className="progress slim">
-          <div className="progress-fill" style={{ width: `${progress}%` }} />
-        </div>
-        <StatsHeader stats={stats} />
-      </div>
-
-      <div className="lesson-body">
-        <div className="lesson-hero">
-          <div className="lesson-avatar" style={{ background: character.accent }}>
-            <span className="lesson-eyes" />
-            <span className="lesson-glyph">{character.glyph}</span>
-          </div>
-          <div>
-            <p className="eyebrow">Lesson</p>
-            <h2>{lesson.title}</h2>
-            <p className="muted">{lesson.focus}</p>
-          </div>
-        </div>
-
-        <QuestionCard question={question} response={responses[question.id]} onSelect={handleSelect} />
-
-        {showFeedback && (
-          <div className={`feedback ${answerIsCorrect() ? 'feedback-good' : 'feedback-bad'}`}>
-            {answerIsCorrect() ? <CheckCircle2 size={18} /> : <Shield size={18} />}
-            <span>
-              {answerIsCorrect()
-                ? 'Nice — keep the streak alive.'
-                : 'Close call. Review the code and try again.'}
+    <header className="top-bar">
+      <div className="top-bar-left">
+        {onClose ? (
+          <button className="close-btn" type="button" onClick={onClose} aria-label="Close lesson">
+            <X size={18} />
+          </button>
+        ) : (
+          <div className="logo">
+            <span className="logo-owl" aria-hidden="true">
+              {mascot}
             </span>
+            <span>CodeOwl</span>
           </div>
         )}
+      </div>
 
-        <div className="placement-actions">
-          <button className="primary-btn" onClick={handleCheck}>
-            {currentIndex === lesson.questions.length - 1 ? 'Complete lesson' : 'Check answer'}
-          </button>
+      <div className="top-bar-stats">
+        <div className="stat-pill streak" aria-label="Streak">
+          <Flame size={16} />
+          <span>{stats.streak}</span>
+        </div>
+        <div className="stat-pill lives" aria-label="Lives">
+          <Heart size={16} />
+          <span>{stats.lives}</span>
+        </div>
+        <div className="stat-pill gems" aria-label="Gems">
+          <Gem size={16} />
+          <span>{stats.gems}</span>
         </div>
       </div>
-    </section>
-  );
+    </header>
+  )
 }
 
-export default App;
+type FeedbackBarProps = {
+  visible: boolean
+  correct: boolean
+  message: string
+  onClose: () => void
+}
+
+function FeedbackBar({ visible, correct, message, onClose }: FeedbackBarProps) {
+  return (
+    <div
+      className={`feedback-bar ${visible ? 'visible' : ''} ${correct ? 'correct' : 'incorrect'}`}
+      role="status"
+      aria-live="polite"
+    >
+      <div className="feedback-text">
+        {correct ? <Check size={18} /> : <X size={18} />}
+        <span>{message}</span>
+      </div>
+      <button className="feedback-close" type="button" onClick={onClose} aria-label="Dismiss feedback">
+        <X size={18} />
+      </button>
+    </div>
+  )
+}
+
+export default App
