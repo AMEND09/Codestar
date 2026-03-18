@@ -263,6 +263,7 @@ function App() {
   const [codeAnswer, setCodeAnswer] = useState('')
   const [codeChecking, setCodeChecking] = useState(false)
 
+  const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null)
   const [activeLessonId, setActiveLessonId] = useState('')
   const [lessonIndex, setLessonIndex] = useState(0)
   const [lessonChoice, setLessonChoice] = useState('')
@@ -312,37 +313,52 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (!userRecord) return
-    if (!courseLoaded) return
+      if (!userRecord || !courseLoaded || gameHydrated) return
 
-    const normalized = normalizeGameState(userRecord)
-    setStreak(normalized.streak)
-    setLives(normalized.lives)
-    setGems(normalized.gems)
-    setStartLessonId(normalized.startLessonId)
-    setCompletedLessons(normalized.completedLessons)
-    setLastLifeRefillDate(normalized.lastLifeRefillDate)
-    setLastLessonDate(normalized.lastLessonDate)
-    setGameHydrated(true)
+      pb.collection('users').getOne(userRecord.id, { $autoCancel: false }).then((freshRecord) => {
+        pb.authStore.save(pb.authStore.token, freshRecord)
+        setUserRecord(freshRecord)
 
-    const hasStarted = normalized.startLessonId.length > 0
-    setScreen(hasStarted ? 'home' : 'placement')
+        const normalized = normalizeGameState(freshRecord)
+        setStreak(normalized.streak)
+        setLives(normalized.lives)
+        setGems(normalized.gems)
+        setStartLessonId(normalized.startLessonId)
+        setCompletedLessons(normalized.completedLessons)
+        setLastLifeRefillDate(normalized.lastLifeRefillDate)
+        setLastLessonDate(normalized.lastLessonDate)
+        setGameHydrated(true)
 
-    void pb.collection('users').update(userRecord.id, {
-      streak: normalized.streak,
-      gems: normalized.gems,
-      lives: normalized.lives,
-      maxLives: MAX_LIVES,
-      startLessonId: normalized.startLessonId,
-      completedLessons: normalized.completedLessons,
-      lastLifeRefillDate: normalized.lastLifeRefillDate,
-      lastLessonDate: normalized.lastLessonDate,
-    }).then((record) => {
-      setUserRecord(record)
-    }).catch(() => {
-      // Ignore early sync issues; save effect will retry.
-    })
-  }, [userRecord?.id, courseLoaded])
+        const hasStarted = normalized.startLessonId.length > 0
+        setScreen(hasStarted ? 'home' : 'placement')
+
+        // Sync back any default fills (e.g. today's lives)
+        void pb.collection('users').update(freshRecord.id, {
+          streak: normalized.streak,
+          gems: normalized.gems,
+          lives: normalized.lives,
+          maxLives: MAX_LIVES,
+          startLessonId: normalized.startLessonId,
+          completedLessons: normalized.completedLessons,
+          lastLifeRefillDate: normalized.lastLifeRefillDate,
+          lastLessonDate: normalized.lastLessonDate,
+        }, { $autoCancel: false })
+      }).catch((err) => {
+        console.warn('Failed to fetch latest save state:', err)
+        // Fallback to local record if offline
+        const normalized = normalizeGameState(userRecord)
+        setStreak(normalized.streak)
+        setLives(normalized.lives)
+        setGems(normalized.gems)
+        setStartLessonId(normalized.startLessonId)
+        setCompletedLessons(normalized.completedLessons)
+        setLastLifeRefillDate(normalized.lastLifeRefillDate)
+        setLastLessonDate(normalized.lastLessonDate)
+        setGameHydrated(true)
+        const hasStarted = normalized.startLessonId.length > 0
+        setScreen(hasStarted ? 'home' : 'placement')
+      })
+    }, [userRecord?.id, courseLoaded, gameHydrated])
 
   useEffect(() => {
     if (!userRecord || !gameHydrated) return
@@ -357,7 +373,7 @@ function App() {
         completedLessons,
         lastLifeRefillDate,
         lastLessonDate,
-      }).then((record) => {
+      }, { $autoCancel: false }).then((record) => {
         setUserRecord(record)
       }).catch((error) => {
         console.warn('Failed to sync game state:', error)
@@ -869,7 +885,20 @@ function App() {
       return
     }
 
+    const lessonObj = lessonTrack.find((l) => l.id === lessonId)
+    if (lessonObj && (!lessonObj.questions || lessonObj.questions.length === 0)) {
+      setFeedbackVisible(false)
+      setSelectedLessonId(null)
+      setActiveLessonId(lessonId)
+      setCompletedLessons((prev) => [...new Set([...prev, lessonId])])
+      setLastLessonTotal(0)
+      setLessonCorrect(0)
+      setScreen('results')
+      return
+    }
+
     setFeedbackVisible(false)
+    setSelectedLessonId(null)
     setActiveLessonId(lessonId)
     setLessonIndex(0)
     setLessonChoice('')
@@ -1269,11 +1298,42 @@ json.dumps(results)
 
                     return (
                       <div key={lesson.id} className="path-item" style={{ transform: `translateX(${translateX}px)` }}>
+                        {selectedLessonId === lesson.id && (
+                          <div className={`lesson-popover ${locked ? 'locked' : ''} ${done ? 'done' : ''} ${current ? 'current' : ''}`}>
+                            <div className="popover-content">
+                              <h3 className="popover-title">{lesson.title}</h3>
+                              <p className="popover-concept">Lesson {index + 1} of {unit.lessons.length}</p>
+                              <button
+                                className="start-btn"
+                                disabled={locked}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  if (!locked) {
+                                    startLesson(lesson.id)
+                                  }
+                                }}
+                              >
+                                {locked ? 'Locked' : 'START +10 XP'}
+                              </button>
+                            </div>
+                            <div className="popover-arrow"></div>
+                          </div>
+                        )}
                         <button
                           id={`lesson-${lesson.id}`}
                           className={`lesson-node ${done ? 'done' : ''} ${current ? 'current' : ''} ${locked ? 'locked' : ''}`}
                           type="button"
-                          onClick={() => (locked ? undefined : startLesson(lesson.id))}
+                          onClick={() => {
+                            if (selectedLessonId === lesson.id) {
+                              if (locked) {
+                                setSelectedLessonId(null)
+                              } else {
+                                startLesson(lesson.id)
+                              }
+                            } else {
+                              setSelectedLessonId(lesson.id)
+                            }
+                          }}
                         >
                           <Star size={34} fill="currentColor" opacity={locked ? 0.3 : 1} strokeWidth={locked ? 0 : 2} />
                         </button>
