@@ -758,7 +758,7 @@
               "id": "u1-l5-q1",
               "index": 1,
               "title": "Complexity Choice",
-              "type": "complexity_choice",
+              "type": "match_pairs",
               "prompt": "Match each function to its Big O:",
               "code": "def mystery_a(arr):\r\n    return arr[0]\r\n\r\n\r\ndef mystery_b(arr):\r\n    for item in arr:\r\n        print(item)\r\n\r\n\r\ndef mystery_c(arr):\r\n    for i in arr:\r\n        for j in arr:\r\n            print(i, j)",
               "functionName": "mystery_a",
@@ -766,7 +766,21 @@
               "choices": [],
               "correctAnswer": "",
               "feedback": "`mystery_a` always does one operation regardless of input size. `mystery_b` does *n* operations (one per element). `mystery_c`'s nested loops mean for every element, we visit every other element — n × n = n².",
-              "rawMarkdown": "```python\r\ndef mystery_a(arr):\r\n    return arr[0]\r\n\r\n\r\ndef mystery_b(arr):\r\n    for item in arr:\r\n        print(item)\r\n\r\n\r\ndef mystery_c(arr):\r\n    for i in arr:\r\n        for j in arr:\r\n            print(i, j)\r\n```\r\n*Match each function to its Big O:*\r\n- `mystery_a` → O(?) \r\n- `mystery_b` → O(?)\r\n- `mystery_c` → O(?)\r\n\r\n**Correct:** `O(1)`, `O(n)`, `O(n²)`\r\n**Feedback:** `mystery_a` always does one operation regardless of input size. `mystery_b` does *n* operations (one per element). `mystery_c`'s nested loops mean for every element, we visit every other element — n × n = n².\r\n\r\n---"
+              "rawMarkdown": "```python\r\ndef mystery_a(arr):\r\n    return arr[0]\r\n\r\n\r\ndef mystery_b(arr):\r\n    for item in arr:\r\n        print(item)\r\n\r\n\r\ndef mystery_c(arr):\r\n    for i in arr:\r\n        for j in arr:\r\n            print(i, j)\r\n```\r\n*Match each function to its Big O:*\r\n- `mystery_a` → O(?) \r\n- `mystery_b` → O(?)\r\n- `mystery_c` → O(?)\r\n\r\n**Correct:** `O(1)`, `O(n)`, `O(n²)`\r\n**Feedback:** `mystery_a` always does one operation regardless of input size. `mystery_b` does *n* operations (one per element). `mystery_c`'s nested loops mean for every element, we visit every other element — n × n = n².\r\n\r\n---",
+              "matchingPairs": [
+                {
+                  "left": "mystery_a",
+                  "right": "O(1)"
+                },
+                {
+                  "left": "mystery_b",
+                  "right": "O(n)"
+                },
+                {
+                  "left": "mystery_c",
+                  "right": "O(n²)"
+                }
+              ]
             },
             {
               "id": "u1-l5-q2",
@@ -815,7 +829,25 @@
               "choices": [],
               "correctAnswer": "",
               "feedback": "",
-              "rawMarkdown": "*Match the operation to its time complexity for a Python list:*\r\n\r\n| Operation | Complexity |\r\n|-----------|-----------|\r\n| `arr.append(x)` | ? |\r\n| `arr.insert(0, x)` | ? |\r\n| `x in arr` | ? |\r\n| `arr[i]` | ? |\r\n\r\n**Correct:**\r\n- `append` → O(1) amortized\r\n- `insert(0, x)` → O(n) — shifts everything\r\n- `x in arr` → O(n) — linear scan\r\n- `arr[i]` → O(1) — direct memory access\r\n\r\n---"
+              "rawMarkdown": "*Match the operation to its time complexity for a Python list:*\r\n\r\n| Operation | Complexity |\r\n|-----------|-----------|\r\n| `arr.append(x)` | ? |\r\n| `arr.insert(0, x)` | ? |\r\n| `x in arr` | ? |\r\n| `arr[i]` | ? |\r\n\r\n**Correct:**\r\n- `append` → O(1) amortized\r\n- `insert(0, x)` → O(n) — shifts everything\r\n- `x in arr` → O(n) — linear scan\r\n- `arr[i]` → O(1) — direct memory access\r\n\r\n---",
+              "matchingPairs": [
+                {
+                  "left": "arr.append(x)",
+                  "right": "O(1) amortized"
+                },
+                {
+                  "left": "arr.insert(0, x)",
+                  "right": "O(n)"
+                },
+                {
+                  "left": "x in arr",
+                  "right": "O(n)"
+                },
+                {
+                  "left": "arr[i]",
+                  "right": "O(1)"
+                }
+              ]
             }
           ],
           "rawMarkdown": "**Concept introduced:** O(1), O(n), O(n²), O(log n) — by recognition, not memorization\r\n\r\n**Question 1 — Complexity Choice**\r\n```python\r\ndef mystery_a(arr):\r\n    return arr[0]\r\n\r\n\r\ndef mystery_b(arr):\r\n    for item in arr:\r\n        print(item)\r\n\r\n\r\ndef mystery_c(arr):\r\n    for i in arr:\r\n        for j in arr:\r\n            print(i, j)\r\n```\r\n*Match each function to its Big O:*\r\n- `mystery_a` → O(?) \r\n- `mystery_b` → O(?)\r\n- `mystery_c` → O(?)\r\n\r\n**Correct:** `O(1)`, `O(n)`, `O(n²)`\r\n**Feedback:** `mystery_a` always does one operation regardless of input size. `mystery_b` does *n* operations (one per element). `mystery_c`'s nested loops mean for every element, we visit every other element — n × n = n².\r\n\r\n---\r\n\r\n**Question 2 — Multiple Choice — Concept**\r\n\r\n*You have a sorted list of 1,000,000 items. You search for a value. The algorithm halves the search space each step. After 20 steps, what's the maximum remaining search space?*\r\n- A) 50,000 items\r\n- B) About 1 item ✅\r\n- C) 500,000 items\r\n- D) 0 items\r\n\r\n**Feedback:** 2²⁰ = 1,048,576 > 1,000,000. Binary search can find any element in at most 20 steps on a million-item list. This is O(log n) — and why sorted data structures are powerful.\r\n\r\n---\r\n\r\n**Question 3 — Match the Pairs**\r\n\r\n*Match the operation to its time complexity for a Python list:*\r\n\r\n| Operation | Complexity |\r\n|-----------|-----------|\r\n| `arr.append(x)` | ? |\r\n| `arr.insert(0, x)` | ? |\r\n| `x in arr` | ? |\r\n| `arr[i]` | ? |\r\n\r\n**Correct:**\r\n- `append` → O(1) amortized\r\n- `insert(0, x)` → O(n) — shifts everything\r\n- `x in arr` → O(n) — linear scan\r\n- `arr[i]` → O(1) — direct memory access\r\n\r\n---"

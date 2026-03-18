@@ -938,3 +938,70 @@
 .logout-btn:hover {
   background: rgba(255, 255, 255, 0.12);
 }
+
+
+.match-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.match-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.match-btn {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  color: var(--text);
+  padding: 1rem;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 4px 0 var(--border);
+}
+
+.match-btn:not(:disabled):hover {
+  background: var(--surface);
+  border-color: var(--accent);
+}
+
+.match-btn.selected {
+  background: rgba(28, 176, 246, 0.15);
+  border-color: #1cb0f6;
+  color: #1cb0f6;
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(28, 176, 246, 0.4);
+}
+
+.match-btn.completed {
+  background: var(--surface2);
+  border-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.match-btn.error-shake {
+  background: rgba(255, 75, 75, 0.15);
+  border-color: #ff4b4b;
+  color: #ff4b4b;
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}

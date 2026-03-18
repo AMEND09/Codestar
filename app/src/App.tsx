@@ -20,6 +20,7 @@ type CourseQuestion = {
   tests?: CodeTest[]
   rawMarkdown?: string
   choices: Array<{ key: string; text: string; isCorrect: boolean }>
+  matchingPairs?: Array<{ left: string; right: string }>
   correctAnswer: string
   feedback: string
 }
@@ -67,7 +68,7 @@ type PlayQuestion = {
   title: string
   prompt: string
   code: string
-  type: 'multiple_choice' | 'fill_blank' | 'insight' | 'code_challenge' | 'arrange_blocks'
+  type: 'multiple_choice' | 'fill_blank' | 'insight' | 'code_challenge' | 'arrange_blocks' | 'match_pairs'
   choices?: Array<{ id: string; text: string }>
   correctAnswer?: string
   feedback: string
@@ -76,6 +77,7 @@ type PlayQuestion = {
   tests?: CodeTest[]
   arrangeBlocks?: string[]
   arrangeCorrectOrder?: string[]
+  matchingPairs?: Array<{ id: string; left: string; right: string }>
 }
 
 type ArrangeBlock = {
@@ -267,6 +269,13 @@ function App() {
   const [blankAnswer, setBlankAnswer] = useState('')
   const [arrangePool, setArrangePool] = useState<ArrangeBlock[]>([])
   const [arrangeAnswer, setArrangeAnswer] = useState<ArrangeBlock[]>([])
+  const [matchLeftList, setMatchLeftList] = useState<ArrangeBlock[]>([])
+  const [matchRightList, setMatchRightList] = useState<ArrangeBlock[]>([])
+  const [matchSelectedLeft, setMatchSelectedLeft] = useState('')
+  const [matchSelectedRight, setMatchSelectedRight] = useState('')
+  const [matchErrorLeft, setMatchErrorLeft] = useState('')
+  const [matchErrorRight, setMatchErrorRight] = useState('')
+  const [matchCompleted, setMatchCompleted] = useState<string[]>([])
   const [lessonFeedback, setLessonFeedback] = useState('')
   const [lessonCorrect, setLessonCorrect] = useState(0)
   const [lastLessonTotal, setLastLessonTotal] = useState(0)
@@ -448,6 +457,20 @@ function App() {
       const hasChoices = question.choices.length > 1
       const hasBlank = question.type === 'fill_blank' && question.correctAnswer
       const isArrange = question.type === 'arrange_blocks'
+      const isMatch = question.type === 'match_pairs' && question.matchingPairs && question.matchingPairs.length > 0
+
+      if (isMatch) {
+        return {
+          id: question.id,
+          title: stripMarkdown(question.title),
+          prompt: stripMarkdown(question.prompt),
+          code: question.code,
+          type: 'match_pairs',
+          matchingPairs: question.matchingPairs?.map((pair, idx) => ({ id: `pair-${idx}`, left: stripMarkdown(pair.left), right: stripMarkdown(pair.right) })),
+          feedback: stripMarkdown(question.feedback),
+          xp: 12,
+        }
+      }
 
       if (isArrange) {
         const blocks = extractArrangeBlocksFromMarkdown(question.rawMarkdown)
@@ -547,6 +570,16 @@ function App() {
       setArrangePool(shuffleBlocks(arrangedBlocks))
       setArrangeAnswer([])
     }
+    if (currentQuestion?.type === 'match_pairs') {
+      const pairs = currentQuestion.matchingPairs ?? []
+      const lefts = pairs.map((p) => ({ id: p.id, text: p.left }))
+      const rights = pairs.map((p) => ({ id: p.id, text: p.right }))
+      setMatchLeftList(shuffleBlocks(lefts))
+      setMatchRightList(shuffleBlocks(rights))
+      setMatchSelectedLeft('')
+      setMatchSelectedRight('')
+      setMatchCompleted([])
+    }
 
     // Reset feedback state when the question changes so the UI always starts with "Check"
     setLessonFeedback('')
@@ -640,6 +673,53 @@ function App() {
   function moveArrangeToPool(block: ArrangeBlock) {
     setArrangeAnswer((prev) => prev.filter((item) => item.id !== block.id))
     setArrangePool((prev) => [...prev, block])
+  }
+
+  function handleMatchClick(side: 'left' | 'right', id: string) {
+    if (matchErrorLeft || matchErrorRight) return // block clicks while error animating
+
+    if (side === 'left') {
+      if (matchSelectedLeft === id) {
+        setMatchSelectedLeft('')
+        return
+      }
+      setMatchSelectedLeft(id)
+      if (matchSelectedRight) attemptMatch(id, matchSelectedRight)
+    } else {
+      if (matchSelectedRight === id) {
+        setMatchSelectedRight('')
+        return
+      }
+      setMatchSelectedRight(id)
+      if (matchSelectedLeft) attemptMatch(matchSelectedLeft, id)
+    }
+  }
+
+  function attemptMatch(leftId: string, rightId: string) {
+    if (leftId === rightId) {
+      setMatchCompleted((prev) => [...prev, leftId])
+      setMatchSelectedLeft('')
+      setMatchSelectedRight('')
+    } else {
+      // Wrong match
+      setMatchErrorLeft(leftId)
+      setMatchErrorRight(rightId)
+      
+      const availableLives = ensurePlayableLives()
+      const nextLives = Math.max(0, availableLives - 1)
+      setLives(nextLives)
+
+      setTimeout(() => {
+        setMatchErrorLeft('')
+        setMatchErrorRight('')
+        setMatchSelectedLeft('')
+        setMatchSelectedRight('')
+      }, 500)
+
+      if (nextLives <= 0) {
+        showOutOfLivesMessage()
+      }
+    }
   }
 
   const outOfLives = lives <= 0 && lastLifeRefillDate === todayKey()
@@ -954,7 +1034,9 @@ json.dumps(results)
     if (currentQuestion.type === 'fill_blank' && !blankAnswer.trim()) return
 
     let correct = false
-    if (currentQuestion.type === 'multiple_choice') {
+    if (currentQuestion.type === 'match_pairs') {
+      correct = matchCompleted.length === (currentQuestion.matchingPairs?.length ?? 0)
+    } else if (currentQuestion.type === 'multiple_choice') {
       correct = lessonChoice === currentQuestion.correctAnswer
     } else if (currentQuestion.type === 'fill_blank') {
       correct =
@@ -1290,6 +1372,47 @@ json.dumps(results)
             <div className="insight-box">Read this pattern carefully, then continue.</div>
           ) : null}
 
+          {currentQuestion.type === 'match_pairs' ? (
+            <div className="match-wrapper">
+              <div className="match-column">
+                {matchLeftList.map((item) => {
+                  const isCompleted = matchCompleted.includes(item.id)
+                  const isSelected = matchSelectedLeft === item.id
+                  const isError = matchErrorLeft === item.id
+                  return (
+                    <button
+                      key={`left-${item.id}`}
+                      className={`match-btn ${isSelected ? 'selected' : ''} ${isCompleted ? 'completed' : ''} ${isError ? 'error-shake' : ''}`}
+                      type="button"
+                      disabled={isCompleted}
+                      onClick={() => handleMatchClick('left', item.id)}
+                    >
+                      {item.text}
+                    </button>
+                  )
+                })}
+              </div>
+              <div className="match-column">
+                {matchRightList.map((item) => {
+                  const isCompleted = matchCompleted.includes(item.id)
+                  const isSelected = matchSelectedRight === item.id
+                  const isError = matchErrorRight === item.id
+                  return (
+                    <button
+                      key={`right-${item.id}`}
+                      className={`match-btn ${isSelected ? 'selected' : ''} ${isCompleted ? 'completed' : ''} ${isError ? 'error-shake' : ''}`}
+                      type="button"
+                      disabled={isCompleted}
+                      onClick={() => handleMatchClick('right', item.id)}
+                    >
+                      {item.text}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          ) : null}
+
           {currentQuestion.type === 'arrange_blocks' ? (
             <div className="arrange-wrapper">
               <div className="arrange-column">
@@ -1379,7 +1502,9 @@ json.dumps(results)
                   (currentQuestion.type === 'multiple_choice' && !lessonChoice) ||
                   (currentQuestion.type === 'fill_blank' && !blankAnswer.trim()) ||
                   (currentQuestion.type === 'arrange_blocks' &&
-                    arrangeAnswer.length !== (currentQuestion.arrangeCorrectOrder?.length ?? 0))
+                    arrangeAnswer.length !== (currentQuestion.arrangeCorrectOrder?.length ?? 0)) ||
+                  (currentQuestion.type === 'match_pairs' &&
+                    matchCompleted.length !== (currentQuestion.matchingPairs?.length ?? 0))
                 }
               >
                 Check
