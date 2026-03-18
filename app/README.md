@@ -1,5 +1,11 @@
 # React + TypeScript + Vite
 
+## PocketBase Requirement
+
+This app now uses PocketBase for authentication and persistent gamification state (streaks, gems, lives, lesson progress).
+
+Read setup instructions in `POCKETBASE_SETUP.md` before running the app.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

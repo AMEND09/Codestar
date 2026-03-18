@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Check, Flame, Gem, Heart, Lock, Play, X } from 'lucide-react'
+import type { DragEvent, FormEvent } from 'react'
+import { Check, Flame, Gem, Heart, Lock, LogOut, Play, X } from 'lucide-react'
 import { Highlight, themes } from 'prism-react-renderer'
 import Prism from 'prismjs'
+import PocketBase, { type RecordModel } from 'pocketbase'
 import 'prismjs/components/prism-python'
 import 'prismjs/themes/prism-tomorrow.css'
 import EditorLib from 'react-simple-code-editor'
@@ -16,6 +18,7 @@ type CourseQuestion = {
   code: string
   functionName?: string
   tests?: CodeTest[]
+  rawMarkdown?: string
   choices: Array<{ key: string; text: string; isCorrect: boolean }>
   correctAnswer: string
   feedback: string
@@ -52,7 +55,7 @@ type CourseData = {
   placementQuiz: PlacementQuestion[]
 }
 
-type Screen = 'loading' | 'placement' | 'home' | 'lesson' | 'results'
+type Screen = 'loading' | 'auth' | 'placement' | 'home' | 'lesson' | 'results'
 
 type CodeTest = {
   call: string
@@ -64,51 +67,191 @@ type PlayQuestion = {
   title: string
   prompt: string
   code: string
-  type: 'multiple_choice' | 'fill_blank' | 'insight' | 'code_challenge'
+  type: 'multiple_choice' | 'fill_blank' | 'insight' | 'code_challenge' | 'arrange_blocks'
   choices?: Array<{ id: string; text: string }>
   correctAnswer?: string
   feedback: string
   xp: number
   functionName?: string
   tests?: CodeTest[]
+  arrangeBlocks?: string[]
+  arrangeCorrectOrder?: string[]
 }
 
+type ArrangeBlock = {
+  id: string
+  text: string
+}
+
+type GameState = {
+  streak: number
+  lives: number
+  gems: number
+  startLessonId: string
+  completedLessons: string[]
+  lastLifeRefillDate: string
+  lastLessonDate: string
+}
+
+type AuthMode = 'login' | 'register'
+
 const STRINGS = ['{}', '()', ';', '[]', '</>', '=>', '!=', '::']
+const MAX_LIVES = 5
+const PB_URL = (import.meta.env.VITE_POCKETBASE_URL as string | undefined) || 'http://127.0.0.1:8090'
+const pb = new PocketBase(PB_URL)
 
 function stripMarkdown(text: string) {
   return text
     .replaceAll('`', '')
     .replaceAll('**', '')
     .replaceAll('*', '')
-    .replaceAll('✅', '')
     .trim()
 }
 
 function lessonLabel(title: string) {
-  const parts = title.split('—')
-  return parts.length > 1 ? parts[1].trim() : title
+  const normalized = title.replace(/\u2014/g, '-')
+  const parts = normalized.split('-')
+  return parts.length > 1 ? parts.slice(1).join('-').trim() : normalized
 }
 
 function sanitizeForCompare(value: string) {
   return stripMarkdown(value).toLowerCase().replaceAll(' ', '')
 }
 
+function normalizeCodeLineForCompare(line: string) {
+  return line.replaceAll('\t', '    ').trim().replace(/\s+/g, ' ')
+}
+
+function codeLinesFromSnippet(snippet: string) {
+  return snippet
+    .split(/\r?\n/)
+    .map((line) => line.replace(/\s+$/g, ''))
+    .filter((line) => line.trim().length > 0)
+}
+
+function extractArrangeBlocksFromMarkdown(rawMarkdown?: string) {
+  if (!rawMarkdown) return []
+  const match = rawMarkdown.match(/Blocks:\s*```(?:python)?\s*([\s\S]*?)```/i)
+  if (!match) return []
+  return codeLinesFromSnippet(match[1])
+}
+
+function extractArrangeCorrectOrderFromMarkdown(rawMarkdown?: string) {
+  if (!rawMarkdown) return []
+  const match = rawMarkdown.match(/\*Correct(?:\s+order)?:\*[\s\S]*?```(?:python)?\s*([\s\S]*?)```/i)
+  if (!match) return []
+  return codeLinesFromSnippet(match[1])
+}
+
+function shuffleBlocks<T>(items: T[]) {
+  const next = [...items]
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = next[i]
+    next[i] = next[j]
+    next[j] = tmp
+  }
+  return next
+}
+
+function todayKey() {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function yesterdayKey(fromKey: string) {
+  const [year, month, day] = fromKey.split('-').map(Number)
+  const d = new Date(year, month - 1, day)
+  d.setDate(d.getDate() - 1)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const da = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${da}`
+}
+
+function parseCompletedLessons(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((value): value is string => typeof value === 'string')
+  }
+
+  if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed)) {
+        return parsed.filter((value): value is string => typeof value === 'string')
+      }
+    } catch {
+      return []
+    }
+  }
+
+  return []
+}
+
+function normalizeGameState(record: RecordModel | null): GameState {
+  const today = todayKey()
+  const streak = typeof record?.streak === 'number' ? record.streak : 0
+  const gems = typeof record?.gems === 'number' ? record.gems : 120
+  const rawLives = typeof record?.lives === 'number' ? record.lives : MAX_LIVES
+  const startLessonId = typeof record?.startLessonId === 'string' ? record.startLessonId : ''
+  const completedLessons = parseCompletedLessons(record?.completedLessons)
+  const lastLifeRefillDate = typeof record?.lastLifeRefillDate === 'string' ? record.lastLifeRefillDate : today
+  const lastLessonDate = typeof record?.lastLessonDate === 'string' ? record.lastLessonDate : ''
+
+  const lives = lastLifeRefillDate === today ? Math.max(0, Math.min(MAX_LIVES, rawLives)) : MAX_LIVES
+
+  return {
+    streak,
+    gems,
+    lives,
+    startLessonId,
+    completedLessons,
+    lastLifeRefillDate: today,
+    lastLessonDate,
+  }
+}
+
+function pocketbaseError(error: unknown) {
+  const message = (error as any)?.response?.message
+  if (typeof message === 'string' && message.trim().length > 0) {
+    return message
+  }
+
+  return 'Something went wrong. Please try again.'
+}
+
+function usernameFromEmail(email: string) {
+  const [left] = email.split('@')
+  const safe = (left || 'coder').toLowerCase().replace(/[^a-z0-9_]/g, '')
+  return `${safe.slice(0, 20)}${Math.floor(Math.random() * 10000)}`
+}
+
 function App() {
   const [screen, setScreen] = useState<Screen>('loading')
   const [course, setCourse] = useState<CourseData | null>(null)
-  
-  const [streak, setStreak] = useState(() => {
-    const val = localStorage.getItem('cs_streak')
-    return val !== null ? Number(val) : 7
-  })
-  const [lives, setLives] = useState(() => {
-    const val = localStorage.getItem('cs_lives')
-    return val !== null ? Number(val) : 5
-  })
-  const [gems, setGems] = useState(() => {
-    const val = localStorage.getItem('cs_gems')
-    return val !== null ? Number(val) : 120
-  })
+  const [courseLoaded, setCourseLoaded] = useState(false)
+
+  const [authMode, setAuthMode] = useState<AuthMode>('login')
+  const [authEmail, setAuthEmail] = useState('')
+  const [authPassword, setAuthPassword] = useState('')
+  const [authPasswordConfirm, setAuthPasswordConfirm] = useState('')
+  const [authName, setAuthName] = useState('')
+  const [authBusy, setAuthBusy] = useState(false)
+  const [authError, setAuthError] = useState('')
+
+  const [userRecord, setUserRecord] = useState<RecordModel | null>(null)
+  const [gameHydrated, setGameHydrated] = useState(false)
+
+  const [streak, setStreak] = useState(0)
+  const [lives, setLives] = useState(MAX_LIVES)
+  const [gems, setGems] = useState(120)
+  const [startLessonId, setStartLessonId] = useState('')
+  const [completedLessons, setCompletedLessons] = useState<string[]>([])
+  const [lastLifeRefillDate, setLastLifeRefillDate] = useState(todayKey())
+  const [lastLessonDate, setLastLessonDate] = useState('')
 
   const [placementIndex, setPlacementIndex] = useState(0)
   const [placementScore, setPlacementScore] = useState(0)
@@ -124,42 +267,126 @@ function App() {
   const [codeAnswer, setCodeAnswer] = useState('')
   const [codeChecking, setCodeChecking] = useState(false)
 
-  const [startLessonId, setStartLessonId] = useState<string>(() => localStorage.getItem('cs_startLessonId') || '')
-  const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
-    const val = localStorage.getItem('cs_completedLessons')
-    return val ? JSON.parse(val) : []
-  })
-
   const [activeLessonId, setActiveLessonId] = useState('')
   const [lessonIndex, setLessonIndex] = useState(0)
   const [lessonChoice, setLessonChoice] = useState('')
   const [blankAnswer, setBlankAnswer] = useState('')
+  const [arrangePool, setArrangePool] = useState<ArrangeBlock[]>([])
+  const [arrangeAnswer, setArrangeAnswer] = useState<ArrangeBlock[]>([])
   const [lessonFeedback, setLessonFeedback] = useState('')
   const [lessonCorrect, setLessonCorrect] = useState(0)
   const [lastLessonTotal, setLastLessonTotal] = useState(0)
+
+  useEffect(() => {
+    const unsubscribe = pb.authStore.onChange((_token, record) => {
+      setUserRecord(record ?? null)
+      if (!record) {
+        setGameHydrated(false)
+        setScreen('auth')
+      }
+    })
+
+    setUserRecord(pb.authStore.record ?? null)
+    if (!pb.authStore.record) {
+      setScreen('auth')
+    }
+
+    return unsubscribe
+  }, [])
 
   useEffect(() => {
     async function loadCourse() {
       const response = await fetch('/data/curriculum.json')
       const payload = (await response.json()) as CourseData
       setCourse(payload)
-      if (localStorage.getItem('cs_startLessonId')) {
-        setScreen('home')
-      } else {
-        setScreen('placement')
-      }
+      setCourseLoaded(true)
     }
 
-    loadCourse().catch(() => setScreen('loading'))
+    loadCourse().catch(() => {
+      setCourseLoaded(false)
+      setScreen('loading')
+    })
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('cs_streak', streak.toString())
-    localStorage.setItem('cs_lives', lives.toString())
-    localStorage.setItem('cs_gems', gems.toString())
-    localStorage.setItem('cs_startLessonId', startLessonId)
-    localStorage.setItem('cs_completedLessons', JSON.stringify(completedLessons))
-  }, [streak, lives, gems, startLessonId, completedLessons])
+    if (!userRecord) return
+    if (!courseLoaded) return
+
+    const normalized = normalizeGameState(userRecord)
+    setStreak(normalized.streak)
+    setLives(normalized.lives)
+    setGems(normalized.gems)
+    setStartLessonId(normalized.startLessonId)
+    setCompletedLessons(normalized.completedLessons)
+    setLastLifeRefillDate(normalized.lastLifeRefillDate)
+    setLastLessonDate(normalized.lastLessonDate)
+    setGameHydrated(true)
+
+    const hasStarted = normalized.startLessonId.length > 0
+    setScreen(hasStarted ? 'home' : 'placement')
+
+    void pb.collection('users').update(userRecord.id, {
+      streak: normalized.streak,
+      gems: normalized.gems,
+      lives: normalized.lives,
+      maxLives: MAX_LIVES,
+      startLessonId: normalized.startLessonId,
+      completedLessons: normalized.completedLessons,
+      lastLifeRefillDate: normalized.lastLifeRefillDate,
+      lastLessonDate: normalized.lastLessonDate,
+    }).then((record) => {
+      setUserRecord(record)
+    }).catch(() => {
+      // Ignore early sync issues; save effect will retry.
+    })
+  }, [userRecord?.id, courseLoaded])
+
+  useEffect(() => {
+    if (!userRecord || !gameHydrated) return
+
+    const timer = setTimeout(() => {
+      void pb.collection('users').update(userRecord.id, {
+        streak,
+        gems,
+        lives,
+        maxLives: MAX_LIVES,
+        startLessonId,
+        completedLessons,
+        lastLifeRefillDate,
+        lastLessonDate,
+      }).then((record) => {
+        setUserRecord(record)
+      }).catch((error) => {
+        console.warn('Failed to sync game state:', error)
+      })
+    }, 250)
+
+    return () => clearTimeout(timer)
+  }, [
+    completedLessons,
+    gameHydrated,
+    gems,
+    lastLessonDate,
+    lastLifeRefillDate,
+    lives,
+    startLessonId,
+    streak,
+    userRecord?.id,
+  ])
+
+  useEffect(() => {
+    if (!gameHydrated) return
+
+    const timer = setInterval(() => {
+      const today = todayKey()
+      if (lastLifeRefillDate !== today) {
+        setLives(MAX_LIVES)
+        setLastLifeRefillDate(today)
+      }
+    }, 60_000)
+
+    return () => clearInterval(timer)
+  }, [gameHydrated, lastLifeRefillDate])
 
   useEffect(() => {
     async function initPyodide() {
@@ -226,6 +453,27 @@ function App() {
       const hasTests = Array.isArray(question.tests) && question.tests.length > 0
       const hasChoices = question.choices.length > 1
       const hasBlank = question.type === 'fill_blank' && question.correctAnswer
+      const isArrange = question.type === 'arrange_blocks'
+
+      if (isArrange) {
+        const blocks = extractArrangeBlocksFromMarkdown(question.rawMarkdown)
+        const correctOrder = extractArrangeCorrectOrderFromMarkdown(question.rawMarkdown)
+        const fallbackBlocks = codeLinesFromSnippet(question.code)
+        const effectiveBlocks = blocks.length > 0 ? blocks : fallbackBlocks
+        const effectiveCorrect = correctOrder.length > 0 ? correctOrder : fallbackBlocks
+
+        return {
+          id: question.id,
+          title: stripMarkdown(question.title),
+          prompt: stripMarkdown(question.prompt),
+          code: question.code,
+          type: 'arrange_blocks',
+          arrangeBlocks: effectiveBlocks,
+          arrangeCorrectOrder: effectiveCorrect,
+          feedback: stripMarkdown(question.feedback),
+          xp: 14,
+        }
+      }
 
       if (hasTests) {
         return {
@@ -296,7 +544,162 @@ function App() {
     if (currentQuestion?.type === 'code_challenge') {
       setCodeAnswer(currentQuestion.code)
     }
+    if (currentQuestion?.type === 'arrange_blocks') {
+      const blocks = currentQuestion.arrangeBlocks ?? []
+      const arrangedBlocks = blocks.map((text, index) => ({
+        id: `${currentQuestion.id}-${index}`,
+        text,
+      }))
+      setArrangePool(shuffleBlocks(arrangedBlocks))
+      setArrangeAnswer([])
+    }
   }, [currentQuestion])
+
+  function parseArrangeDragPayload(event: DragEvent<HTMLElement>) {
+    try {
+      const raw = event.dataTransfer.getData('text/plain')
+      const parsed = JSON.parse(raw) as { zone: 'pool' | 'answer'; id: string }
+      if (!parsed?.id || (parsed.zone !== 'pool' && parsed.zone !== 'answer')) return null
+      return parsed
+    } catch {
+      return null
+    }
+  }
+
+  function handleArrangeDrop(targetZone: 'pool' | 'answer', targetIndex?: number) {
+    return (event: DragEvent<HTMLElement>) => {
+      event.preventDefault()
+      const payload = parseArrangeDragPayload(event)
+      if (!payload) return
+
+      const sourceZone = payload.zone
+      const sourceList = sourceZone === 'pool' ? arrangePool : arrangeAnswer
+      const sourceIndex = sourceList.findIndex((item) => item.id === payload.id)
+      if (sourceIndex < 0) return
+
+      const block = sourceList[sourceIndex]
+      if (!block) return
+
+      if (sourceZone === targetZone) {
+        const list = [...sourceList]
+        const [picked] = list.splice(sourceIndex, 1)
+        if (!picked) return
+
+        let insertAt = targetIndex ?? list.length
+        if (sourceIndex < insertAt) insertAt -= 1
+        insertAt = Math.max(0, Math.min(insertAt, list.length))
+        list.splice(insertAt, 0, picked)
+
+        if (targetZone === 'pool') setArrangePool(list)
+        else setArrangeAnswer(list)
+        return
+      }
+
+      const nextSource = [...sourceList]
+      nextSource.splice(sourceIndex, 1)
+
+      const targetList = targetZone === 'pool' ? arrangePool : arrangeAnswer
+      const nextTarget = [...targetList]
+      const insertAt = Math.max(0, Math.min(targetIndex ?? nextTarget.length, nextTarget.length))
+      nextTarget.splice(insertAt, 0, block)
+
+      if (sourceZone === 'pool') setArrangePool(nextSource)
+      else setArrangeAnswer(nextSource)
+
+      if (targetZone === 'pool') setArrangePool(nextTarget)
+      else setArrangeAnswer(nextTarget)
+    }
+  }
+
+  function handleArrangeDragStart(zone: 'pool' | 'answer', block: ArrangeBlock) {
+    return (event: DragEvent<HTMLElement>) => {
+      event.dataTransfer.setData('text/plain', JSON.stringify({ zone, id: block.id }))
+      event.dataTransfer.effectAllowed = 'move'
+    }
+  }
+
+  const outOfLives = lives <= 0 && lastLifeRefillDate === todayKey()
+
+  function ensurePlayableLives() {
+    const today = todayKey()
+    if (lastLifeRefillDate !== today) {
+      setLives(MAX_LIVES)
+      setLastLifeRefillDate(today)
+      return MAX_LIVES
+    }
+
+    return lives
+  }
+
+  function showOutOfLivesMessage() {
+    const message = 'You are out of lives. Come back tomorrow for a full refill.'
+    setLessonFeedback(message)
+    setFeedbackCorrect(false)
+    setFeedbackMessage(message)
+    setFeedbackVisible(true)
+  }
+
+  async function submitAuth(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setAuthError('')
+    setAuthBusy(true)
+
+    try {
+      if (authMode === 'register') {
+        if (authPassword.length < 8) {
+          throw new Error('Password must be at least 8 characters.')
+        }
+
+        if (authPassword !== authPasswordConfirm) {
+          throw new Error('Passwords do not match.')
+        }
+
+        await pb.collection('users').create({
+          email: authEmail,
+          password: authPassword,
+          passwordConfirm: authPasswordConfirm,
+          name: authName.trim() || authEmail.split('@')[0],
+          username: usernameFromEmail(authEmail),
+          emailVisibility: true,
+          streak: 0,
+          gems: 120,
+          lives: MAX_LIVES,
+          maxLives: MAX_LIVES,
+          startLessonId: '',
+          completedLessons: [],
+          lastLifeRefillDate: todayKey(),
+          lastLessonDate: '',
+        })
+      }
+
+      await pb.collection('users').authWithPassword(authEmail, authPassword)
+      setAuthPassword('')
+      setAuthPasswordConfirm('')
+      setAuthError('')
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : pocketbaseError(error))
+    } finally {
+      setAuthBusy(false)
+    }
+  }
+
+  function logout() {
+    pb.authStore.clear()
+    setGameHydrated(false)
+    setScreen('auth')
+    setStreak(0)
+    setLives(MAX_LIVES)
+    setGems(120)
+    setStartLessonId('')
+    setCompletedLessons([])
+    setLastLifeRefillDate(todayKey())
+    setLastLessonDate('')
+    setPlacementIndex(0)
+    setPlacementScore(0)
+    setPlacementChoice('')
+    setPlacementFeedback('')
+    setFeedbackVisible(false)
+  }
 
   function finishPlacement() {
     if (!course) return
@@ -331,8 +734,8 @@ function App() {
     if (correct) setPlacementScore((score) => score + 1)
 
     const feedback = correct
-      ? 'Nice work — your reading is on point.'
-      : stripMarkdown(currentPlacement.feedback) || 'Not quite — check the pattern and try again.'
+      ? 'Nice work - your reading is on point.'
+      : stripMarkdown(currentPlacement.feedback) || 'Not quite - check the pattern and try again.'
 
     setPlacementFeedback(feedback)
     setFeedbackCorrect(correct)
@@ -356,6 +759,12 @@ function App() {
   }
 
   function startLesson(lessonId: string) {
+    const availableLives = ensurePlayableLives()
+    if (availableLives <= 0) {
+      showOutOfLivesMessage()
+      return
+    }
+
     setFeedbackVisible(false)
     setActiveLessonId(lessonId)
     setLessonIndex(0)
@@ -368,6 +777,12 @@ function App() {
 
   async function runCodeChallenge() {
     if (!currentQuestion || !pyodide) return
+
+    const availableLives = ensurePlayableLives()
+    if (availableLives <= 0) {
+      showOutOfLivesMessage()
+      return
+    }
 
     setCodeChecking(true)
     setFeedbackVisible(false)
@@ -417,28 +832,39 @@ json.dumps(results)
       if (failed) {
         const error = failed.error ? `${failed.error}` : ''
         const call = failed.call ? `\nTest: ${failed.call}` : ''
-        const msg = `Not quite. ${error}${call}`
+        const nextLives = Math.max(0, availableLives - 1)
+        setLives(nextLives)
+
+        const msg = nextLives <= 0
+          ? 'You are out of lives. Come back tomorrow for a full refill.'
+          : `Not quite. ${error}${call}`
+
         setLessonFeedback(msg)
         setFeedbackCorrect(false)
         setFeedbackMessage(msg)
         setFeedbackVisible(true)
-        setLives((value) => Math.max(0, value - 1))
       } else {
         setLessonCorrect((count) => count + 1)
         setGems((value) => value + currentQuestion.xp)
-        const msg = currentQuestion.feedback || 'Nice work — tests passed.'
+        const msg = currentQuestion.feedback || 'Nice work - tests passed.'
         setLessonFeedback(msg)
         setFeedbackCorrect(true)
         setFeedbackMessage(msg)
         setFeedbackVisible(true)
       }
     } catch (err) {
-      const msg = `Error running code: ${err}`
+      const available = ensurePlayableLives()
+      const nextLives = Math.max(0, available - 1)
+      setLives(nextLives)
+
+      const msg = nextLives <= 0
+        ? 'You are out of lives. Come back tomorrow for a full refill.'
+        : `Error running code: ${err}`
+
       setLessonFeedback(msg)
       setFeedbackCorrect(false)
       setFeedbackMessage(msg)
       setFeedbackVisible(true)
-      setLives((value) => Math.max(0, value - 1))
     } finally {
       setCodeChecking(false)
     }
@@ -457,8 +883,46 @@ json.dumps(results)
       return
     }
 
+    const availableLives = ensurePlayableLives()
+    if (availableLives <= 0) {
+      showOutOfLivesMessage()
+      return
+    }
+
     if (currentQuestion.type === 'code_challenge') {
       void runCodeChallenge()
+      return
+    }
+
+    if (currentQuestion.type === 'arrange_blocks') {
+      const expected = currentQuestion.arrangeCorrectOrder ?? []
+      if (arrangeAnswer.length !== expected.length) return
+
+      const correct = arrangeAnswer.every((line, index) => {
+        const expectedLine = expected[index] ?? ''
+        return normalizeCodeLineForCompare(line.text) === normalizeCodeLineForCompare(expectedLine)
+      })
+
+      if (correct) {
+        setLessonCorrect((count) => count + 1)
+        setGems((value) => value + currentQuestion.xp)
+        const msg = currentQuestion.feedback || 'Correct. Keep climbing.'
+        setLessonFeedback(msg)
+        setFeedbackCorrect(true)
+        setFeedbackMessage(msg)
+        setFeedbackVisible(true)
+        return
+      }
+
+      const nextLives = Math.max(0, availableLives - 1)
+      setLives(nextLives)
+      const msg = nextLives <= 0
+        ? 'You are out of lives. Come back tomorrow for a full refill.'
+        : currentQuestion.feedback || 'Not quite. Read the pattern and retry.'
+      setLessonFeedback(msg)
+      setFeedbackCorrect(false)
+      setFeedbackMessage(msg)
+      setFeedbackVisible(true)
       return
     }
 
@@ -485,8 +949,13 @@ json.dumps(results)
       return
     }
 
-    setLives((value) => Math.max(0, value - 1))
-    const msg = currentQuestion.feedback || 'Not quite. Read the pattern and retry.'
+    const nextLives = Math.max(0, availableLives - 1)
+    setLives(nextLives)
+
+    const msg = nextLives <= 0
+      ? 'You are out of lives. Come back tomorrow for a full refill.'
+      : currentQuestion.feedback || 'Not quite. Read the pattern and retry.'
+
     setLessonFeedback(msg)
     setFeedbackCorrect(false)
     setFeedbackMessage(msg)
@@ -499,8 +968,16 @@ json.dumps(results)
       if (activeLessonId) {
         setCompletedLessons((prev) => [...new Set([...prev, activeLessonId])])
       }
+
+      const today = todayKey()
+      if (lastLessonDate !== today) {
+        const prev = lastLessonDate
+        const nextStreak = prev && prev === yesterdayKey(today) ? streak + 1 : 1
+        setStreak(nextStreak)
+        setLastLessonDate(today)
+      }
+
       setLastLessonTotal(playableQuestions.length)
-      setStreak((value) => value + 1)
       setFeedbackVisible(false)
       setScreen('results')
       return
@@ -518,7 +995,81 @@ json.dumps(results)
     setScreen('home')
   }
 
-  if (screen === 'loading') {
+  if (screen === 'auth') {
+    return (
+      <main className="app-shell app-auth">
+        <section className="auth-card">
+          <div className="placement-mascot">{'{}'}</div>
+          <h1>{authMode === 'login' ? 'Welcome Back' : 'Create Account'}</h1>
+          <p>Sign in to sync streaks, gems, and lives with PocketBase.</p>
+
+          <div className="auth-toggle">
+            <button
+              type="button"
+              className={`choice ${authMode === 'login' ? 'selected' : ''}`}
+              onClick={() => setAuthMode('login')}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              className={`choice ${authMode === 'register' ? 'selected' : ''}`}
+              onClick={() => setAuthMode('register')}
+            >
+              Register
+            </button>
+          </div>
+
+          <form className="auth-form" onSubmit={submitAuth}>
+            {authMode === 'register' ? (
+              <input
+                className="blank-input"
+                placeholder="Display name"
+                value={authName}
+                onChange={(event) => setAuthName(event.target.value)}
+              />
+            ) : null}
+
+            <input
+              className="blank-input"
+              type="email"
+              placeholder="Email"
+              value={authEmail}
+              onChange={(event) => setAuthEmail(event.target.value)}
+              required
+            />
+            <input
+              className="blank-input"
+              type="password"
+              placeholder="Password"
+              value={authPassword}
+              onChange={(event) => setAuthPassword(event.target.value)}
+              required
+            />
+
+            {authMode === 'register' ? (
+              <input
+                className="blank-input"
+                type="password"
+                placeholder="Confirm password"
+                value={authPasswordConfirm}
+                onChange={(event) => setAuthPasswordConfirm(event.target.value)}
+                required
+              />
+            ) : null}
+
+            {authError ? <div className="auth-error">{authError}</div> : null}
+
+            <button className="primary-btn" type="submit" disabled={authBusy}>
+              {authBusy ? 'Please wait...' : authMode === 'login' ? 'Login' : 'Create account'}
+            </button>
+          </form>
+        </section>
+      </main>
+    )
+  }
+
+  if (screen === 'loading' || !courseLoaded || !gameHydrated) {
     return <main className="app-shell">Loading curriculum...</main>
   }
 
@@ -585,9 +1136,13 @@ json.dumps(results)
   if (screen === 'home' && course) {
     return (
       <main className="app-shell app-home">
-        <TopBar stats={{ streak, lives, gems }} />
+        <TopBar stats={{ streak, lives, gems }} onLogout={logout} />
 
         <div className="main-content">
+          {outOfLives ? (
+            <div className="auth-error home-warning">Out of lives for today. Come back tomorrow for a refill.</div>
+          ) : null}
+
           <section className="roadmap">
             {course.units.map((unit) => (
               <article key={unit.id} className="unit-card">
@@ -596,45 +1151,45 @@ json.dumps(results)
                   <h2>{unit.topic}</h2>
                 </div>
 
-                  <div className="unit-path">
-                    {unit.lessons.map((lesson, index) => {
-                      const overall = lessonTrack.findIndex((item) => item.id === lesson.id)
-                      const done = completedLessons.includes(lesson.id)
-                      const current = lesson.id === nextLessonId
-                      const locked = !done && !current
-                      const offset = index % 2 === 0 ? 'left' : 'right'
+                <div className="unit-path">
+                  {unit.lessons.map((lesson, index) => {
+                    const overall = lessonTrack.findIndex((item) => item.id === lesson.id)
+                    const done = completedLessons.includes(lesson.id)
+                    const current = lesson.id === nextLessonId
+                    const locked = !done && (!current || outOfLives)
+                    const offset = index % 2 === 0 ? 'left' : 'right'
 
-                      return (
-                        <div key={lesson.id} className={`path-item ${offset}`}>
-                          <button
-                            className={`lesson-node ${done ? 'done' : ''} ${current ? 'current' : ''} ${locked ? 'locked' : ''}`}
-                            type="button"
-                            onClick={() => (locked ? undefined : startLesson(lesson.id))}
-                          >
-                            {done ? (
-                              <Check size={18} />
-                            ) : current ? (
-                              <span className="symbol-mascot">{STRINGS[overall % STRINGS.length]}</span>
-                            ) : (
-                              <Lock size={16} />
-                            )}
-                          </button>
-                          <div className="lesson-name">{lessonLabel(lesson.title)}</div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </article>
-              ))}
-            </section>
-          </div>
+                    return (
+                      <div key={lesson.id} className={`path-item ${offset}`}>
+                        <button
+                          className={`lesson-node ${done ? 'done' : ''} ${current ? 'current' : ''} ${locked ? 'locked' : ''}`}
+                          type="button"
+                          onClick={() => (locked ? undefined : startLesson(lesson.id))}
+                        >
+                          {done ? (
+                            <Check size={18} />
+                          ) : current ? (
+                            <span className="symbol-mascot">{STRINGS[overall % STRINGS.length]}</span>
+                          ) : (
+                            <Lock size={16} />
+                          )}
+                        </button>
+                        <div className="lesson-name">{lessonLabel(lesson.title)}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </article>
+            ))}
+          </section>
+        </div>
 
-          <FeedbackBar
-            visible={feedbackVisible}
-            correct={feedbackCorrect}
-            message={feedbackMessage}
-            onClose={() => setFeedbackVisible(false)}
-          />
+        <FeedbackBar
+          visible={feedbackVisible}
+          correct={feedbackCorrect}
+          message={feedbackMessage}
+          onClose={() => setFeedbackVisible(false)}
+        />
       </main>
     )
   }
@@ -650,40 +1205,40 @@ json.dumps(results)
             <div className="lesson-progress-fill" style={{ width: `${progressPercent}%` }} />
           </div>
           <div className="hearts-display" title={`${lives} lives remaining`}>
-            {Array.from({ length: 5 }).map((_, i) => (
+            {Array.from({ length: MAX_LIVES }).map((_, i) => (
               <span key={i} className={`heart ${i >= lives ? 'lost' : ''}`}>
-                ❤️
+                <Heart size={18} fill="currentColor" />
               </span>
             ))}
           </div>
         </header>
 
-          <section className="lesson-body">
-            <div className="question-label">{currentQuestion.title}</div>
-            <h2 className="question-prompt">{currentQuestion.prompt}</h2>
+        <section className="lesson-body">
+          <div className="question-label">{currentQuestion.title}</div>
+          <h2 className="question-prompt">{currentQuestion.prompt}</h2>
 
-            {currentQuestion.type === 'code_challenge' ? (
-              <div className="code-editor-wrapper">
-                <div className="code-editor-container">
-                  <Editor
-                    className="code-editor"
-                    value={codeAnswer}
-                    onValueChange={(code: string) => setCodeAnswer(code)}
-                    highlight={(code: string) => Prism.highlight(code, Prism.languages.python, 'python')}
-                    padding={16}
-                    textareaClassName="code-editor-textarea"
-                    style={{
-                      fontFamily: 'var(--mono)',
-                      fontSize: '0.95rem',
-                      minHeight: '220px',
-                    }}
-                  />
-                </div>
-                <div className="code-hint">Write your function and press Check to run tests.</div>
+          {currentQuestion.type === 'code_challenge' ? (
+            <div className="code-editor-wrapper">
+              <div className="code-editor-container">
+                <Editor
+                  className="code-editor"
+                  value={codeAnswer}
+                  onValueChange={(code: string) => setCodeAnswer(code)}
+                  highlight={(code: string) => Prism.highlight(code, Prism.languages.python, 'python')}
+                  padding={16}
+                  textareaClassName="code-editor-textarea"
+                  style={{
+                    fontFamily: 'var(--mono)',
+                    fontSize: '0.95rem',
+                    minHeight: '220px',
+                  }}
+                />
               </div>
-            ) : currentQuestion.code ? (
-              <CodePanel code={currentQuestion.code} />
-            ) : null}
+              <div className="code-hint">Write your function and press Check to run tests.</div>
+            </div>
+          ) : currentQuestion.code ? (
+            <CodePanel code={currentQuestion.code} />
+          ) : null}
 
           {currentQuestion.type === 'multiple_choice' ? (
             <div className="answer-list">
@@ -714,6 +1269,64 @@ json.dumps(results)
             <div className="insight-box">Read this pattern carefully, then continue.</div>
           ) : null}
 
+          {currentQuestion.type === 'arrange_blocks' ? (
+            <div className="arrange-wrapper">
+              <div className="arrange-column">
+                <div className="arrange-label">Available Blocks</div>
+                <div
+                  className="arrange-zone"
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={handleArrangeDrop('pool')}
+                >
+                  {arrangePool.length > 0 ? (
+                    arrangePool.map((line) => (
+                      <div
+                        key={line.id}
+                        className="arrange-block"
+                        draggable
+                        onDragStart={handleArrangeDragStart('pool', line)}
+                      >
+                        {line.text}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="arrange-empty">Drop blocks here to remove them from your answer.</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="arrange-column">
+                <div className="arrange-label">Your Order</div>
+                <div
+                  className="arrange-zone"
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={handleArrangeDrop('answer')}
+                >
+                  {arrangeAnswer.length > 0 ? (
+                    arrangeAnswer.map((line, index) => (
+                      <div
+                        key={line.id}
+                        className="arrange-answer-row"
+                        onDragOver={(event) => event.preventDefault()}
+                        onDrop={handleArrangeDrop('answer', index)}
+                      >
+                        <div
+                          className="arrange-block arrange-block-answer"
+                          draggable
+                          onDragStart={handleArrangeDragStart('answer', line)}
+                        >
+                          {line.text}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="arrange-empty">Drag blocks here to build your answer.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           {!lessonFeedback ? (
             <button
               className="primary-btn"
@@ -722,12 +1335,14 @@ json.dumps(results)
               disabled={
                 (currentQuestion.type === 'multiple_choice' && !lessonChoice) ||
                 (currentQuestion.type === 'fill_blank' && !blankAnswer.trim()) ||
+                (currentQuestion.type === 'arrange_blocks' &&
+                  arrangeAnswer.length !== (currentQuestion.arrangeCorrectOrder?.length ?? 0)) ||
                 (currentQuestion.type === 'code_challenge' && (!pyodideReady || codeChecking))
               }
             >
               {currentQuestion.type === 'code_challenge'
                 ? codeChecking
-                  ? 'Running…'
+                  ? 'Running...'
                   : 'Check'
                 : 'Check'}
             </button>
@@ -810,9 +1425,10 @@ type TopBarProps = {
     gems: number
   }
   onClose?: () => void
+  onLogout?: () => void
 }
 
-function TopBar({ stats, onClose }: TopBarProps) {
+function TopBar({ stats, onClose, onLogout }: TopBarProps) {
   const mascot = STRINGS[(stats.streak + stats.gems) % STRINGS.length]
 
   return (
@@ -846,6 +1462,13 @@ function TopBar({ stats, onClose }: TopBarProps) {
           <span>{stats.gems}</span>
         </div>
       </div>
+
+      {onLogout ? (
+        <button className="logout-btn" type="button" onClick={onLogout} aria-label="Log out">
+          <LogOut size={16} />
+          <span>Logout</span>
+        </button>
+      ) : null}
     </header>
   )
 }
