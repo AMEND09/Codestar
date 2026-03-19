@@ -328,8 +328,37 @@
           "conceptIntroduced": "Zero-indexing, negative indexing, slicing",
           "questions": [
             {
+              "id": "u1-l1-q0",
+              "index": 0,
+              "title": "What is a Python List?",
+              "type": "multiple_choice",
+              "prompt": "Which of these creates a Python list?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "[1, 2, 3]",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "(1, 2, 3)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "{1, 2, 3}",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "Lists use square brackets []. They are ordered, changeable collections."
+            },
+            {
               "id": "u1-l1-q1",
-              "index": 1,
+              "index": 2,
               "title": "Trace the Output",
               "type": "trace_output",
               "prompt": "What does this print? (Choose all three outputs)",
@@ -364,7 +393,7 @@
             },
             {
               "id": "u1-l1-q2",
-              "index": 2,
+              "index": 3,
               "title": "Fill in the Blank",
               "type": "fill_blank",
               "prompt": "What goes in the blank?",
@@ -378,7 +407,7 @@
             },
             {
               "id": "u1-l1-q3",
-              "index": 3,
+              "index": 4,
               "title": "Spot the Bug",
               "type": "spot_bug",
               "prompt": "This crashes. Why?",
@@ -413,7 +442,7 @@
             },
             {
               "id": "u1-l1-q4",
-              "index": 4,
+              "index": 5,
               "title": "Write from Scratch",
               "type": "write_from_scratch",
               "prompt": "*Test cases run automatically on submit.*",
@@ -449,8 +478,37 @@
           "conceptIntroduced": "`for` loops, `range()`, `enumerate()`, `while` loops",
           "questions": [
             {
+              "id": "u1-l2-q0",
+              "index": 0,
+              "title": "What does a for loop do?",
+              "type": "multiple_choice",
+              "prompt": "What does a `for` loop do?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Runs code once then stops",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Repeats code for each item in a sequence",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Creates a new list",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "A `for` loop iterates over each element in a sequence, running the loop body once per element."
+            },
+            {
               "id": "u1-l2-q1",
-              "index": 1,
+              "index": 2,
               "title": "Trace the Output",
               "type": "trace_output",
               "prompt": "What does this print?",
@@ -485,7 +543,7 @@
             },
             {
               "id": "u1-l2-q2",
-              "index": 2,
+              "index": 3,
               "title": "Arrange the Blocks",
               "type": "arrange_blocks",
               "prompt": "Put these lines in order to print all even numbers from 0 to 8 (inclusive):",
@@ -499,7 +557,7 @@
             },
             {
               "id": "u1-l2-q3",
-              "index": 3,
+              "index": 4,
               "title": "Fill in the Blank",
               "type": "fill_blank",
               "prompt": "",
@@ -513,7 +571,7 @@
             },
             {
               "id": "u1-l2-q4",
-              "index": 4,
+              "index": 5,
               "title": "Write from Scratch",
               "type": "write_from_scratch",
               "prompt": "",
@@ -549,8 +607,37 @@
           "conceptIntroduced": "Dict lookups, `.get()`, sets for O(1) membership",
           "questions": [
             {
+              "id": "u1-l3-q0",
+              "index": 0,
+              "title": "What is a Python Dictionary?",
+              "type": "multiple_choice",
+              "prompt": "Which of these is a Python dictionary?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "[1, 2, 3]",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "{'name': 'Alice', 'age': 30}",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "(1, 2, 3)",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Dictionaries store key-value pairs using curly braces {}. Keys map to values like a real dictionary maps words to definitions."
+            },
+            {
               "id": "u1-l3-q1",
-              "index": 1,
+              "index": 2,
               "title": "Trace the Output",
               "type": "trace_output",
               "prompt": "What prints?",
@@ -585,7 +672,7 @@
             },
             {
               "id": "u1-l3-q2",
-              "index": 2,
+              "index": 3,
               "title": "Spot the Bug",
               "type": "spot_bug",
               "prompt": "This code has a bug. What is it?",
@@ -620,7 +707,7 @@
             },
             {
               "id": "u1-l3-q3",
-              "index": 3,
+              "index": 4,
               "title": "Complexity Choice",
               "type": "complexity_choice",
               "prompt": "What are the time complexities of `two_sum_slow` and `two_sum_fast`?",
@@ -655,7 +742,7 @@
             },
             {
               "id": "u1-l3-q4",
-              "index": 4,
+              "index": 5,
               "title": "Write from Scratch",
               "type": "write_from_scratch",
               "prompt": "",
@@ -683,8 +770,37 @@
           "conceptIntroduced": "Default args, return values, scope, helper functions",
           "questions": [
             {
+              "id": "u1-l4-q0",
+              "index": 0,
+              "title": "What is a function?",
+              "type": "multiple_choice",
+              "prompt": "What keyword do you use to define a function in Python?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "function",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "fun",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "def",
+                  "isCorrect": true
+                }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Python uses `def` to define functions. Functions package reusable code into a named block."
+            },
+            {
               "id": "u1-l4-q1",
-              "index": 1,
+              "index": 2,
               "title": "Trace the Output",
               "type": "trace_output",
               "prompt": "What prints?",
@@ -719,7 +835,7 @@
             },
             {
               "id": "u1-l4-q2",
-              "index": 2,
+              "index": 3,
               "title": "Write from Scratch",
               "type": "write_from_scratch",
               "prompt": "",
@@ -755,8 +871,37 @@
           "conceptIntroduced": "O(1), O(n), O(n²), O(log n) — by recognition, not memorization",
           "questions": [
             {
+              "id": "u1-l5-q0",
+              "index": 0,
+              "title": "What is Big O?",
+              "type": "multiple_choice",
+              "prompt": "What does Big O notation describe?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "How correct an algorithm is",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "How an algorithm's time or space grows with input size",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The size of the code file",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Big O notation describes how the time or memory requirements of an algorithm scale as the input grows."
+            },
+            {
               "id": "u1-l5-q1",
-              "index": 1,
+              "index": 2,
               "title": "Complexity Choice",
               "type": "match_pairs",
               "prompt": "Match each function to its Big O:",
@@ -784,7 +929,7 @@
             },
             {
               "id": "u1-l5-q2",
-              "index": 2,
+              "index": 3,
               "title": "Multiple Choice — Concept",
               "type": "multiple_choice",
               "prompt": "You have a sorted list of 1,000,000 items. You search for a value. The algorithm halves the search space each step. After 20 steps, what's the maximum remaining search space?",
@@ -819,7 +964,7 @@
             },
             {
               "id": "u1-l5-q3",
-              "index": 3,
+              "index": 4,
               "title": "Match the Pairs",
               "type": "match_pairs",
               "prompt": "Match the operation to its time complexity for a Python list:",
