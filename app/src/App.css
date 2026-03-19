@@ -712,7 +712,7 @@
 .lesson-node.current {
   background: var(--unit-color, #58cc02);
   color: #ffffff;
-  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35), 0 0 0 10px rgba(88, 204, 2, 0.2);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35), 0 0 0 10px color-mix(in srgb, var(--unit-color, #58cc02) 25%, transparent);
   transform: scale(1.1);
   animation: pulse 2.2s ease-in-out infinite;
 }
@@ -1099,7 +1099,7 @@
 .lesson-popover .start-btn {
   display: block;
   background: white;
-  color: #58cc02;
+  color: var(--unit-color, #58cc02);
   border: none;
   border-radius: 12px;
   box-shadow: 0 4px 0 #e5e5e5;
@@ -1136,5 +1136,5 @@
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-  border-top: 15px solid #58cc02;
+  border-top: 15px solid var(--unit-color, #58cc02);
 }
