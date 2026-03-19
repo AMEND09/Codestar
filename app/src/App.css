@@ -623,20 +623,39 @@
   box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
 }
 
+.unit-card:nth-child(5n + 1) {
+  --unit-color: #58cc02;
+}
 .unit-card:nth-child(5n + 1) .unit-header {
-  background: #58cc02;
+  background: var(--unit-color);
+}
+
+.unit-card:nth-child(5n + 2) {
+  --unit-color: #1cb0f6;
 }
 .unit-card:nth-child(5n + 2) .unit-header {
-  background: #1cb0f6;
+  background: var(--unit-color);
+}
+
+.unit-card:nth-child(5n + 3) {
+  --unit-color: #ff4b4b;
 }
 .unit-card:nth-child(5n + 3) .unit-header {
-  background: #ff4b4b;
+  background: var(--unit-color);
+}
+
+.unit-card:nth-child(5n + 4) {
+  --unit-color: #ce82ff;
 }
 .unit-card:nth-child(5n + 4) .unit-header {
-  background: #ce82ff;
+  background: var(--unit-color);
+}
+
+.unit-card:nth-child(5n + 5) {
+  --unit-color: #ffc800;
 }
 .unit-card:nth-child(5n + 5) .unit-header {
-  background: #ffc800;
+  background: var(--unit-color);
 }
 
 .unit-tag {
@@ -677,28 +696,31 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #e5e5e5; /* flat gray for locked nodes */
+  background: var(--unit-color, #e5e5e5);
   color: #ffffff;
-  box-shadow: 0 8px 0 #cfcfcf;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: transform 0.1s;
 }
 
 .lesson-node.done {
-  background: #58cc02;
+  background: var(--unit-color, #58cc02);
   color: #ffffff;
-  box-shadow: 0 8px 0 #4ea903;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35);
 }
 
 .lesson-node.current {
-  background: #58cc02; /* Match the 'done' green for current */
+  background: var(--unit-color, #58cc02);
   color: #ffffff;
-  box-shadow: 0 8px 0 #4ea903, 0 0 0 10px rgba(88, 204, 2, 0.2);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35), 0 0 0 10px rgba(88, 204, 2, 0.2);
   transform: scale(1.1);
   animation: pulse 2.2s ease-in-out infinite;
 }
 
 .lesson-node.locked {
+  background: #e5e5e5;
+  color: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.12);
   cursor: not-allowed;
 }
 
@@ -1012,36 +1034,38 @@
   bottom: 85px; /* Sits cleanly above the node */
   left: 50%;
   transform: translateX(-50%);
-  background: #58cc02;
+  background: var(--unit-color, #58cc02);
   border-radius: 16px;
   padding: 16px 20px 20px 20px;
   width: 290px;
   color: white;
-  z-index: 9999;
+  z-index: 99999;
   animation: popin 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
   pointer-events: none;
 }
 
 .lesson-popover.locked {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1f1f27;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .lesson-popover.locked .popover-title,
 .lesson-popover.locked .popover-concept {
-  opacity: 0.85;
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .lesson-popover.locked .start-btn {
-  background: rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
   cursor: not-allowed;
-  opacity: 0.75;
+  opacity: 1;
 }
 
 .lesson-popover.locked .popover-arrow {
-  border-top-color: rgba(255, 255, 255, 0.18);
+  border-top-color: #1f1f27;
 }
 
 @keyframes popin {

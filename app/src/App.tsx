@@ -1297,7 +1297,14 @@ json.dumps(results)
                     const translateX = offsets[cycleIndex]
 
                     return (
-                      <div key={lesson.id} className="path-item" style={{ transform: `translateX(${translateX}px)` }}>
+                      <div
+                        key={lesson.id}
+                        className="path-item"
+                        style={{
+                          transform: `translateX(${translateX}px)`,
+                          zIndex: selectedLessonId === lesson.id ? 99999 : 1,
+                        }}
+                      >
                         {selectedLessonId === lesson.id && (
                           <div className={`lesson-popover ${locked ? 'locked' : ''} ${done ? 'done' : ''} ${current ? 'current' : ''}`}>
                             <div className="popover-content">
