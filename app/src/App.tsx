@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import type { DragEvent, FormEvent } from 'react'
-import { Check, Flame, Gem, Heart, LogOut, Play, Star, X } from 'lucide-react'
+import { BookOpen, Check, Flame, Gem, Heart, LogOut, Play, Settings, ShoppingBag, Star, X } from 'lucide-react'
 import { Highlight, themes } from 'prism-react-renderer'
 import Prism from 'prismjs'
 import PocketBase, { type RecordModel } from 'pocketbase'
@@ -93,6 +93,21 @@ type GameState = {
   completedLessons: string[]
   lastLifeRefillDate: string
   lastLessonDate: string
+  activeCourseSlug: string
+  purchasedCourses: string[]
+  streakFreezeActive: boolean
+}
+
+type HomeTab = 'learn' | 'courses' | 'shop' | 'settings'
+
+type AvailableCourse = {
+  id: string
+  title: string
+  description: string
+  slug: string
+  color: string
+  price: number
+  dataPath: string
 }
 
 type AuthMode = 'login' | 'register'
@@ -101,6 +116,44 @@ const STRINGS = ['{}', '()', ';', '[]', '</>', '=>', '!=', '::']
 const MAX_LIVES = 5
 const PB_URL = (import.meta.env.VITE_POCKETBASE_URL as string | undefined) || 'http://127.0.0.1:8090'
 const pb = new PocketBase(PB_URL)
+
+const DEFAULT_COURSES: AvailableCourse[] = [
+  {
+    id: 'python-dsa',
+    title: 'Python DSA',
+    description: 'Data structures & algorithms in Python',
+    slug: 'python-dsa',
+    color: '#58cc02',
+    price: 0,
+    dataPath: '/data/curriculum.json',
+  },
+  {
+    id: 'python-basics',
+    title: 'Python Basics',
+    description: 'Learn Python from the very beginning',
+    slug: 'python-basics',
+    color: '#1cb0f6',
+    price: 500,
+    dataPath: '/data/python-basics.json',
+  },
+]
+
+const SHOP_ITEMS = [
+  {
+    id: 'life-refill',
+    label: 'Life Refill',
+    description: 'Restore all 5 lives right now',
+    cost: 100,
+    icon: '❤️',
+  },
+  {
+    id: 'streak-freeze',
+    label: 'Streak Freeze',
+    description: 'Protects your streak for one missed day',
+    cost: 200,
+    icon: '🧊',
+  },
+]
 
 function stripMarkdown(text: string) {
   return text
@@ -196,6 +249,9 @@ function normalizeGameState(record: RecordModel | null): GameState {
   const completedLessons = parseCompletedLessons(record?.completedLessons)
   const lastLifeRefillDate = typeof record?.lastLifeRefillDate === 'string' ? record.lastLifeRefillDate : today
   const lastLessonDate = typeof record?.lastLessonDate === 'string' ? record.lastLessonDate : ''
+  const activeCourseSlug = typeof record?.activeCourseSlug === 'string' && record.activeCourseSlug ? record.activeCourseSlug : 'python-dsa'
+  const purchasedCourses = parseCompletedLessons(record?.purchasedCourses)
+  const streakFreezeActive = typeof record?.streakFreezeActive === 'boolean' ? record.streakFreezeActive : false
 
   const lives = lastLifeRefillDate === today ? Math.max(0, Math.min(MAX_LIVES, rawLives)) : MAX_LIVES
 
@@ -207,6 +263,9 @@ function normalizeGameState(record: RecordModel | null): GameState {
     completedLessons,
     lastLifeRefillDate: today,
     lastLessonDate,
+    activeCourseSlug,
+    purchasedCourses: purchasedCourses.length > 0 ? purchasedCourses : ['python-dsa'],
+    streakFreezeActive,
   }
 }
 
@@ -281,6 +340,14 @@ function App() {
   const [lessonCorrect, setLessonCorrect] = useState(0)
   const [lastLessonTotal, setLastLessonTotal] = useState(0)
 
+  // Navigation & new feature state
+  const [homeTab, setHomeTab] = useState<HomeTab>('learn')
+  const [availableCourses, setAvailableCourses] = useState<AvailableCourse[]>(DEFAULT_COURSES)
+  const [activeCourseSlug, setActiveCourseSlug] = useState('python-dsa')
+  const [purchasedCourses, setPurchasedCourses] = useState<string[]>(['python-dsa'])
+  const [streakFreezeActive, setStreakFreezeActive] = useState(false)
+  const [shopConfirmId, setShopConfirmId] = useState<string | null>(null)
+
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((_token, record) => {
       setUserRecord(record ?? null)
@@ -300,17 +367,19 @@ function App() {
 
   useEffect(() => {
     async function loadCourse() {
-      const response = await fetch('/data/curriculum.json')
+      const course = availableCourses.find(c => c.slug === activeCourseSlug) ?? DEFAULT_COURSES[0]!
+      const response = await fetch(course.dataPath)
       const payload = (await response.json()) as CourseData
       setCourse(payload)
       setCourseLoaded(true)
     }
 
+    setCourseLoaded(false)
     loadCourse().catch(() => {
       setCourseLoaded(false)
       setScreen('loading')
     })
-  }, [])
+  }, [activeCourseSlug, availableCourses])
 
   useEffect(() => {
       if (!userRecord || !courseLoaded || gameHydrated) return
@@ -327,6 +396,9 @@ function App() {
         setCompletedLessons(normalized.completedLessons)
         setLastLifeRefillDate(normalized.lastLifeRefillDate)
         setLastLessonDate(normalized.lastLessonDate)
+        setActiveCourseSlug(normalized.activeCourseSlug)
+        setPurchasedCourses(normalized.purchasedCourses)
+        setStreakFreezeActive(normalized.streakFreezeActive)
         setGameHydrated(true)
 
         const hasStarted = normalized.startLessonId.length > 0
@@ -342,6 +414,9 @@ function App() {
           completedLessons: normalized.completedLessons,
           lastLifeRefillDate: normalized.lastLifeRefillDate,
           lastLessonDate: normalized.lastLessonDate,
+          activeCourseSlug: normalized.activeCourseSlug,
+          purchasedCourses: normalized.purchasedCourses,
+          streakFreezeActive: normalized.streakFreezeActive,
         }, { $autoCancel: false })
       }).catch((err) => {
         console.warn('Failed to fetch latest save state:', err)
@@ -354,6 +429,9 @@ function App() {
         setCompletedLessons(normalized.completedLessons)
         setLastLifeRefillDate(normalized.lastLifeRefillDate)
         setLastLessonDate(normalized.lastLessonDate)
+        setActiveCourseSlug(normalized.activeCourseSlug)
+        setPurchasedCourses(normalized.purchasedCourses)
+        setStreakFreezeActive(normalized.streakFreezeActive)
         setGameHydrated(true)
         const hasStarted = normalized.startLessonId.length > 0
         setScreen(hasStarted ? 'home' : 'placement')
@@ -373,6 +451,9 @@ function App() {
         completedLessons,
         lastLifeRefillDate,
         lastLessonDate,
+        activeCourseSlug,
+        purchasedCourses,
+        streakFreezeActive,
       }, { $autoCancel: false }).then((record) => {
         setUserRecord(record)
       }).catch((error) => {
@@ -390,6 +471,9 @@ function App() {
     lives,
     startLessonId,
     streak,
+    activeCourseSlug,
+    purchasedCourses,
+    streakFreezeActive,
     userRecord?.id,
   ])
 
@@ -819,6 +903,10 @@ function App() {
     setPlacementChoice('')
     setPlacementFeedback('')
     setFeedbackVisible(false)
+    setHomeTab('learn')
+    setActiveCourseSlug('python-dsa')
+    setPurchasedCourses(['python-dsa'])
+    setStreakFreezeActive(false)
   }
 
   function finishPlacement() {
@@ -1271,86 +1359,151 @@ json.dumps(results)
   if (screen === 'home' && course) {
     return (
       <main className="app-shell app-home">
-        <TopBar stats={{ streak, lives, gems }} onLogout={logout} />
+        <TopBar stats={{ streak, lives, gems }} />
 
-        <div className="main-content">
-          {outOfLives ? (
-            <div className="auth-error home-warning">Out of lives for today. Come back tomorrow for a refill.</div>
-          ) : null}
+        <div className="home-layout">
+          <TabBar activeTab={homeTab} onTabChange={setHomeTab} />
 
-          <section className="roadmap">
-            {course.units.map((unit) => (
-              <article key={unit.id} className="unit-card">
-                <div className="unit-header">
-                  <div className="unit-tag">Unit {unit.number}</div>
-                  <h2>{unit.topic}</h2>
-                </div>
+          <div className="tab-content">
+            {homeTab === 'learn' && (
+              <div className="main-content">
+                {outOfLives ? (
+                  <div className="auth-error home-warning">Out of lives for today. Come back tomorrow for a refill.</div>
+                ) : null}
 
-                <div className="unit-path">
-                  {unit.lessons.map((lesson, index) => {
-                    const done = completedLessons.includes(lesson.id)
-                    const current = lesson.id === nextLessonId
-                    const locked = !done && (!current || outOfLives)
-                    
-                    const cycleIndex = index % 8
-                    const offsets = [0, 45, 75, 45, 0, -45, -75, -45]
-                    const translateX = offsets[cycleIndex]
+                <section className="roadmap">
+                  {course.units.map((unit) => (
+                    <article key={unit.id} className="unit-card">
+                      <div className="unit-header">
+                        <div className="unit-tag">Unit {unit.number}</div>
+                        <h2>{unit.topic}</h2>
+                      </div>
 
-                    return (
-                      <div
-                        key={lesson.id}
-                        className="path-item"
-                        style={{
-                          transform: `translateX(${translateX}px)`,
-                          zIndex: selectedLessonId === lesson.id ? 99999 : 1,
-                        }}
-                      >
-                        {selectedLessonId === lesson.id && (
-                          <div className={`lesson-popover ${locked ? 'locked' : ''} ${done ? 'done' : ''} ${current ? 'current' : ''}`}>
-                            <div className="popover-content">
-                              <h3 className="popover-title">{lesson.title}</h3>
-                              <p className="popover-concept">Lesson {index + 1} of {unit.lessons.length}</p>
+                      <div className="unit-path">
+                        {unit.lessons.map((lesson, index) => {
+                          const done = completedLessons.includes(lesson.id)
+                          const current = lesson.id === nextLessonId
+                          const locked = !done && (!current || outOfLives)
+                          
+                          const cycleIndex = index % 8
+                          const offsets = [0, 45, 75, 45, 0, -45, -75, -45]
+                          const translateX = offsets[cycleIndex]
+
+                          return (
+                            <div
+                              key={lesson.id}
+                              className="path-item"
+                              style={{
+                                transform: `translateX(${translateX}px)`,
+                                zIndex: selectedLessonId === lesson.id ? 99999 : 1,
+                              }}
+                            >
+                              {selectedLessonId === lesson.id && (
+                                <div className={`lesson-popover ${locked ? 'locked' : ''} ${done ? 'done' : ''} ${current ? 'current' : ''}`}>
+                                  <div className="popover-content">
+                                    <h3 className="popover-title">{lesson.title}</h3>
+                                    <p className="popover-concept">Lesson {index + 1} of {unit.lessons.length}</p>
+                                    <button
+                                      className="start-btn"
+                                      disabled={locked}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        if (!locked) {
+                                          startLesson(lesson.id)
+                                        }
+                                      }}
+                                    >
+                                      {locked ? 'Locked' : 'START +10 XP'}
+                                    </button>
+                                  </div>
+                                  <div className="popover-arrow"></div>
+                                </div>
+                              )}
                               <button
-                                className="start-btn"
-                                disabled={locked}
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  if (!locked) {
-                                    startLesson(lesson.id)
+                                id={`lesson-${lesson.id}`}
+                                className={`lesson-node ${done ? 'done' : ''} ${current ? 'current' : ''} ${locked ? 'locked' : ''}`}
+                                type="button"
+                                onClick={() => {
+                                  if (selectedLessonId === lesson.id) {
+                                    if (locked) {
+                                      setSelectedLessonId(null)
+                                    } else {
+                                      startLesson(lesson.id)
+                                    }
+                                  } else {
+                                    setSelectedLessonId(lesson.id)
                                   }
                                 }}
                               >
-                                {locked ? 'Locked' : 'START +10 XP'}
+                                <Star size={34} fill="currentColor" opacity={locked ? 0.3 : 1} strokeWidth={locked ? 0 : 2} />
                               </button>
                             </div>
-                            <div className="popover-arrow"></div>
-                          </div>
-                        )}
-                        <button
-                          id={`lesson-${lesson.id}`}
-                          className={`lesson-node ${done ? 'done' : ''} ${current ? 'current' : ''} ${locked ? 'locked' : ''}`}
-                          type="button"
-                          onClick={() => {
-                            if (selectedLessonId === lesson.id) {
-                              if (locked) {
-                                setSelectedLessonId(null)
-                              } else {
-                                startLesson(lesson.id)
-                              }
-                            } else {
-                              setSelectedLessonId(lesson.id)
-                            }
-                          }}
-                        >
-                          <Star size={34} fill="currentColor" opacity={locked ? 0.3 : 1} strokeWidth={locked ? 0 : 2} />
-                        </button>
+                          )
+                        })}
                       </div>
-                    )
-                  })}
-                </div>
-              </article>
-            ))}
-          </section>
+                    </article>
+                  ))}
+                </section>
+              </div>
+            )}
+
+            {homeTab === 'courses' && (
+              <CourseSelector
+                courses={availableCourses}
+                activeCourseSlug={activeCourseSlug}
+                purchasedCourses={purchasedCourses}
+                gems={gems}
+                onSelect={(slug) => {
+                  setActiveCourseSlug(slug)
+                  setStartLessonId('')
+                  setCompletedLessons([])
+                  setHomeTab('learn')
+                }}
+                onPurchase={(course) => {
+                  if (gems >= course.price) {
+                    setGems(g => g - course.price)
+                    setPurchasedCourses(p => [...p, course.slug])
+                    setActiveCourseSlug(course.slug)
+                    setStartLessonId('')
+                    setCompletedLessons([])
+                    setHomeTab('learn')
+                  }
+                }}
+              />
+            )}
+
+            {homeTab === 'shop' && (
+              <ShopScreen
+                gems={gems}
+                lives={lives}
+                maxLives={MAX_LIVES}
+                streakFreezeActive={streakFreezeActive}
+                confirmId={shopConfirmId}
+                onConfirmRequest={setShopConfirmId}
+                onBuyLifeRefill={() => {
+                  if (gems >= 100) {
+                    setGems(g => g - 100)
+                    setLives(MAX_LIVES)
+                    setShopConfirmId(null)
+                  }
+                }}
+                onBuyStreakFreeze={() => {
+                  if (gems >= 200) {
+                    setGems(g => g - 200)
+                    setStreakFreezeActive(true)
+                    setShopConfirmId(null)
+                  }
+                }}
+              />
+            )}
+
+            {homeTab === 'settings' && (
+              <SettingsScreen
+                userRecord={userRecord}
+                onLogout={logout}
+              />
+            )}
+          </div>
         </div>
 
         <FeedbackBar
@@ -1724,6 +1877,176 @@ function FeedbackBar({ visible, correct, message, onClose }: FeedbackBarProps) {
       </div>
       <button className="feedback-close" type="button" onClick={onClose} aria-label="Dismiss feedback">
         <X size={18} />
+      </button>
+    </div>
+  )
+}
+
+function TabBar({ activeTab, onTabChange }: { activeTab: HomeTab; onTabChange: (t: HomeTab) => void }) {
+  const tabs: { id: HomeTab; label: string; icon: React.ReactNode }[] = [
+    { id: 'learn', label: 'Learn', icon: <BookOpen size={22} /> },
+    { id: 'courses', label: 'Courses', icon: <Star size={22} /> },
+    { id: 'shop', label: 'Shop', icon: <ShoppingBag size={22} /> },
+    { id: 'settings', label: 'Settings', icon: <Settings size={22} /> },
+  ]
+  return (
+    <nav className="tab-bar" aria-label="Main navigation">
+      {tabs.map(tab => (
+        <button
+          key={tab.id}
+          className={`tab-bar-item ${activeTab === tab.id ? 'active' : ''}`}
+          type="button"
+          onClick={() => onTabChange(tab.id)}
+          aria-current={activeTab === tab.id ? 'page' : undefined}
+        >
+          {tab.icon}
+          <span className="tab-bar-label">{tab.label}</span>
+        </button>
+      ))}
+    </nav>
+  )
+}
+
+type ShopScreenProps = {
+  gems: number
+  lives: number
+  maxLives: number
+  streakFreezeActive: boolean
+  confirmId: string | null
+  onConfirmRequest: (id: string | null) => void
+  onBuyLifeRefill: () => void
+  onBuyStreakFreeze: () => void
+}
+
+function ShopScreen({ gems, lives, maxLives, streakFreezeActive, confirmId, onConfirmRequest, onBuyLifeRefill, onBuyStreakFreeze }: ShopScreenProps) {
+  return (
+    <div className="shop-screen">
+      <h2 className="shop-title">Shop</h2>
+      <div className="gem-balance">
+        <Gem size={20} />
+        <span>{gems} gems</span>
+      </div>
+
+      <div className="shop-items">
+        {SHOP_ITEMS.map(item => {
+          const canAfford = gems >= item.cost
+          const alreadyActive = item.id === 'streak-freeze' && streakFreezeActive
+          const alreadyFull = item.id === 'life-refill' && lives >= maxLives
+
+          return (
+            <div key={item.id} className="shop-item">
+              <div className="shop-item-icon">{item.icon}</div>
+              <div className="shop-item-info">
+                <div className="shop-item-label">{item.label}</div>
+                <div className="shop-item-desc">{item.description}</div>
+              </div>
+              <div className="shop-item-right">
+                <div className="shop-item-cost">
+                  <Gem size={14} />
+                  {item.cost}
+                </div>
+                {confirmId === item.id ? (
+                  <div className="shop-confirm">
+                    <button className="shop-btn shop-btn-confirm" onClick={() => {
+                      if (item.id === 'life-refill') onBuyLifeRefill()
+                      else if (item.id === 'streak-freeze') onBuyStreakFreeze()
+                    }}>Yes</button>
+                    <button className="shop-btn shop-btn-cancel" onClick={() => onConfirmRequest(null)}>No</button>
+                  </div>
+                ) : (
+                  <button
+                    className="shop-btn"
+                    disabled={!canAfford || alreadyActive || alreadyFull}
+                    onClick={() => onConfirmRequest(item.id)}
+                  >
+                    {alreadyFull ? 'Full' : alreadyActive ? 'Active' : 'Buy'}
+                  </button>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+type CourseSelectorProps = {
+  courses: AvailableCourse[]
+  activeCourseSlug: string
+  purchasedCourses: string[]
+  gems: number
+  onSelect: (slug: string) => void
+  onPurchase: (course: AvailableCourse) => void
+}
+
+function CourseSelector({ courses, activeCourseSlug, purchasedCourses, gems, onSelect, onPurchase }: CourseSelectorProps) {
+  return (
+    <div className="course-selector">
+      <h2 className="shop-title">Courses</h2>
+      <div className="course-list">
+        {courses.map(course => {
+          const owned = purchasedCourses.includes(course.slug)
+          const active = activeCourseSlug === course.slug
+          const canAfford = gems >= course.price
+
+          return (
+            <div key={course.id} className={`course-card ${active ? 'active' : ''}`} style={{ borderColor: active ? course.color : undefined }}>
+              <div className="course-card-dot" style={{ background: course.color }} />
+              <div className="course-card-info">
+                <div className="course-card-title">{course.title}</div>
+                <div className="course-card-desc">{course.description}</div>
+              </div>
+              <div className="course-card-action">
+                {active ? (
+                  <span className="course-active-badge">Active</span>
+                ) : owned ? (
+                  <button className="shop-btn" onClick={() => onSelect(course.slug)}>Switch</button>
+                ) : (
+                  <div style={{ textAlign: 'right' }}>
+                    <div className="shop-item-cost" style={{ marginBottom: 6 }}>
+                      <Gem size={14} />
+                      {course.price}
+                    </div>
+                    <button
+                      className="shop-btn"
+                      disabled={!canAfford}
+                      onClick={() => onPurchase(course)}
+                    >
+                      Unlock
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function SettingsScreen({ userRecord, onLogout }: { userRecord: RecordModel | null; onLogout: () => void }) {
+  return (
+    <div className="settings-screen">
+      <h2 className="shop-title">Settings</h2>
+      <div className="settings-card">
+        <div className="settings-row">
+          <span className="settings-label">Name</span>
+          <span className="settings-value">{userRecord?.name || '—'}</span>
+        </div>
+        <div className="settings-row">
+          <span className="settings-label">Username</span>
+          <span className="settings-value">{userRecord?.username || '—'}</span>
+        </div>
+        <div className="settings-row">
+          <span className="settings-label">Email</span>
+          <span className="settings-value">{userRecord?.email || '—'}</span>
+        </div>
+      </div>
+      <button className="logout-btn settings-logout" type="button" onClick={onLogout}>
+        <LogOut size={16} />
+        <span>Log Out</span>
       </button>
     </div>
   )

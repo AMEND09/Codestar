@@ -1,0 +1,1395 @@
+{
+  "units": [
+    {
+      "id": "pb-u1",
+      "number": 1,
+      "topic": "Hello, Python!",
+      "title": "Your First Lines of Code",
+      "lessons": [
+        {
+          "id": "pb-u1-l1",
+          "index": 1,
+          "title": "Lesson 1.1 — print()",
+          "conceptIntroduced": "print()",
+          "questions": [
+            {
+              "id": "pb-u1-l1-q1",
+              "index": 1,
+              "title": "What does print() do?",
+              "type": "multiple_choice",
+              "prompt": "What does `print('Hello')` do?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Displays Hello on the screen", "isCorrect": true },
+                { "key": "B", "text": "Saves Hello to a file", "isCorrect": false },
+                { "key": "C", "text": "Deletes the word Hello", "isCorrect": false }
+              ],
+              "correctAnswer": "A",
+              "feedback": "print() displays its argument on the screen. It is the most basic way to produce output in Python."
+            },
+            {
+              "id": "pb-u1-l1-q2",
+              "index": 2,
+              "title": "Which line prints Python?",
+              "type": "multiple_choice",
+              "prompt": "Which line outputs the word `Python`?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "display('Python')", "isCorrect": false },
+                { "key": "B", "text": "print('Python')", "isCorrect": true },
+                { "key": "C", "text": "show 'Python'", "isCorrect": false },
+                { "key": "D", "text": "output(Python)", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "In Python, print() is the function used to show output. Always wrap the text in quotes."
+            },
+            {
+              "id": "pb-u1-l1-q3",
+              "index": 3,
+              "title": "Fill in the blank",
+              "type": "fill_blank",
+              "prompt": "Complete the code to print `World`: `_____('World')`",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "print",
+              "feedback": "The function is called print. You call it with parentheses and pass the text inside quotes."
+            },
+            {
+              "id": "pb-u1-l1-q4",
+              "index": 4,
+              "title": "Trace the output",
+              "type": "multiple_choice",
+              "prompt": "What does this program print?",
+              "code": "print('Hello')\nprint('World')",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Hello World (on one line)", "isCorrect": false },
+                { "key": "B", "text": "Hello\\nWorld (on two lines)", "isCorrect": true },
+                { "key": "C", "text": "Nothing", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Each print() call starts on a new line. Two print calls produce two lines of output."
+            }
+          ]
+        },
+        {
+          "id": "pb-u1-l2",
+          "index": 2,
+          "title": "Lesson 1.2 — Comments & Syntax",
+          "conceptIntroduced": "Comments, basic syntax",
+          "questions": [
+            {
+              "id": "pb-u1-l2-q1",
+              "index": 1,
+              "title": "What is a comment?",
+              "type": "multiple_choice",
+              "prompt": "What is a comment in Python?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "A note that Python ignores when running", "isCorrect": true },
+                { "key": "B", "text": "A command that prints text", "isCorrect": false },
+                { "key": "C", "text": "An error message", "isCorrect": false }
+              ],
+              "correctAnswer": "A",
+              "feedback": "Comments are notes for humans — Python skips them when running your code."
+            },
+            {
+              "id": "pb-u1-l2-q2",
+              "index": 2,
+              "title": "Comment symbol",
+              "type": "multiple_choice",
+              "prompt": "Which line is a Python comment?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "// This is a note", "isCorrect": false },
+                { "key": "B", "text": "# This is a note", "isCorrect": true },
+                { "key": "C", "text": "/* This is a note */", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Python comments start with the # symbol. Everything after # on that line is ignored."
+            },
+            {
+              "id": "pb-u1-l2-q3",
+              "index": 3,
+              "title": "Fill in the comment",
+              "type": "fill_blank",
+              "prompt": "A Python comment starts with: `___ This is ignored`",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "#",
+              "feedback": "The # symbol marks the start of a comment in Python."
+            },
+            {
+              "id": "pb-u1-l2-q4",
+              "index": 4,
+              "title": "What runs?",
+              "type": "multiple_choice",
+              "prompt": "What does this code output?",
+              "code": "# Say hello\nprint('Hi!')",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Say hello", "isCorrect": false },
+                { "key": "B", "text": "Hi!", "isCorrect": true },
+                { "key": "C", "text": "Say hello\\nHi!", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "The comment # Say hello is ignored. Only print('Hi!') runs, so the output is Hi!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pb-u2",
+      "number": 2,
+      "topic": "Variables",
+      "title": "Storing Values",
+      "lessons": [
+        {
+          "id": "pb-u2-l1",
+          "index": 1,
+          "title": "Lesson 2.1 — Creating Variables",
+          "conceptIntroduced": "Variable assignment",
+          "questions": [
+            {
+              "id": "pb-u2-l1-q1",
+              "index": 1,
+              "title": "What is a variable?",
+              "type": "multiple_choice",
+              "prompt": "What is a variable in Python?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "A named box that stores a value", "isCorrect": true },
+                { "key": "B", "text": "A type of comment", "isCorrect": false },
+                { "key": "C", "text": "A built-in Python keyword", "isCorrect": false }
+              ],
+              "correctAnswer": "A",
+              "feedback": "A variable is like a labeled box. You give it a name, and it holds a value you can use later."
+            },
+            {
+              "id": "pb-u2-l1-q2",
+              "index": 2,
+              "title": "Assigning a value",
+              "type": "multiple_choice",
+              "prompt": "Which line correctly stores the number 10 in a variable named `score`?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "score == 10", "isCorrect": false },
+                { "key": "B", "text": "10 = score", "isCorrect": false },
+                { "key": "C", "text": "score = 10", "isCorrect": true }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Use a single = to assign a value. The variable name comes first, then = then the value."
+            },
+            {
+              "id": "pb-u2-l1-q3",
+              "index": 3,
+              "title": "Trace the output",
+              "type": "multiple_choice",
+              "prompt": "What does this code print?",
+              "code": "age = 25\nprint(age)",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "age", "isCorrect": false },
+                { "key": "B", "text": "25", "isCorrect": true },
+                { "key": "C", "text": "age = 25", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "print(age) prints the value stored in age, which is 25. Without quotes, Python looks up the variable."
+            },
+            {
+              "id": "pb-u2-l1-q4",
+              "index": 4,
+              "title": "Fill the assignment",
+              "type": "fill_blank",
+              "prompt": "Complete: `name ___ 'Alice'` to store the string in name",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "=",
+              "feedback": "A single = is the assignment operator. It stores the right-hand value into the left-hand variable."
+            }
+          ]
+        },
+        {
+          "id": "pb-u2-l2",
+          "index": 2,
+          "title": "Lesson 2.2 — Variable Names & Updates",
+          "conceptIntroduced": "Naming rules, updating variables",
+          "questions": [
+            {
+              "id": "pb-u2-l2-q1",
+              "index": 1,
+              "title": "Valid name?",
+              "type": "multiple_choice",
+              "prompt": "Which is a valid Python variable name?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "my age", "isCorrect": false },
+                { "key": "B", "text": "2fast", "isCorrect": false },
+                { "key": "C", "text": "my_age", "isCorrect": true }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Variable names cannot have spaces or start with a number. Use underscores instead of spaces."
+            },
+            {
+              "id": "pb-u2-l2-q2",
+              "index": 2,
+              "title": "Updating a variable",
+              "type": "multiple_choice",
+              "prompt": "What does this code print?",
+              "code": "x = 3\nx = x + 2\nprint(x)",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3", "isCorrect": false },
+                { "key": "B", "text": "5", "isCorrect": true },
+                { "key": "C", "text": "x + 2", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "x starts at 3, then x = x + 2 adds 2 to make 5. The new value is stored back in x."
+            },
+            {
+              "id": "pb-u2-l2-q3",
+              "index": 3,
+              "title": "Shorthand update",
+              "type": "multiple_choice",
+              "prompt": "What does `x += 4` do when `x` is 6?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Sets x to 4", "isCorrect": false },
+                { "key": "B", "text": "Sets x to 10", "isCorrect": true },
+                { "key": "C", "text": "Prints 10", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "x += 4 is shorthand for x = x + 4. Since x is 6, the result is 10."
+            },
+            {
+              "id": "pb-u2-l2-q4",
+              "index": 4,
+              "title": "Fill the shorthand",
+              "type": "fill_blank",
+              "prompt": "Shortcut to subtract 1 from x: `x ___ 1`",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "-=",
+              "feedback": "x -= 1 is shorthand for x = x - 1. It subtracts 1 from x and stores the result."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pb-u3",
+      "number": 3,
+      "topic": "Strings",
+      "title": "Working with Text",
+      "lessons": [
+        {
+          "id": "pb-u3-l1",
+          "index": 1,
+          "title": "Lesson 3.1 — Creating Strings",
+          "conceptIntroduced": "String literals, len()",
+          "questions": [
+            {
+              "id": "pb-u3-l1-q1",
+              "index": 1,
+              "title": "What is a string?",
+              "type": "multiple_choice",
+              "prompt": "What is a string in Python?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "A sequence of characters (text)", "isCorrect": true },
+                { "key": "B", "text": "A type of number", "isCorrect": false },
+                { "key": "C", "text": "A Python keyword", "isCorrect": false }
+              ],
+              "correctAnswer": "A",
+              "feedback": "A string is text data — a sequence of characters enclosed in quotes."
+            },
+            {
+              "id": "pb-u3-l1-q2",
+              "index": 2,
+              "title": "String length",
+              "type": "multiple_choice",
+              "prompt": "What does `len('code')` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3", "isCorrect": false },
+                { "key": "B", "text": "4", "isCorrect": true },
+                { "key": "C", "text": "'code'", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "len() counts the number of characters. 'code' has 4 characters: c, o, d, e."
+            },
+            {
+              "id": "pb-u3-l1-q3",
+              "index": 3,
+              "title": "String concatenation",
+              "type": "multiple_choice",
+              "prompt": "What does `'Hello' + ' World'` produce?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "HelloWorld", "isCorrect": false },
+                { "key": "B", "text": "Hello World", "isCorrect": true },
+                { "key": "C", "text": "Error", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "The + operator joins (concatenates) strings. The space is part of ' World' so the result is 'Hello World'."
+            },
+            {
+              "id": "pb-u3-l1-q4",
+              "index": 4,
+              "title": "Repeat a string",
+              "type": "multiple_choice",
+              "prompt": "What does `'ha' * 3` produce?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "ha 3", "isCorrect": false },
+                { "key": "B", "text": "hahaha", "isCorrect": true },
+                { "key": "C", "text": "3ha", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Multiplying a string by a number repeats it. 'ha' * 3 gives 'hahaha'."
+            }
+          ]
+        },
+        {
+          "id": "pb-u3-l2",
+          "index": 2,
+          "title": "Lesson 3.2 — String Methods",
+          "conceptIntroduced": ".upper(), .lower(), .strip()",
+          "questions": [
+            {
+              "id": "pb-u3-l2-q1",
+              "index": 1,
+              "title": "Upper case",
+              "type": "multiple_choice",
+              "prompt": "What does `'hello'.upper()` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "'Hello'", "isCorrect": false },
+                { "key": "B", "text": "'HELLO'", "isCorrect": true },
+                { "key": "C", "text": "'hello'", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": ".upper() converts every character to uppercase. 'hello' becomes 'HELLO'."
+            },
+            {
+              "id": "pb-u3-l2-q2",
+              "index": 2,
+              "title": "Strip whitespace",
+              "type": "multiple_choice",
+              "prompt": "What does `'  hi  '.strip()` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "'  hi  '", "isCorrect": false },
+                { "key": "B", "text": "'hi'", "isCorrect": true },
+                { "key": "C", "text": "''", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": ".strip() removes leading and trailing whitespace. '  hi  ' becomes 'hi'."
+            },
+            {
+              "id": "pb-u3-l2-q3",
+              "index": 3,
+              "title": "Lower case",
+              "type": "fill_blank",
+              "prompt": "`'Python'.lower()` returns: ___",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "python",
+              "feedback": ".lower() converts all characters to lowercase. 'Python' becomes 'python'."
+            },
+            {
+              "id": "pb-u3-l2-q4",
+              "index": 4,
+              "title": "Match string methods",
+              "type": "match_pairs",
+              "prompt": "Match each string method to what it does.",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "matchingPairs": [
+                { "left": ".upper()", "right": "Convert to ALL CAPS" },
+                { "left": ".lower()", "right": "Convert to all lowercase" },
+                { "left": ".strip()", "right": "Remove surrounding spaces" },
+                { "left": "len()", "right": "Count the characters" }
+              ],
+              "correctAnswer": "",
+              "feedback": "String methods let you transform text without changing the original variable."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pb-u4",
+      "number": 4,
+      "topic": "Numbers & Math",
+      "title": "Integers, Floats & Operators",
+      "lessons": [
+        {
+          "id": "pb-u4-l1",
+          "index": 1,
+          "title": "Lesson 4.1 — Int vs Float",
+          "conceptIntroduced": "int, float, type()",
+          "questions": [
+            {
+              "id": "pb-u4-l1-q1",
+              "index": 1,
+              "title": "What is an integer?",
+              "type": "multiple_choice",
+              "prompt": "Which of these is an integer (whole number)?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3.14", "isCorrect": false },
+                { "key": "B", "text": "42", "isCorrect": true },
+                { "key": "C", "text": "'42'", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Integers are whole numbers with no decimal point. 42 is an int; 3.14 is a float; '42' is a string."
+            },
+            {
+              "id": "pb-u4-l1-q2",
+              "index": 2,
+              "title": "Division result",
+              "type": "multiple_choice",
+              "prompt": "What does `7 / 2` return in Python 3?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3", "isCorrect": false },
+                { "key": "B", "text": "3.5", "isCorrect": true },
+                { "key": "C", "text": "4", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "In Python 3, / always gives a float result. 7 / 2 is 3.5, not 3."
+            },
+            {
+              "id": "pb-u4-l1-q3",
+              "index": 3,
+              "title": "Floor division",
+              "type": "multiple_choice",
+              "prompt": "What does `7 // 2` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3.5", "isCorrect": false },
+                { "key": "B", "text": "3", "isCorrect": true },
+                { "key": "C", "text": "4", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "// is floor division — it divides and rounds down to the nearest whole number. 7 // 2 is 3."
+            },
+            {
+              "id": "pb-u4-l1-q4",
+              "index": 4,
+              "title": "Modulo",
+              "type": "multiple_choice",
+              "prompt": "What does `10 % 3` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3", "isCorrect": false },
+                { "key": "B", "text": "1", "isCorrect": true },
+                { "key": "C", "text": "0", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "% is the modulo operator — it gives the remainder. 10 divided by 3 is 3 remainder 1."
+            }
+          ]
+        },
+        {
+          "id": "pb-u4-l2",
+          "index": 2,
+          "title": "Lesson 4.2 — Math Operators",
+          "conceptIntroduced": "**, %, operator order",
+          "questions": [
+            {
+              "id": "pb-u4-l2-q1",
+              "index": 1,
+              "title": "Exponent",
+              "type": "multiple_choice",
+              "prompt": "What does `2 ** 3` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "5", "isCorrect": false },
+                { "key": "B", "text": "6", "isCorrect": false },
+                { "key": "C", "text": "8", "isCorrect": true }
+              ],
+              "correctAnswer": "C",
+              "feedback": "** is the power operator. 2 ** 3 means 2 to the power of 3, which is 2×2×2 = 8."
+            },
+            {
+              "id": "pb-u4-l2-q2",
+              "index": 2,
+              "title": "Order of operations",
+              "type": "multiple_choice",
+              "prompt": "What does `2 + 3 * 4` evaluate to?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "20", "isCorrect": false },
+                { "key": "B", "text": "14", "isCorrect": true },
+                { "key": "C", "text": "10", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Python follows standard math order: multiplication before addition. 3 * 4 = 12, then 2 + 12 = 14."
+            },
+            {
+              "id": "pb-u4-l2-q3",
+              "index": 3,
+              "title": "Match operators",
+              "type": "match_pairs",
+              "prompt": "Match each operator to its meaning.",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "matchingPairs": [
+                { "left": "+", "right": "Addition" },
+                { "left": "**", "right": "Exponent (power)" },
+                { "left": "%", "right": "Remainder" },
+                { "left": "//", "right": "Floor division" }
+              ],
+              "correctAnswer": "",
+              "feedback": "Python has many math operators. Learning them all gives you powerful tools for calculations."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pb-u5",
+      "number": 5,
+      "topic": "Booleans & Comparisons",
+      "title": "True, False, and Conditions",
+      "lessons": [
+        {
+          "id": "pb-u5-l1",
+          "index": 1,
+          "title": "Lesson 5.1 — True and False",
+          "conceptIntroduced": "bool, comparison operators",
+          "questions": [
+            {
+              "id": "pb-u5-l1-q1",
+              "index": 1,
+              "title": "What is a Boolean?",
+              "type": "multiple_choice",
+              "prompt": "What type of value is `True` in Python?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "A string", "isCorrect": false },
+                { "key": "B", "text": "A Boolean", "isCorrect": true },
+                { "key": "C", "text": "An integer", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "True and False are Boolean values. They represent yes/no or on/off states."
+            },
+            {
+              "id": "pb-u5-l1-q2",
+              "index": 2,
+              "title": "Comparison result",
+              "type": "multiple_choice",
+              "prompt": "What does `5 > 3` evaluate to?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "True", "isCorrect": true },
+                { "key": "B", "text": "False", "isCorrect": false },
+                { "key": "C", "text": "5", "isCorrect": false }
+              ],
+              "correctAnswer": "A",
+              "feedback": "5 is greater than 3, so 5 > 3 evaluates to True."
+            },
+            {
+              "id": "pb-u5-l1-q3",
+              "index": 3,
+              "title": "Equality check",
+              "type": "multiple_choice",
+              "prompt": "What does `3 == 3` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3", "isCorrect": false },
+                { "key": "B", "text": "True", "isCorrect": true },
+                { "key": "C", "text": "False", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "== checks if two values are equal. Since 3 equals 3, the result is True."
+            },
+            {
+              "id": "pb-u5-l1-q4",
+              "index": 4,
+              "title": "not operator",
+              "type": "multiple_choice",
+              "prompt": "What does `not True` evaluate to?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "True", "isCorrect": false },
+                { "key": "B", "text": "False", "isCorrect": true },
+                { "key": "C", "text": "None", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "The `not` operator flips a Boolean. not True gives False."
+            }
+          ]
+        },
+        {
+          "id": "pb-u5-l2",
+          "index": 2,
+          "title": "Lesson 5.2 — and, or, not",
+          "conceptIntroduced": "Logical operators",
+          "questions": [
+            {
+              "id": "pb-u5-l2-q1",
+              "index": 1,
+              "title": "and operator",
+              "type": "multiple_choice",
+              "prompt": "What does `True and False` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "True", "isCorrect": false },
+                { "key": "B", "text": "False", "isCorrect": true },
+                { "key": "C", "text": "Error", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "`and` requires BOTH sides to be True. If either is False, the result is False."
+            },
+            {
+              "id": "pb-u5-l2-q2",
+              "index": 2,
+              "title": "or operator",
+              "type": "multiple_choice",
+              "prompt": "What does `False or True` return?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "True", "isCorrect": true },
+                { "key": "B", "text": "False", "isCorrect": false },
+                { "key": "C", "text": "None", "isCorrect": false }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`or` only needs ONE side to be True. False or True is True."
+            },
+            {
+              "id": "pb-u5-l2-q3",
+              "index": 3,
+              "title": "Match logic operators",
+              "type": "match_pairs",
+              "prompt": "Match each logical operator to its rule.",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "matchingPairs": [
+                { "left": "and", "right": "Both must be True" },
+                { "left": "or", "right": "At least one must be True" },
+                { "left": "not", "right": "Flips True to False" }
+              ],
+              "correctAnswer": "",
+              "feedback": "Logical operators combine or invert Boolean values. Master these to write powerful conditions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pb-u6",
+      "number": 6,
+      "topic": "If Statements",
+      "title": "Making Decisions",
+      "lessons": [
+        {
+          "id": "pb-u6-l1",
+          "index": 1,
+          "title": "Lesson 6.1 — Your First if",
+          "conceptIntroduced": "if keyword, indentation",
+          "questions": [
+            {
+              "id": "pb-u6-l1-q1",
+              "index": 1,
+              "title": "What keyword starts a condition?",
+              "type": "multiple_choice",
+              "prompt": "Which keyword starts a conditional statement in Python?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "when", "isCorrect": false },
+                { "key": "B", "text": "if", "isCorrect": true },
+                { "key": "C", "text": "check", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "The `if` keyword starts a conditional block. If the condition is True, the indented code runs."
+            },
+            {
+              "id": "pb-u6-l1-q2",
+              "index": 2,
+              "title": "Trace the if",
+              "type": "multiple_choice",
+              "prompt": "What does this print?",
+              "code": "x = 10\nif x > 5:\n    print('Big')",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Nothing", "isCorrect": false },
+                { "key": "B", "text": "Big", "isCorrect": true },
+                { "key": "C", "text": "x > 5", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "x is 10, which is greater than 5, so the condition is True and 'Big' is printed."
+            },
+            {
+              "id": "pb-u6-l1-q3",
+              "index": 3,
+              "title": "if-else",
+              "type": "multiple_choice",
+              "prompt": "What does this print?",
+              "code": "score = 40\nif score >= 50:\n    print('Pass')\nelse:\n    print('Fail')",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Pass", "isCorrect": false },
+                { "key": "B", "text": "Fail", "isCorrect": true },
+                { "key": "C", "text": "Pass\\nFail", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "40 is not >= 50, so the if-block is skipped and the else-block runs, printing 'Fail'."
+            },
+            {
+              "id": "pb-u6-l1-q4",
+              "index": 4,
+              "title": "Arrange an if-else",
+              "type": "arrange_blocks",
+              "prompt": "Arrange these lines to print 'cold' when temp < 15, else 'warm'.",
+              "code": "temp = 10\nif temp < 15:\n    print('cold')\nelse:\n    print('warm')",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "The if-block runs when the condition is True; the else-block runs otherwise.",
+              "rawMarkdown": "Blocks:\n```python\ntemp = 10\nif temp < 15:\n    print('cold')\nelse:\n    print('warm')\n```\n*Correct order:*\n```python\ntemp = 10\nif temp < 15:\n    print('cold')\nelse:\n    print('warm')\n```"
+            }
+          ]
+        },
+        {
+          "id": "pb-u6-l2",
+          "index": 2,
+          "title": "Lesson 6.2 — elif",
+          "conceptIntroduced": "elif for multiple branches",
+          "questions": [
+            {
+              "id": "pb-u6-l2-q1",
+              "index": 1,
+              "title": "elif meaning",
+              "type": "multiple_choice",
+              "prompt": "What does `elif` stand for?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "else if", "isCorrect": true },
+                { "key": "B", "text": "else in loop", "isCorrect": false },
+                { "key": "C", "text": "end if", "isCorrect": false }
+              ],
+              "correctAnswer": "A",
+              "feedback": "elif is short for 'else if'. It adds more conditions to check when the first `if` is False."
+            },
+            {
+              "id": "pb-u6-l2-q2",
+              "index": 2,
+              "title": "Trace elif",
+              "type": "multiple_choice",
+              "prompt": "What does this print?",
+              "code": "grade = 75\nif grade >= 90:\n    print('A')\nelif grade >= 70:\n    print('B')\nelse:\n    print('C')",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "A", "isCorrect": false },
+                { "key": "B", "text": "B", "isCorrect": true },
+                { "key": "C", "text": "C", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "75 is not >= 90, but 75 >= 70 is True, so the elif branch runs and prints 'B'."
+            },
+            {
+              "id": "pb-u6-l2-q3",
+              "index": 3,
+              "title": "Write a classifier",
+              "type": "code_challenge",
+              "prompt": "Write a function `classify(n)` that returns 'positive' if n > 0, 'negative' if n < 0, or 'zero' if n == 0.",
+              "code": "def classify(n):\n    # your code here\n    pass",
+              "functionName": "classify",
+              "tests": [
+                { "call": "classify(5)", "expected": "'positive'" },
+                { "call": "classify(-3)", "expected": "'negative'" },
+                { "call": "classify(0)", "expected": "'zero'" }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Use if/elif/else to check all three cases. Return the string that matches the condition."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pb-u7",
+      "number": 7,
+      "topic": "Lists & Loops",
+      "title": "Collections and Repetition",
+      "lessons": [
+        {
+          "id": "pb-u7-l1",
+          "index": 1,
+          "title": "Lesson 7.1 — Lists",
+          "conceptIntroduced": "List creation, indexing, len()",
+          "questions": [
+            {
+              "id": "pb-u7-l1-q1",
+              "index": 1,
+              "title": "List syntax",
+              "type": "multiple_choice",
+              "prompt": "Which correctly creates a list of three numbers?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "(1, 2, 3)", "isCorrect": false },
+                { "key": "B", "text": "{1, 2, 3}", "isCorrect": false },
+                { "key": "C", "text": "[1, 2, 3]", "isCorrect": true }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Lists use square brackets []. (1,2,3) is a tuple and {1,2,3} is a set."
+            },
+            {
+              "id": "pb-u7-l1-q2",
+              "index": 2,
+              "title": "List indexing",
+              "type": "multiple_choice",
+              "prompt": "What does `fruits[0]` return when `fruits = ['apple', 'banana', 'cherry']`?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "'banana'", "isCorrect": false },
+                { "key": "B", "text": "'apple'", "isCorrect": true },
+                { "key": "C", "text": "1", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Python lists are zero-indexed. Index 0 is the first item, so fruits[0] is 'apple'."
+            },
+            {
+              "id": "pb-u7-l1-q3",
+              "index": 3,
+              "title": "Append to list",
+              "type": "multiple_choice",
+              "prompt": "What does `.append()` do to a list?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Removes the last item", "isCorrect": false },
+                { "key": "B", "text": "Adds an item to the end", "isCorrect": true },
+                { "key": "C", "text": "Sorts the list", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": ".append() adds one item to the end of the list. It modifies the list in place."
+            },
+            {
+              "id": "pb-u7-l1-q4",
+              "index": 4,
+              "title": "Trace list operation",
+              "type": "multiple_choice",
+              "prompt": "What does this print?",
+              "code": "nums = [10, 20, 30]\nnums.append(40)\nprint(len(nums))",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3", "isCorrect": false },
+                { "key": "B", "text": "4", "isCorrect": true },
+                { "key": "C", "text": "40", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "The list starts with 3 items, then .append(40) adds one more. len() returns 4."
+            }
+          ]
+        },
+        {
+          "id": "pb-u7-l2",
+          "index": 2,
+          "title": "Lesson 7.2 — For Loops",
+          "conceptIntroduced": "for loop, range()",
+          "questions": [
+            {
+              "id": "pb-u7-l2-q1",
+              "index": 1,
+              "title": "For loop keyword",
+              "type": "multiple_choice",
+              "prompt": "Which keyword starts a loop that iterates over items?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "loop", "isCorrect": false },
+                { "key": "B", "text": "for", "isCorrect": true },
+                { "key": "C", "text": "repeat", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "The `for` keyword is used to loop. It goes through each item in a sequence one at a time."
+            },
+            {
+              "id": "pb-u7-l2-q2",
+              "index": 2,
+              "title": "Trace range loop",
+              "type": "multiple_choice",
+              "prompt": "How many times does this loop run?",
+              "code": "for i in range(4):\n    print(i)",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "3", "isCorrect": false },
+                { "key": "B", "text": "4", "isCorrect": true },
+                { "key": "C", "text": "5", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "range(4) produces 0, 1, 2, 3 — four values. The loop runs four times."
+            },
+            {
+              "id": "pb-u7-l2-q3",
+              "index": 3,
+              "title": "Loop over list",
+              "type": "multiple_choice",
+              "prompt": "What does this print?",
+              "code": "colors = ['red', 'green']\nfor c in colors:\n    print(c)",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "red green (on one line)", "isCorrect": false },
+                { "key": "B", "text": "red\\ngreen (on two lines)", "isCorrect": true },
+                { "key": "C", "text": "colors", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "The for loop prints each item on its own line: first 'red', then 'green'."
+            },
+            {
+              "id": "pb-u7-l2-q4",
+              "index": 4,
+              "title": "Arrange a loop",
+              "type": "arrange_blocks",
+              "prompt": "Arrange these lines to sum numbers 1 through 3.",
+              "code": "total = 0\nfor n in [1, 2, 3]:\n    total += n\nprint(total)",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "First initialize total, then loop and add each number, then print the final sum.",
+              "rawMarkdown": "Blocks:\n```python\ntotal = 0\nfor n in [1, 2, 3]:\n    total += n\nprint(total)\n```\n*Correct order:*\n```python\ntotal = 0\nfor n in [1, 2, 3]:\n    total += n\nprint(total)\n```"
+            }
+          ]
+        },
+        {
+          "id": "pb-u7-l3",
+          "index": 3,
+          "title": "Lesson 7.3 — While Loops",
+          "conceptIntroduced": "while loop, break",
+          "questions": [
+            {
+              "id": "pb-u7-l3-q1",
+              "index": 1,
+              "title": "While loop condition",
+              "type": "multiple_choice",
+              "prompt": "A while loop runs as long as its condition is…",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "False", "isCorrect": false },
+                { "key": "B", "text": "True", "isCorrect": true },
+                { "key": "C", "text": "None", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "A while loop keeps running as long as its condition evaluates to True."
+            },
+            {
+              "id": "pb-u7-l3-q2",
+              "index": 2,
+              "title": "Trace while",
+              "type": "multiple_choice",
+              "prompt": "What does this code print?",
+              "code": "i = 0\nwhile i < 3:\n    print(i)\n    i += 1",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "0 1 2 3", "isCorrect": false },
+                { "key": "B", "text": "0 1 2", "isCorrect": true },
+                { "key": "C", "text": "1 2 3", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "i starts at 0 and increments. When i reaches 3, the condition i < 3 is False and the loop stops."
+            },
+            {
+              "id": "pb-u7-l3-q3",
+              "index": 3,
+              "title": "break statement",
+              "type": "multiple_choice",
+              "prompt": "What does `break` do inside a loop?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Skips to the next iteration", "isCorrect": false },
+                { "key": "B", "text": "Exits the loop immediately", "isCorrect": true },
+                { "key": "C", "text": "Raises an error", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "`break` immediately exits the loop, skipping any remaining iterations."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pb-u8",
+      "number": 8,
+      "topic": "Functions",
+      "title": "Reusable Blocks of Code",
+      "lessons": [
+        {
+          "id": "pb-u8-l1",
+          "index": 1,
+          "title": "Lesson 8.1 — Defining Functions",
+          "conceptIntroduced": "def keyword, calling functions",
+          "questions": [
+            {
+              "id": "pb-u8-l1-q1",
+              "index": 1,
+              "title": "What keyword defines a function?",
+              "type": "multiple_choice",
+              "prompt": "Which keyword do you use to define a function in Python?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "function", "isCorrect": false },
+                { "key": "B", "text": "define", "isCorrect": false },
+                { "key": "C", "text": "def", "isCorrect": true }
+              ],
+              "correctAnswer": "C",
+              "feedback": "In Python, `def` is used to define a function. It stands for 'define'."
+            },
+            {
+              "id": "pb-u8-l1-q2",
+              "index": 2,
+              "title": "Trace a function call",
+              "type": "multiple_choice",
+              "prompt": "What does this print?",
+              "code": "def greet():\n    print('Hi!')\n\ngreet()",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Nothing", "isCorrect": false },
+                { "key": "B", "text": "greet()", "isCorrect": false },
+                { "key": "C", "text": "Hi!", "isCorrect": true }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Defining a function does not run it. Calling greet() runs the code inside and prints 'Hi!'."
+            },
+            {
+              "id": "pb-u8-l1-q3",
+              "index": 3,
+              "title": "Fill the def",
+              "type": "fill_blank",
+              "prompt": "Complete: `___ say_hello():` to define a function named say_hello",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "def",
+              "feedback": "Every function definition starts with the `def` keyword followed by the function name and parentheses."
+            }
+          ]
+        },
+        {
+          "id": "pb-u8-l2",
+          "index": 2,
+          "title": "Lesson 8.2 — Parameters & Return",
+          "conceptIntroduced": "Parameters, return values",
+          "questions": [
+            {
+              "id": "pb-u8-l2-q1",
+              "index": 1,
+              "title": "What is a parameter?",
+              "type": "multiple_choice",
+              "prompt": "In `def add(a, b):`, what are `a` and `b`?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "Return values", "isCorrect": false },
+                { "key": "B", "text": "Parameters (inputs to the function)", "isCorrect": true },
+                { "key": "C", "text": "Global variables", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Parameters are the inputs a function accepts. They are listed inside the parentheses in the def line."
+            },
+            {
+              "id": "pb-u8-l2-q2",
+              "index": 2,
+              "title": "Trace return",
+              "type": "multiple_choice",
+              "prompt": "What does this print?",
+              "code": "def add(a, b):\n    return a + b\n\nprint(add(3, 4))",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "a + b", "isCorrect": false },
+                { "key": "B", "text": "7", "isCorrect": true },
+                { "key": "C", "text": "3 4", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "add(3, 4) calls the function with a=3 and b=4. It returns 3+4=7, which is then printed."
+            },
+            {
+              "id": "pb-u8-l2-q3",
+              "index": 3,
+              "title": "Fill the return",
+              "type": "fill_blank",
+              "prompt": "Complete: `___ a * b` to send back the product",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "return",
+              "feedback": "The `return` keyword sends a value back to wherever the function was called from."
+            },
+            {
+              "id": "pb-u8-l2-q4",
+              "index": 4,
+              "title": "Write a square function",
+              "type": "code_challenge",
+              "prompt": "Write a function `square(n)` that returns n multiplied by itself.",
+              "code": "def square(n):\n    # your code here\n    pass",
+              "functionName": "square",
+              "tests": [
+                { "call": "square(3)", "expected": "9" },
+                { "call": "square(5)", "expected": "25" },
+                { "call": "square(0)", "expected": "0" }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "return n * n (or n ** 2) gives you n squared."
+            }
+          ]
+        },
+        {
+          "id": "pb-u8-l3",
+          "index": 3,
+          "title": "Lesson 8.3 — Putting It All Together",
+          "conceptIntroduced": "Combining all concepts",
+          "questions": [
+            {
+              "id": "pb-u8-l3-q1",
+              "index": 1,
+              "title": "Function with loop",
+              "type": "code_challenge",
+              "prompt": "Write a function `sum_list(nums)` that returns the sum of all numbers in the list.",
+              "code": "def sum_list(nums):\n    # your code here\n    pass",
+              "functionName": "sum_list",
+              "tests": [
+                { "call": "sum_list([1, 2, 3])", "expected": "6" },
+                { "call": "sum_list([10, 20])", "expected": "30" },
+                { "call": "sum_list([])", "expected": "0" }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Use a for loop and a running total variable. Start total at 0 and add each item."
+            },
+            {
+              "id": "pb-u8-l3-q2",
+              "index": 2,
+              "title": "Find max in list",
+              "type": "code_challenge",
+              "prompt": "Write a function `find_max(nums)` that returns the largest number in the list. Assume the list is non-empty.",
+              "code": "def find_max(nums):\n    # your code here\n    pass",
+              "functionName": "find_max",
+              "tests": [
+                { "call": "find_max([3, 1, 4, 1, 5])", "expected": "5" },
+                { "call": "find_max([7])", "expected": "7" },
+                { "call": "find_max([-1, -5, -2])", "expected": "-1" }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Start with best = nums[0], then loop through the rest and update best when you find a larger value."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "placementQuiz": [
+    {
+      "id": "pb-pq1",
+      "title": "Basic Output",
+      "prompt": "Which line prints the word Hello to the screen?",
+      "code": "",
+      "choices": [
+        { "id": "A", "text": "display('Hello')" },
+        { "id": "B", "text": "print('Hello')" },
+        { "id": "C", "text": "echo Hello" }
+      ],
+      "correctAnswer": "B",
+      "feedback": "In Python, print() is used to display output."
+    },
+    {
+      "id": "pb-pq2",
+      "title": "Variable Assignment",
+      "prompt": "Which line correctly stores 42 in a variable named `answer`?",
+      "code": "",
+      "choices": [
+        { "id": "A", "text": "answer == 42" },
+        { "id": "B", "text": "42 = answer" },
+        { "id": "C", "text": "answer = 42" }
+      ],
+      "correctAnswer": "C",
+      "feedback": "Use a single = to assign. Variable name goes on the left."
+    },
+    {
+      "id": "pb-pq3",
+      "title": "String Concatenation",
+      "prompt": "What does `'Py' + 'thon'` evaluate to?",
+      "code": "",
+      "choices": [
+        { "id": "A", "text": "'Python'" },
+        { "id": "B", "text": "'Py thon'" },
+        { "id": "C", "text": "Error" }
+      ],
+      "correctAnswer": "A",
+      "feedback": "The + operator joins strings together. 'Py' + 'thon' gives 'Python'."
+    },
+    {
+      "id": "pb-pq4",
+      "title": "List Indexing",
+      "prompt": "What does this code print?",
+      "code": "items = ['a', 'b', 'c']\nprint(items[1])",
+      "choices": [
+        { "id": "A", "text": "'a'" },
+        { "id": "B", "text": "'b'" },
+        { "id": "C", "text": "'c'" }
+      ],
+      "correctAnswer": "B",
+      "feedback": "Lists are zero-indexed. Index 1 is the second item, which is 'b'."
+    },
+    {
+      "id": "pb-pq5",
+      "title": "Boolean Result",
+      "prompt": "What does `10 > 5` evaluate to?",
+      "code": "",
+      "choices": [
+        { "id": "A", "text": "True" },
+        { "id": "B", "text": "False" },
+        { "id": "C", "text": "10" }
+      ],
+      "correctAnswer": "A",
+      "feedback": "10 is greater than 5, so the comparison evaluates to True."
+    },
+    {
+      "id": "pb-pq6",
+      "title": "For Loop Range",
+      "prompt": "How many times does `for i in range(3):` loop?",
+      "code": "",
+      "choices": [
+        { "id": "A", "text": "2" },
+        { "id": "B", "text": "3" },
+        { "id": "C", "text": "4" }
+      ],
+      "correctAnswer": "B",
+      "feedback": "range(3) produces 0, 1, 2 — exactly 3 values, so the loop runs 3 times."
+    },
+    {
+      "id": "pb-pq7",
+      "title": "Function Definition",
+      "prompt": "Which line correctly defines a function named `greet`?",
+      "code": "",
+      "choices": [
+        { "id": "A", "text": "function greet():" },
+        { "id": "B", "text": "def greet():" },
+        { "id": "C", "text": "define greet():" }
+      ],
+      "correctAnswer": "B",
+      "feedback": "Python uses the `def` keyword to define functions."
+    },
+    {
+      "id": "pb-pq8",
+      "title": "Return Value",
+      "prompt": "What does this print?",
+      "code": "def double(x):\n    return x * 2\n\nprint(double(5))",
+      "choices": [
+        { "id": "A", "text": "5" },
+        { "id": "B", "text": "10" },
+        { "id": "C", "text": "x * 2" }
+      ],
+      "correctAnswer": "B",
+      "feedback": "double(5) calls the function with x=5. It returns 5*2=10, which print() displays."
+    }
+  ]
+}
