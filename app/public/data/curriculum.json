@@ -1,0 +1,2954 @@
+{
+  "metadata": {
+    "title": "Codestar: Python DSA Curriculum",
+    "subtitle": "A Duolingo-Style Course for Data Structures & Algorithms",
+    "totalUnits": 12,
+    "totalLessons": 80,
+    "totalXp": 4400,
+    "philosophy": "Students encounter realistic code first, commit to an answer, and then receive targeted feedback."
+  },
+  "questionTypes": [
+    {
+      "type": "Trace the Output",
+      "description": "Given code, predict what it prints",
+      "cognitiveLevel": "Recognize"
+    },
+    {
+      "type": "Spot the Bug",
+      "description": "Find the error in broken code",
+      "cognitiveLevel": "Recognize"
+    },
+    {
+      "type": "Multiple Choice — Concept",
+      "description": "Choose the correct explanation",
+      "cognitiveLevel": "Recall"
+    },
+    {
+      "type": "Fill in the Blank",
+      "description": "Complete a missing piece of code",
+      "cognitiveLevel": "Recall"
+    },
+    {
+      "type": "Arrange the Blocks",
+      "description": "Drag/drop lines into correct order",
+      "cognitiveLevel": "Construct"
+    },
+    {
+      "type": "Fix the Code",
+      "description": "Edit broken code in a text editor",
+      "cognitiveLevel": "Construct"
+    },
+    {
+      "type": "Write from Scratch",
+      "description": "Write a function given a docstring",
+      "cognitiveLevel": "Produce"
+    },
+    {
+      "type": "Complexity Choice",
+      "description": "Choose the Big O for shown code",
+      "cognitiveLevel": "Analyze"
+    },
+    {
+      "type": "Match the Pairs",
+      "description": "Match data structures to their properties",
+      "cognitiveLevel": "Recognize"
+    }
+  ],
+  "overview": [
+    {
+      "unit": 1,
+      "topic": "Python Foundations for DSA",
+      "lessons": 6,
+      "xp": 200
+    },
+    {
+      "unit": 2,
+      "topic": "Arrays & Lists",
+      "lessons": 7,
+      "xp": 250
+    },
+    {
+      "unit": 3,
+      "topic": "Strings & Hashing",
+      "lessons": 6,
+      "xp": 250
+    },
+    {
+      "unit": 4,
+      "topic": "Stacks & Queues",
+      "lessons": 6,
+      "xp": 300
+    },
+    {
+      "unit": 5,
+      "topic": "Linked Lists",
+      "lessons": 7,
+      "xp": 350
+    },
+    {
+      "unit": 6,
+      "topic": "Recursion",
+      "lessons": 7,
+      "xp": 350
+    },
+    {
+      "unit": 7,
+      "topic": "Sorting Algorithms",
+      "lessons": 6,
+      "xp": 400
+    },
+    {
+      "unit": 8,
+      "topic": "Binary Search",
+      "lessons": 5,
+      "xp": 300
+    },
+    {
+      "unit": 9,
+      "topic": "Trees & BSTs",
+      "lessons": 8,
+      "xp": 450
+    },
+    {
+      "unit": 10,
+      "topic": "Graphs & BFS/DFS",
+      "lessons": 8,
+      "xp": 500
+    },
+    {
+      "unit": 11,
+      "topic": "Dynamic Programming",
+      "lessons": 8,
+      "xp": 550
+    },
+    {
+      "unit": 12,
+      "topic": "Advanced Patterns",
+      "lessons": 6,
+      "xp": 500
+    }
+  ],
+  "placementQuiz": [
+    {
+      "id": "placement-1",
+      "sourceUnit": 1,
+      "sourceLessonId": "u1-l1",
+      "sourceLessonTitle": "Lesson 1.1 — Lists and Indexing",
+      "title": "Trace the Output",
+      "prompt": "What does this print? (Choose all three outputs)",
+      "code": "nums = [10, 20, 30, 40, 50]\r\nprint(nums[1])\r\nprint(nums[-1])\r\nprint(nums[1:3])",
+      "choices": [
+        {
+          "id": "A",
+          "text": "`20`, `50`, `[20, 30]`"
+        },
+        {
+          "id": "B",
+          "text": "`10`, `40`, `[10, 20]`"
+        },
+        {
+          "id": "C",
+          "text": "`20`, `50`, `[20, 30, 40]`"
+        },
+        {
+          "id": "D",
+          "text": "`10`, `50`, `[20, 30]`"
+        }
+      ],
+      "correctAnswer": "A",
+      "feedback": "`nums[1]` is the *second* item — arrays start at 0. `nums[-1]` counts from the end. `nums[1:3]` means \"from index 1 up to (but not including) index 3.\"",
+      "xp": 10
+    },
+    {
+      "id": "placement-2",
+      "sourceUnit": 2,
+      "sourceLessonId": "u2-l1",
+      "sourceLessonTitle": "Lesson 2.1 — Two Pointers",
+      "title": "Trace the Output",
+      "prompt": "What prints?",
+      "code": "def is_palindrome(s):\r\n    left = 0\r\n    right = len(s) - 1\r\n    \r\n    while left < right:\r\n        if s[left] != s[right]:\r\n            return False\r\n        left += 1\r\n        right -= 1\r\n    \r\n    return True\r\n\r\nprint(is_palindrome(\"racecar\"))\r\nprint(is_palindrome(\"hello\"))",
+      "choices": [
+        {
+          "id": "A",
+          "text": "`True`, `True`"
+        },
+        {
+          "id": "B",
+          "text": "`True`, `False`"
+        },
+        {
+          "id": "C",
+          "text": "`False`, `False`"
+        },
+        {
+          "id": "D",
+          "text": "Error"
+        }
+      ],
+      "correctAnswer": "B",
+      "feedback": "Two pointers start at both ends and move inward. For \"racecar\": r=r, a=a, c=c — all match, so `True`. For \"hello\": h≠o, so `False` immediately.",
+      "xp": 10
+    },
+    {
+      "id": "placement-3",
+      "sourceUnit": 4,
+      "sourceLessonId": "u4-l1",
+      "sourceLessonTitle": "Lesson 4.1 — The Stack",
+      "title": "Trace the Output",
+      "prompt": "What prints?",
+      "code": "stack = []\r\n\r\nstack.append(1)\r\nstack.append(2)\r\nstack.append(3)\r\n\r\nprint(stack.pop())\r\nprint(stack.pop())\r\nstack.append(4)\r\nprint(stack)",
+      "choices": [
+        {
+          "id": "A",
+          "text": "`3`, `2`, `[1, 4]`"
+        },
+        {
+          "id": "B",
+          "text": "`1`, `2`, `[3, 4]`"
+        },
+        {
+          "id": "C",
+          "text": "`3`, `2`, `[4]`"
+        },
+        {
+          "id": "D",
+          "text": "`3`, `1`, `[2, 4]`"
+        }
+      ],
+      "correctAnswer": "A",
+      "feedback": "`list.append()` pushes to the top (end). `list.pop()` removes from the top (end). This is LIFO: last item pushed (3) is first popped.",
+      "xp": 10
+    },
+    {
+      "id": "placement-4",
+      "sourceUnit": 6,
+      "sourceLessonId": "u6-l1",
+      "sourceLessonTitle": "Lesson 6.1 — Base Case First",
+      "title": "Spot the Bug",
+      "prompt": "What happens when you run this?",
+      "code": "def countdown(n):\r\n    print(n)\r\n    countdown(n - 1)\r\n\r\ncountdown(5)",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Prints 5, 4, 3, 2, 1, 0"
+        },
+        {
+          "id": "B",
+          "text": "Prints 5, 4, 3, 2, 1"
+        },
+        {
+          "id": "C",
+          "text": "Prints 5 then crashes with RecursionError"
+        },
+        {
+          "id": "D",
+          "text": "Prints nothing"
+        }
+      ],
+      "correctAnswer": "C",
+      "feedback": "There's no base case — the function calls itself forever until Python hits its recursion limit (~1000 calls) and raises `RecursionError`. Add `if n <= 0: return` before the recursive call.",
+      "xp": 10
+    },
+    {
+      "id": "placement-5",
+      "sourceUnit": 8,
+      "sourceLessonId": "u8-l1",
+      "sourceLessonTitle": "Lesson 8.1 — Classic Binary Search",
+      "title": "Spot the Bug",
+      "prompt": "What is the bug?",
+      "code": "def binary_search(arr, target):\r\n    left = 0\r\n    right = len(arr)   # bug here\r\n    \r\n    while left < right:\r\n        mid = (left + right) // 2\r\n        if arr[mid] == target:\r\n            return mid\r\n        elif arr[mid] < target:\r\n            left = mid + 1\r\n        else:\r\n            right = mid - 1\r\n    \r\n    return -1",
+      "choices": [
+        {
+          "id": "A",
+          "text": "`mid` calculation could overflow"
+        },
+        {
+          "id": "B",
+          "text": "`right` should be `len(arr) - 1`"
+        },
+        {
+          "id": "C",
+          "text": "The while condition should be `<=`"
+        },
+        {
+          "id": "D",
+          "text": "`left = mid + 1` should be `left = mid`"
+        }
+      ],
+      "correctAnswer": "B",
+      "feedback": "`arr[len(arr)]` is out of bounds. `right` should start at `len(arr) - 1`. With `right = len(arr)`, the first `mid` calculation could yield an out-of-bounds index on the first pass.",
+      "xp": 10
+    },
+    {
+      "id": "placement-6",
+      "sourceUnit": 10,
+      "sourceLessonId": "u10-l1",
+      "sourceLessonTitle": "Lesson 10.1 — Graph Representations",
+      "title": "Multiple Choice — Concept",
+      "prompt": "Which representation uses less space for a sparse graph (few edges)?",
+      "code": "# Adjacency Matrix (n=4 nodes)\r\nmatrix = [\r\n    [0, 1, 0, 0],\r\n    [1, 0, 1, 1],\r\n    [0, 1, 0, 0],\r\n    [0, 1, 0, 0]\r\n]\r\n\r\n# Adjacency List (same graph)\r\nadj = {\r\n    0: [1],\r\n    1: [0, 2, 3],\r\n    2: [1],\r\n    3: [1]\r\n}",
+      "choices": [
+        {
+          "id": "A",
+          "text": "Adjacency Matrix — O(1) edge lookups"
+        },
+        {
+          "id": "B",
+          "text": "Adjacency List — O(V + E) vs O(V²)"
+        },
+        {
+          "id": "C",
+          "text": "Both use the same space"
+        },
+        {
+          "id": "D",
+          "text": "Adjacency Matrix — better for large graphs"
+        }
+      ],
+      "correctAnswer": "B",
+      "feedback": "",
+      "xp": 10
+    }
+  ],
+  "units": [
+    {
+      "id": "unit-1",
+      "number": 1,
+      "title": "Python Foundations for DSA",
+      "topic": "Python Foundations for DSA",
+      "lessonsPlanned": 6,
+      "xp": 200,
+      "description": "Students who already know Python basics can test out. The focus here is not general Python — it's the specific Python patterns that appear constantly in DSA.",
+      "lessons": [
+        {
+          "id": "u1-l1",
+          "unit": 1,
+          "index": 1,
+          "title": "Lesson 1.1 — Lists and Indexing",
+          "conceptIntroduced": "Zero-indexing, negative indexing, slicing",
+          "questions": [
+            {
+              "id": "u1-l1-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What does this print? (Choose all three outputs)",
+              "code": "nums = [10, 20, 30, 40, 50]\r\nprint(nums[1])\r\nprint(nums[-1])\r\nprint(nums[1:3])",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`20`, `50`, `[20, 30]`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`10`, `40`, `[10, 20]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`20`, `50`, `[20, 30, 40]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`10`, `50`, `[20, 30]`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`nums[1]` is the *second* item — arrays start at 0. `nums[-1]` counts from the end. `nums[1:3]` means \"from index 1 up to (but not including) index 3.\"",
+              "rawMarkdown": "```python\r\nnums = [10, 20, 30, 40, 50]\r\nprint(nums[1])\r\nprint(nums[-1])\r\nprint(nums[1:3])\r\n```\r\n*What does this print? (Choose all three outputs)*\r\n- A) `20`, `50`, `[20, 30]` ✅\r\n- B) `10`, `40`, `[10, 20]`\r\n- C) `20`, `50`, `[20, 30, 40]`\r\n- D) `10`, `50`, `[20, 30]`\r\n\r\n**Feedback (wrong):** `nums[1]` is the *second* item — arrays start at 0. `nums[-1]` counts from the end. `nums[1:3]` means \"from index 1 up to (but not including) index 3.\"\r\n\r\n---"
+            },
+            {
+              "id": "u1-l1-q2",
+              "index": 2,
+              "title": "Fill in the Blank",
+              "type": "fill_blank",
+              "prompt": "What goes in the blank?",
+              "code": "fruits = [\"apple\", \"banana\", \"cherry\", \"date\"]\r\n\r\n# Get the last item without knowing the length\r\nlast = fruits[____]",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "-1",
+              "feedback": "Negative indices count backward. `-1` always gives the last element regardless of list length — a pattern you'll use constantly.",
+              "rawMarkdown": "```python\r\nfruits = [\"apple\", \"banana\", \"cherry\", \"date\"]\r\n\r\n# Get the last item without knowing the length\r\nlast = fruits[____]\r\n```\r\n*What goes in the blank?*\r\n\r\n**Correct answer:** `-1`\r\n**Feedback:** Negative indices count backward. `-1` always gives the last element regardless of list length — a pattern you'll use constantly.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l1-q3",
+              "index": 3,
+              "title": "Spot the Bug",
+              "type": "spot_bug",
+              "prompt": "This crashes. Why?",
+              "code": "def get_middle(arr):\r\n    mid = len(arr) / 2\r\n    return arr[mid]\r\n\r\nprint(get_middle([1, 2, 3, 4, 5]))",
+              "functionName": "get_middle",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`len()` doesn't work on lists",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "List indices must be integers, but `/` returns a float",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "You can't divide by 2",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The function is missing a parameter",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Python's `/` operator always returns a float. `arr[2.5]` is invalid. Use `//` (integer division) for index math: `mid = len(arr) // 2`.",
+              "rawMarkdown": "```python\r\ndef get_middle(arr):\r\n    mid = len(arr) / 2\r\n    return arr[mid]\r\n\r\nprint(get_middle([1, 2, 3, 4, 5]))\r\n```\r\n*This crashes. Why?*\r\n- A) `len()` doesn't work on lists\r\n- B) List indices must be integers, but `/` returns a float ✅\r\n- C) You can't divide by 2\r\n- D) The function is missing a parameter\r\n\r\n**Feedback:** Python's `/` operator always returns a float. `arr[2.5]` is invalid. Use `//` (integer division) for index math: `mid = len(arr) // 2`.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l1-q4",
+              "index": 4,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "*Test cases run automatically on submit.*",
+              "code": "def first_and_last(arr):\r\n    \"\"\"\r\n    Given a list, return a new list containing\r\n    only the first and last elements.\r\n    \r\n    first_and_last([1, 2, 3, 4]) -> [1, 4]\r\n    first_and_last([7, 8])       -> [7, 8]\r\n    first_and_last([5])          -> [5, 5]\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "first_and_last",
+              "tests": [
+                {
+                  "call": "first_and_last([1, 2, 3, 4])",
+                  "expected": "[1, 4]"
+                },
+                {
+                  "call": "first_and_last([7, 8])",
+                  "expected": "[7, 8]"
+                },
+                {
+                  "call": "first_and_last([5])",
+                  "expected": "[5, 5]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef first_and_last(arr):\r\n    \"\"\"\r\n    Given a list, return a new list containing\r\n    only the first and last elements.\r\n    \r\n    first_and_last([1, 2, 3, 4]) -> [1, 4]\r\n    first_and_last([7, 8])       -> [7, 8]\r\n    first_and_last([5])          -> [5, 5]\r\n    \"\"\"\r\n    # your code here\r\n```\r\n**Test cases run automatically on submit.**\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Zero-indexing, negative indexing, slicing\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\nnums = [10, 20, 30, 40, 50]\r\nprint(nums[1])\r\nprint(nums[-1])\r\nprint(nums[1:3])\r\n```\r\n*What does this print? (Choose all three outputs)*\r\n- A) `20`, `50`, `[20, 30]` ✅\r\n- B) `10`, `40`, `[10, 20]`\r\n- C) `20`, `50`, `[20, 30, 40]`\r\n- D) `10`, `50`, `[20, 30]`\r\n\r\n**Feedback (wrong):** `nums[1]` is the *second* item — arrays start at 0. `nums[-1]` counts from the end. `nums[1:3]` means \"from index 1 up to (but not including) index 3.\"\r\n\r\n---\r\n\r\n**Question 2 — Fill in the Blank**\r\n```python\r\nfruits = [\"apple\", \"banana\", \"cherry\", \"date\"]\r\n\r\n# Get the last item without knowing the length\r\nlast = fruits[____]\r\n```\r\n*What goes in the blank?*\r\n\r\n**Correct answer:** `-1`\r\n**Feedback:** Negative indices count backward. `-1` always gives the last element regardless of list length — a pattern you'll use constantly.\r\n\r\n---\r\n\r\n**Question 3 — Spot the Bug**\r\n```python\r\ndef get_middle(arr):\r\n    mid = len(arr) / 2\r\n    return arr[mid]\r\n\r\nprint(get_middle([1, 2, 3, 4, 5]))\r\n```\r\n*This crashes. Why?*\r\n- A) `len()` doesn't work on lists\r\n- B) List indices must be integers, but `/` returns a float ✅\r\n- C) You can't divide by 2\r\n- D) The function is missing a parameter\r\n\r\n**Feedback:** Python's `/` operator always returns a float. `arr[2.5]` is invalid. Use `//` (integer division) for index math: `mid = len(arr) // 2`.\r\n\r\n---\r\n\r\n**Question 4 — Write from Scratch**\r\n```python\r\ndef first_and_last(arr):\r\n    \"\"\"\r\n    Given a list, return a new list containing\r\n    only the first and last elements.\r\n    \r\n    first_and_last([1, 2, 3, 4]) -> [1, 4]\r\n    first_and_last([7, 8])       -> [7, 8]\r\n    first_and_last([5])          -> [5, 5]\r\n    \"\"\"\r\n    # your code here\r\n```\r\n**Test cases run automatically on submit.**\r\n\r\n---"
+        },
+        {
+          "id": "u1-l2",
+          "unit": 1,
+          "index": 2,
+          "title": "Lesson 1.2 — Loops and Iteration Patterns",
+          "conceptIntroduced": "`for` loops, `range()`, `enumerate()`, `while` loops",
+          "questions": [
+            {
+              "id": "u1-l2-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What does this print?",
+              "code": "total = 0\r\nnumbers = [3, 1, 4, 1, 5]\r\n\r\nfor i, num in enumerate(numbers):\r\n    if i % 2 == 0:\r\n        total += num\r\n\r\nprint(total)",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`14`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`12`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`5`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`9`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "`enumerate` gives both the index `i` and value `num`. `i % 2 == 0` is true for indices 0, 2, 4 — so we add `numbers[0]=3`, `numbers[2]=4`, `numbers[4]=5`. Total = 12.",
+              "rawMarkdown": "```python\r\ntotal = 0\r\nnumbers = [3, 1, 4, 1, 5]\r\n\r\nfor i, num in enumerate(numbers):\r\n    if i % 2 == 0:\r\n        total += num\r\n\r\nprint(total)\r\n```\r\n*What does this print?*\r\n- A) `14`\r\n- B) `12` ✅\r\n- C) `5`\r\n- D) `9`\r\n\r\n**Feedback:** `enumerate` gives both the index `i` and value `num`. `i % 2 == 0` is true for indices 0, 2, 4 — so we add `numbers[0]=3`, `numbers[2]=4`, `numbers[4]=5`. Total = 12.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l2-q2",
+              "index": 2,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Put these lines in order to print all even numbers from 0 to 8 (inclusive):",
+              "code": "print(i)\r\nfor i in range(0, 10, 2):",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "`range(start, stop, step)` — the third argument is the step size. `range(0, 10, 2)` yields 0, 2, 4, 6, 8.",
+              "rawMarkdown": "*Put these lines in order to print all even numbers from 0 to 8 (inclusive):*\r\n\r\nBlocks:\r\n```\r\nprint(i)\r\nfor i in range(0, 10, 2):\r\n```\r\n*Correct order:*\r\n```python\r\nfor i in range(0, 10, 2):\r\n    print(i)\r\n```\r\n**Feedback:** `range(start, stop, step)` — the third argument is the step size. `range(0, 10, 2)` yields 0, 2, 4, 6, 8.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l2-q3",
+              "index": 3,
+              "title": "Fill in the Blank",
+              "type": "fill_blank",
+              "prompt": "",
+              "code": "# Print indices 0 through n-1 in reverse\r\nn = 5\r\n\r\nfor i in range(____, ____, ____):\r\n    print(i)\r\n\r\n# Expected output: 4, 3, 2, 1, 0",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "4, -1, -1",
+              "feedback": "`range(4, -1, -1)` starts at 4, stops before -1, and steps by -1. The stop must be -1 (not 0) to *include* 0 in the output.",
+              "rawMarkdown": "```python\r\n# Print indices 0 through n-1 in reverse\r\nn = 5\r\n\r\nfor i in range(____, ____, ____):\r\n    print(i)\r\n\r\n# Expected output: 4, 3, 2, 1, 0\r\n```\r\n**Correct answer:** `4, -1, -1`\r\n**Feedback:** `range(4, -1, -1)` starts at 4, stops before -1, and steps by -1. The stop must be -1 (not 0) to *include* 0 in the output.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l2-q4",
+              "index": 4,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def count_evens(arr):\r\n    \"\"\"\r\n    Return the count of even numbers in the list.\r\n    \r\n    count_evens([1, 2, 3, 4, 6]) -> 3\r\n    count_evens([1, 3, 5])       -> 0\r\n    count_evens([])              -> 0\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "count_evens",
+              "tests": [
+                {
+                  "call": "count_evens([1, 2, 3, 4, 6])",
+                  "expected": "3"
+                },
+                {
+                  "call": "count_evens([1, 3, 5])",
+                  "expected": "0"
+                },
+                {
+                  "call": "count_evens([])",
+                  "expected": "0"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef count_evens(arr):\r\n    \"\"\"\r\n    Return the count of even numbers in the list.\r\n    \r\n    count_evens([1, 2, 3, 4, 6]) -> 3\r\n    count_evens([1, 3, 5])       -> 0\r\n    count_evens([])              -> 0\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** `for` loops, `range()`, `enumerate()`, `while` loops\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\ntotal = 0\r\nnumbers = [3, 1, 4, 1, 5]\r\n\r\nfor i, num in enumerate(numbers):\r\n    if i % 2 == 0:\r\n        total += num\r\n\r\nprint(total)\r\n```\r\n*What does this print?*\r\n- A) `14`\r\n- B) `12` ✅\r\n- C) `5`\r\n- D) `9`\r\n\r\n**Feedback:** `enumerate` gives both the index `i` and value `num`. `i % 2 == 0` is true for indices 0, 2, 4 — so we add `numbers[0]=3`, `numbers[2]=4`, `numbers[4]=5`. Total = 12.\r\n\r\n---\r\n\r\n**Question 2 — Arrange the Blocks**\r\n\r\n*Put these lines in order to print all even numbers from 0 to 8 (inclusive):*\r\n\r\nBlocks:\r\n```\r\nprint(i)\r\nfor i in range(0, 10, 2):\r\n```\r\n*Correct order:*\r\n```python\r\nfor i in range(0, 10, 2):\r\n    print(i)\r\n```\r\n**Feedback:** `range(start, stop, step)` — the third argument is the step size. `range(0, 10, 2)` yields 0, 2, 4, 6, 8.\r\n\r\n---\r\n\r\n**Question 3 — Fill in the Blank**\r\n```python\r\n# Print indices 0 through n-1 in reverse\r\nn = 5\r\n\r\nfor i in range(____, ____, ____):\r\n    print(i)\r\n\r\n# Expected output: 4, 3, 2, 1, 0\r\n```\r\n**Correct answer:** `4, -1, -1`\r\n**Feedback:** `range(4, -1, -1)` starts at 4, stops before -1, and steps by -1. The stop must be -1 (not 0) to *include* 0 in the output.\r\n\r\n---\r\n\r\n**Question 4 — Write from Scratch**\r\n```python\r\ndef count_evens(arr):\r\n    \"\"\"\r\n    Return the count of even numbers in the list.\r\n    \r\n    count_evens([1, 2, 3, 4, 6]) -> 3\r\n    count_evens([1, 3, 5])       -> 0\r\n    count_evens([])              -> 0\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u1-l3",
+          "unit": 1,
+          "index": 3,
+          "title": "Lesson 1.3 — Dictionaries and Sets",
+          "conceptIntroduced": "Dict lookups, `.get()`, sets for O(1) membership",
+          "questions": [
+            {
+              "id": "u1-l3-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "scores = {\"alice\": 90, \"bob\": 75, \"carol\": 88}\r\n\r\nprint(scores.get(\"bob\"))\r\nprint(scores.get(\"dave\"))\r\nprint(scores.get(\"dave\", 0))",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`75`, `None`, `0`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`75`, `KeyError`, `0`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`75`, `0`, `0`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`75`, `None`, `None`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`.get(key)` returns `None` if the key doesn't exist — no crash. `.get(key, default)` returns the default instead of `None`. This is safer than `scores[\"dave\"]` which would raise `KeyError`.",
+              "rawMarkdown": "```python\r\nscores = {\"alice\": 90, \"bob\": 75, \"carol\": 88}\r\n\r\nprint(scores.get(\"bob\"))\r\nprint(scores.get(\"dave\"))\r\nprint(scores.get(\"dave\", 0))\r\n```\r\n*What prints?*\r\n- A) `75`, `None`, `0` ✅\r\n- B) `75`, `KeyError`, `0`\r\n- C) `75`, `0`, `0`\r\n- D) `75`, `None`, `None`\r\n\r\n**Feedback:** `.get(key)` returns `None` if the key doesn't exist — no crash. `.get(key, default)` returns the default instead of `None`. This is safer than `scores[\"dave\"]` which would raise `KeyError`.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l3-q2",
+              "index": 2,
+              "title": "Spot the Bug",
+              "type": "spot_bug",
+              "prompt": "This code has a bug. What is it?",
+              "code": "def has_duplicate(nums):\r\n    seen = {}\r\n    for num in nums:\r\n        if num in seen:\r\n            return True\r\n        seen.add(num)\r\n    return False",
+              "functionName": "has_duplicate",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "You can't use `in` with a dictionary",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Dictionaries don't have `.add()` — that's a set method",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The function should return `None`, not `False`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`seen` should be initialized as a list",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "`.add()` is a `set` method. Dicts use `seen[num] = True` (or any value). For this use case, a `set` is actually the better choice: `seen = set()` then `seen.add(num)`.",
+              "rawMarkdown": "```python\r\ndef has_duplicate(nums):\r\n    seen = {}\r\n    for num in nums:\r\n        if num in seen:\r\n            return True\r\n        seen.add(num)\r\n    return False\r\n```\r\n*This code has a bug. What is it?*\r\n- A) You can't use `in` with a dictionary\r\n- B) Dictionaries don't have `.add()` — that's a set method ✅\r\n- C) The function should return `None`, not `False`\r\n- D) `seen` should be initialized as a list\r\n\r\n**Feedback:** `.add()` is a `set` method. Dicts use `seen[num] = True` (or any value). For this use case, a `set` is actually the better choice: `seen = set()` then `seen.add(num)`.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l3-q3",
+              "index": 3,
+              "title": "Complexity Choice",
+              "type": "complexity_choice",
+              "prompt": "What are the time complexities of `two_sum_slow` and `two_sum_fast`?",
+              "code": "def two_sum_slow(nums, target):\r\n    for i in range(len(nums)):\r\n        for j in range(i + 1, len(nums)):\r\n            if nums[i] + nums[j] == target:\r\n                return [i, j]\r\n    return []\r\n\r\n\r\ndef two_sum_fast(nums, target):\r\n    seen = {}\r\n    for i, num in enumerate(nums):\r\n        complement = target - num\r\n        if complement in seen:\r\n            return [seen[complement], i]\r\n        seen[num] = i\r\n    return []",
+              "functionName": "two_sum_slow",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "O(n²) and O(n)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "O(n) and O(1)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "O(n²) and O(n²)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "O(n log n) and O(n)",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "The nested loop in `two_sum_slow` is O(n²). `two_sum_fast` uses a hash map — each lookup is O(1), and we do it once per element, giving O(n) overall. This is a fundamental DSA trade-off: space for speed.",
+              "rawMarkdown": "```python\r\ndef two_sum_slow(nums, target):\r\n    for i in range(len(nums)):\r\n        for j in range(i + 1, len(nums)):\r\n            if nums[i] + nums[j] == target:\r\n                return [i, j]\r\n    return []\r\n\r\n\r\ndef two_sum_fast(nums, target):\r\n    seen = {}\r\n    for i, num in enumerate(nums):\r\n        complement = target - num\r\n        if complement in seen:\r\n            return [seen[complement], i]\r\n        seen[num] = i\r\n    return []\r\n```\r\n*What are the time complexities of `two_sum_slow` and `two_sum_fast`?*\r\n- A) O(n²) and O(n) ✅\r\n- B) O(n) and O(1)\r\n- C) O(n²) and O(n²)\r\n- D) O(n log n) and O(n)\r\n\r\n**Feedback:** The nested loop in `two_sum_slow` is O(n²). `two_sum_fast` uses a hash map — each lookup is O(1), and we do it once per element, giving O(n) overall. This is a fundamental DSA trade-off: space for speed.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l3-q4",
+              "index": 4,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def word_frequency(sentence):\r\n    \"\"\"\r\n    Return a dictionary mapping each word to the\r\n    number of times it appears in the sentence.\r\n    \r\n    word_frequency(\"the cat sat on the mat\")\r\n    -> {\"the\": 2, \"cat\": 1, \"sat\": 1, \"on\": 1, \"mat\": 1}\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "word_frequency",
+              "tests": [
+                {
+                  "call": "word_frequency(\"the cat sat on the mat\")",
+                  "expected": "{\"the\": 2, \"cat\": 1, \"sat\": 1, \"on\": 1, \"mat\": 1}"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef word_frequency(sentence):\r\n    \"\"\"\r\n    Return a dictionary mapping each word to the\r\n    number of times it appears in the sentence.\r\n    \r\n    word_frequency(\"the cat sat on the mat\")\r\n    -> {\"the\": 2, \"cat\": 1, \"sat\": 1, \"on\": 1, \"mat\": 1}\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Dict lookups, `.get()`, sets for O(1) membership\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\nscores = {\"alice\": 90, \"bob\": 75, \"carol\": 88}\r\n\r\nprint(scores.get(\"bob\"))\r\nprint(scores.get(\"dave\"))\r\nprint(scores.get(\"dave\", 0))\r\n```\r\n*What prints?*\r\n- A) `75`, `None`, `0` ✅\r\n- B) `75`, `KeyError`, `0`\r\n- C) `75`, `0`, `0`\r\n- D) `75`, `None`, `None`\r\n\r\n**Feedback:** `.get(key)` returns `None` if the key doesn't exist — no crash. `.get(key, default)` returns the default instead of `None`. This is safer than `scores[\"dave\"]` which would raise `KeyError`.\r\n\r\n---\r\n\r\n**Question 2 — Spot the Bug**\r\n```python\r\ndef has_duplicate(nums):\r\n    seen = {}\r\n    for num in nums:\r\n        if num in seen:\r\n            return True\r\n        seen.add(num)\r\n    return False\r\n```\r\n*This code has a bug. What is it?*\r\n- A) You can't use `in` with a dictionary\r\n- B) Dictionaries don't have `.add()` — that's a set method ✅\r\n- C) The function should return `None`, not `False`\r\n- D) `seen` should be initialized as a list\r\n\r\n**Feedback:** `.add()` is a `set` method. Dicts use `seen[num] = True` (or any value). For this use case, a `set` is actually the better choice: `seen = set()` then `seen.add(num)`.\r\n\r\n---\r\n\r\n**Question 3 — Complexity Choice**\r\n```python\r\ndef two_sum_slow(nums, target):\r\n    for i in range(len(nums)):\r\n        for j in range(i + 1, len(nums)):\r\n            if nums[i] + nums[j] == target:\r\n                return [i, j]\r\n    return []\r\n\r\n\r\ndef two_sum_fast(nums, target):\r\n    seen = {}\r\n    for i, num in enumerate(nums):\r\n        complement = target - num\r\n        if complement in seen:\r\n            return [seen[complement], i]\r\n        seen[num] = i\r\n    return []\r\n```\r\n*What are the time complexities of `two_sum_slow` and `two_sum_fast`?*\r\n- A) O(n²) and O(n) ✅\r\n- B) O(n) and O(1)\r\n- C) O(n²) and O(n²)\r\n- D) O(n log n) and O(n)\r\n\r\n**Feedback:** The nested loop in `two_sum_slow` is O(n²). `two_sum_fast` uses a hash map — each lookup is O(1), and we do it once per element, giving O(n) overall. This is a fundamental DSA trade-off: space for speed.\r\n\r\n---\r\n\r\n**Question 4 — Write from Scratch**\r\n```python\r\ndef word_frequency(sentence):\r\n    \"\"\"\r\n    Return a dictionary mapping each word to the\r\n    number of times it appears in the sentence.\r\n    \r\n    word_frequency(\"the cat sat on the mat\")\r\n    -> {\"the\": 2, \"cat\": 1, \"sat\": 1, \"on\": 1, \"mat\": 1}\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u1-l4",
+          "unit": 1,
+          "index": 4,
+          "title": "Lesson 1.4 — Functions and Scope",
+          "conceptIntroduced": "Default args, return values, scope, helper functions",
+          "questions": [
+            {
+              "id": "u1-l4-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def greet(name, greeting=\"Hello\"):\r\n    return f\"{greeting}, {name}!\"\r\n\r\nprint(greet(\"Alice\"))\r\nprint(greet(\"Bob\", \"Hi\"))\r\nprint(greet(greeting=\"Hey\", name=\"Carol\"))",
+              "functionName": "greet",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`Hello, Alice!`, `Hi, Bob!`, `Hey, Carol!`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`Hello, Alice!`, `Hello, Bob!`, `Hey, Carol!`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "Error — can't use keyword arguments",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`Hello, Alice!`, `Hi, Bob!`, `Hey, name!`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef greet(name, greeting=\"Hello\"):\r\n    return f\"{greeting}, {name}!\"\r\n\r\nprint(greet(\"Alice\"))\r\nprint(greet(\"Bob\", \"Hi\"))\r\nprint(greet(greeting=\"Hey\", name=\"Carol\"))\r\n```\r\n*What prints?*\r\n- A) `Hello, Alice!`, `Hi, Bob!`, `Hey, Carol!` ✅\r\n- B) `Hello, Alice!`, `Hello, Bob!`, `Hey, Carol!`\r\n- C) Error — can't use keyword arguments\r\n- D) `Hello, Alice!`, `Hi, Bob!`, `Hey, name!`\r\n\r\n---"
+            },
+            {
+              "id": "u1-l4-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def clamp(value, min_val, max_val):\r\n    \"\"\"\r\n    Return value clamped between min_val and max_val.\r\n    If value < min_val, return min_val.\r\n    If value > max_val, return max_val.\r\n    Otherwise return value.\r\n    \r\n    clamp(5, 1, 10)  -> 5\r\n    clamp(-3, 1, 10) -> 1\r\n    clamp(15, 1, 10) -> 10\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "clamp",
+              "tests": [
+                {
+                  "call": "clamp(5, 1, 10)",
+                  "expected": "5"
+                },
+                {
+                  "call": "clamp(-3, 1, 10)",
+                  "expected": "1"
+                },
+                {
+                  "call": "clamp(15, 1, 10)",
+                  "expected": "10"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef clamp(value, min_val, max_val):\r\n    \"\"\"\r\n    Return value clamped between min_val and max_val.\r\n    If value < min_val, return min_val.\r\n    If value > max_val, return max_val.\r\n    Otherwise return value.\r\n    \r\n    clamp(5, 1, 10)  -> 5\r\n    clamp(-3, 1, 10) -> 1\r\n    clamp(15, 1, 10) -> 10\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Default args, return values, scope, helper functions\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\ndef greet(name, greeting=\"Hello\"):\r\n    return f\"{greeting}, {name}!\"\r\n\r\nprint(greet(\"Alice\"))\r\nprint(greet(\"Bob\", \"Hi\"))\r\nprint(greet(greeting=\"Hey\", name=\"Carol\"))\r\n```\r\n*What prints?*\r\n- A) `Hello, Alice!`, `Hi, Bob!`, `Hey, Carol!` ✅\r\n- B) `Hello, Alice!`, `Hello, Bob!`, `Hey, Carol!`\r\n- C) Error — can't use keyword arguments\r\n- D) `Hello, Alice!`, `Hi, Bob!`, `Hey, name!`\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef clamp(value, min_val, max_val):\r\n    \"\"\"\r\n    Return value clamped between min_val and max_val.\r\n    If value < min_val, return min_val.\r\n    If value > max_val, return max_val.\r\n    Otherwise return value.\r\n    \r\n    clamp(5, 1, 10)  -> 5\r\n    clamp(-3, 1, 10) -> 1\r\n    clamp(15, 1, 10) -> 10\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u1-l5",
+          "unit": 1,
+          "index": 5,
+          "title": "Lesson 1.5 — Big O Notation",
+          "conceptIntroduced": "O(1), O(n), O(n²), O(log n) — by recognition, not memorization",
+          "questions": [
+            {
+              "id": "u1-l5-q1",
+              "index": 1,
+              "title": "Complexity Choice",
+              "type": "match_pairs",
+              "prompt": "Match each function to its Big O:",
+              "code": "def mystery_a(arr):\r\n    return arr[0]\r\n\r\n\r\ndef mystery_b(arr):\r\n    for item in arr:\r\n        print(item)\r\n\r\n\r\ndef mystery_c(arr):\r\n    for i in arr:\r\n        for j in arr:\r\n            print(i, j)",
+              "functionName": "mystery_a",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "`mystery_a` always does one operation regardless of input size. `mystery_b` does *n* operations (one per element). `mystery_c`'s nested loops mean for every element, we visit every other element — n × n = n².",
+              "rawMarkdown": "```python\r\ndef mystery_a(arr):\r\n    return arr[0]\r\n\r\n\r\ndef mystery_b(arr):\r\n    for item in arr:\r\n        print(item)\r\n\r\n\r\ndef mystery_c(arr):\r\n    for i in arr:\r\n        for j in arr:\r\n            print(i, j)\r\n```\r\n*Match each function to its Big O:*\r\n- `mystery_a` → O(?) \r\n- `mystery_b` → O(?)\r\n- `mystery_c` → O(?)\r\n\r\n**Correct:** `O(1)`, `O(n)`, `O(n²)`\r\n**Feedback:** `mystery_a` always does one operation regardless of input size. `mystery_b` does *n* operations (one per element). `mystery_c`'s nested loops mean for every element, we visit every other element — n × n = n².\r\n\r\n---",
+              "matchingPairs": [
+                {
+                  "left": "mystery_a",
+                  "right": "O(1)"
+                },
+                {
+                  "left": "mystery_b",
+                  "right": "O(n)"
+                },
+                {
+                  "left": "mystery_c",
+                  "right": "O(n²)"
+                }
+              ]
+            },
+            {
+              "id": "u1-l5-q2",
+              "index": 2,
+              "title": "Multiple Choice — Concept",
+              "type": "multiple_choice",
+              "prompt": "You have a sorted list of 1,000,000 items. You search for a value. The algorithm halves the search space each step. After 20 steps, what's the maximum remaining search space?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "50,000 items",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "About 1 item",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "500,000 items",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "0 items",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "2²⁰ = 1,048,576 > 1,000,000. Binary search can find any element in at most 20 steps on a million-item list. This is O(log n) — and why sorted data structures are powerful.",
+              "rawMarkdown": "*You have a sorted list of 1,000,000 items. You search for a value. The algorithm halves the search space each step. After 20 steps, what's the maximum remaining search space?*\r\n- A) 50,000 items\r\n- B) About 1 item ✅\r\n- C) 500,000 items\r\n- D) 0 items\r\n\r\n**Feedback:** 2²⁰ = 1,048,576 > 1,000,000. Binary search can find any element in at most 20 steps on a million-item list. This is O(log n) — and why sorted data structures are powerful.\r\n\r\n---"
+            },
+            {
+              "id": "u1-l5-q3",
+              "index": 3,
+              "title": "Match the Pairs",
+              "type": "match_pairs",
+              "prompt": "Match the operation to its time complexity for a Python list:",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "*Match the operation to its time complexity for a Python list:*\r\n\r\n| Operation | Complexity |\r\n|-----------|-----------|\r\n| `arr.append(x)` | ? |\r\n| `arr.insert(0, x)` | ? |\r\n| `x in arr` | ? |\r\n| `arr[i]` | ? |\r\n\r\n**Correct:**\r\n- `append` → O(1) amortized\r\n- `insert(0, x)` → O(n) — shifts everything\r\n- `x in arr` → O(n) — linear scan\r\n- `arr[i]` → O(1) — direct memory access\r\n\r\n---",
+              "matchingPairs": [
+                {
+                  "left": "arr.append(x)",
+                  "right": "O(1) amortized"
+                },
+                {
+                  "left": "arr.insert(0, x)",
+                  "right": "O(n)"
+                },
+                {
+                  "left": "x in arr",
+                  "right": "O(n)"
+                },
+                {
+                  "left": "arr[i]",
+                  "right": "O(1)"
+                }
+              ]
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** O(1), O(n), O(n²), O(log n) — by recognition, not memorization\r\n\r\n**Question 1 — Complexity Choice**\r\n```python\r\ndef mystery_a(arr):\r\n    return arr[0]\r\n\r\n\r\ndef mystery_b(arr):\r\n    for item in arr:\r\n        print(item)\r\n\r\n\r\ndef mystery_c(arr):\r\n    for i in arr:\r\n        for j in arr:\r\n            print(i, j)\r\n```\r\n*Match each function to its Big O:*\r\n- `mystery_a` → O(?) \r\n- `mystery_b` → O(?)\r\n- `mystery_c` → O(?)\r\n\r\n**Correct:** `O(1)`, `O(n)`, `O(n²)`\r\n**Feedback:** `mystery_a` always does one operation regardless of input size. `mystery_b` does *n* operations (one per element). `mystery_c`'s nested loops mean for every element, we visit every other element — n × n = n².\r\n\r\n---\r\n\r\n**Question 2 — Multiple Choice — Concept**\r\n\r\n*You have a sorted list of 1,000,000 items. You search for a value. The algorithm halves the search space each step. After 20 steps, what's the maximum remaining search space?*\r\n- A) 50,000 items\r\n- B) About 1 item ✅\r\n- C) 500,000 items\r\n- D) 0 items\r\n\r\n**Feedback:** 2²⁰ = 1,048,576 > 1,000,000. Binary search can find any element in at most 20 steps on a million-item list. This is O(log n) — and why sorted data structures are powerful.\r\n\r\n---\r\n\r\n**Question 3 — Match the Pairs**\r\n\r\n*Match the operation to its time complexity for a Python list:*\r\n\r\n| Operation | Complexity |\r\n|-----------|-----------|\r\n| `arr.append(x)` | ? |\r\n| `arr.insert(0, x)` | ? |\r\n| `x in arr` | ? |\r\n| `arr[i]` | ? |\r\n\r\n**Correct:**\r\n- `append` → O(1) amortized\r\n- `insert(0, x)` → O(n) — shifts everything\r\n- `x in arr` → O(n) — linear scan\r\n- `arr[i]` → O(1) — direct memory access\r\n\r\n---"
+        },
+        {
+          "id": "u1-l6",
+          "unit": 1,
+          "index": 6,
+          "title": "Lesson 1.6 — Unit 1 Review + Test Out",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*A 10-question mix of all Lesson 1.1–1.5 types. Passing (≥80%) unlocks Unit 2. A perfect score awards the \"Pythonista\" badge.*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-2",
+      "number": 2,
+      "title": "Arrays & Lists",
+      "topic": "Arrays & Lists",
+      "lessonsPlanned": 7,
+      "xp": 250,
+      "description": "The workhorse of DSA. Almost every problem touches arrays. This unit builds pattern recognition for the most common array techniques.",
+      "lessons": [
+        {
+          "id": "u2-l1",
+          "unit": 2,
+          "index": 1,
+          "title": "Lesson 2.1 — Two Pointers",
+          "conceptIntroduced": "Left/right pointers converging toward each other",
+          "questions": [
+            {
+              "id": "u2-l1-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def is_palindrome(s):\r\n    left = 0\r\n    right = len(s) - 1\r\n    \r\n    while left < right:\r\n        if s[left] != s[right]:\r\n            return False\r\n        left += 1\r\n        right -= 1\r\n    \r\n    return True\r\n\r\nprint(is_palindrome(\"racecar\"))\r\nprint(is_palindrome(\"hello\"))",
+              "functionName": "is_palindrome",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`True`, `True`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`True`, `False`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`False`, `False`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Error",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Two pointers start at both ends and move inward. For \"racecar\": r=r, a=a, c=c — all match, so `True`. For \"hello\": h≠o, so `False` immediately.",
+              "rawMarkdown": "```python\r\ndef is_palindrome(s):\r\n    left = 0\r\n    right = len(s) - 1\r\n    \r\n    while left < right:\r\n        if s[left] != s[right]:\r\n            return False\r\n        left += 1\r\n        right -= 1\r\n    \r\n    return True\r\n\r\nprint(is_palindrome(\"racecar\"))\r\nprint(is_palindrome(\"hello\"))\r\n```\r\n*What prints?*\r\n- A) `True`, `True`\r\n- B) `True`, `False` ✅\r\n- C) `False`, `False`\r\n- D) Error\r\n\r\n**Feedback:** Two pointers start at both ends and move inward. For \"racecar\": r=r, a=a, c=c — all match, so `True`. For \"hello\": h≠o, so `False` immediately.\r\n\r\n---"
+            },
+            {
+              "id": "u2-l1-q2",
+              "index": 2,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Build a function that reverses a list in-place using two pointers:",
+              "code": "def reverse_in_place(arr):\r\nright = len(arr) - 1\r\n    arr[left], arr[right] = arr[right], arr[left]\r\nleft = 0\r\n    while left < right:\r\n        left += 1\r\n        right -= 1",
+              "functionName": "reverse_in_place",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "*Build a function that reverses a list in-place using two pointers:*\r\n\r\nBlocks:\r\n```\r\ndef reverse_in_place(arr):\r\nright = len(arr) - 1\r\n    arr[left], arr[right] = arr[right], arr[left]\r\nleft = 0\r\n    while left < right:\r\n        left += 1\r\n        right -= 1\r\n```\r\n*Correct:*\r\n```python\r\ndef reverse_in_place(arr):\r\n    left = 0\r\n    right = len(arr) - 1\r\n    while left < right:\r\n        arr[left], arr[right] = arr[right], arr[left]\r\n        left += 1\r\n        right -= 1\r\n```\r\n\r\n---"
+            },
+            {
+              "id": "u2-l1-q3",
+              "index": 3,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def two_sum_sorted(nums, target):\r\n    \"\"\"\r\n    Given a SORTED list and a target, return the indices\r\n    (1-indexed) of the two numbers that add up to target.\r\n    Exactly one solution is guaranteed.\r\n    Use O(1) extra space.\r\n    \r\n    two_sum_sorted([2, 7, 11, 15], 9) -> [1, 2]\r\n    two_sum_sorted([2, 3, 4], 6)      -> [1, 3]\r\n    \"\"\"\r\n    # Hint: start with left=0, right=len(nums)-1\r\n    # your code here",
+              "functionName": "two_sum_sorted",
+              "tests": [
+                {
+                  "call": "two_sum_sorted([2, 7, 11, 15], 9)",
+                  "expected": "[1, 2]"
+                },
+                {
+                  "call": "two_sum_sorted([2, 3, 4], 6)",
+                  "expected": "[1, 3]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef two_sum_sorted(nums, target):\r\n    \"\"\"\r\n    Given a SORTED list and a target, return the indices\r\n    (1-indexed) of the two numbers that add up to target.\r\n    Exactly one solution is guaranteed.\r\n    Use O(1) extra space.\r\n    \r\n    two_sum_sorted([2, 7, 11, 15], 9) -> [1, 2]\r\n    two_sum_sorted([2, 3, 4], 6)      -> [1, 3]\r\n    \"\"\"\r\n    # Hint: start with left=0, right=len(nums)-1\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Left/right pointers converging toward each other\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\ndef is_palindrome(s):\r\n    left = 0\r\n    right = len(s) - 1\r\n    \r\n    while left < right:\r\n        if s[left] != s[right]:\r\n            return False\r\n        left += 1\r\n        right -= 1\r\n    \r\n    return True\r\n\r\nprint(is_palindrome(\"racecar\"))\r\nprint(is_palindrome(\"hello\"))\r\n```\r\n*What prints?*\r\n- A) `True`, `True`\r\n- B) `True`, `False` ✅\r\n- C) `False`, `False`\r\n- D) Error\r\n\r\n**Feedback:** Two pointers start at both ends and move inward. For \"racecar\": r=r, a=a, c=c — all match, so `True`. For \"hello\": h≠o, so `False` immediately.\r\n\r\n---\r\n\r\n**Question 2 — Arrange the Blocks**\r\n\r\n*Build a function that reverses a list in-place using two pointers:*\r\n\r\nBlocks:\r\n```\r\ndef reverse_in_place(arr):\r\nright = len(arr) - 1\r\n    arr[left], arr[right] = arr[right], arr[left]\r\nleft = 0\r\n    while left < right:\r\n        left += 1\r\n        right -= 1\r\n```\r\n*Correct:*\r\n```python\r\ndef reverse_in_place(arr):\r\n    left = 0\r\n    right = len(arr) - 1\r\n    while left < right:\r\n        arr[left], arr[right] = arr[right], arr[left]\r\n        left += 1\r\n        right -= 1\r\n```\r\n\r\n---\r\n\r\n**Question 3 — Write from Scratch**\r\n```python\r\ndef two_sum_sorted(nums, target):\r\n    \"\"\"\r\n    Given a SORTED list and a target, return the indices\r\n    (1-indexed) of the two numbers that add up to target.\r\n    Exactly one solution is guaranteed.\r\n    Use O(1) extra space.\r\n    \r\n    two_sum_sorted([2, 7, 11, 15], 9) -> [1, 2]\r\n    two_sum_sorted([2, 3, 4], 6)      -> [1, 3]\r\n    \"\"\"\r\n    # Hint: start with left=0, right=len(nums)-1\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u2-l2",
+          "unit": 2,
+          "index": 2,
+          "title": "Lesson 2.2 — Sliding Window",
+          "conceptIntroduced": "A window that moves through an array without restarting",
+          "questions": [
+            {
+              "id": "u2-l2-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def max_sum_subarray(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    \r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    \r\n    return max_sum\r\n\r\nprint(max_sum_subarray([2, 1, 5, 1, 3, 2], 3))",
+              "functionName": "max_sum_subarray",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`5`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`9`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`8`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`6`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Instead of re-summing each window (O(n·k)), we slide: subtract the element leaving the window, add the element entering. Windows of size 3: [2,1,5]=8, [1,5,1]=7, [5,1,3]=9, [1,3,2]=6. Max is 9.",
+              "rawMarkdown": "```python\r\ndef max_sum_subarray(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    \r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    \r\n    return max_sum\r\n\r\nprint(max_sum_subarray([2, 1, 5, 1, 3, 2], 3))\r\n```\r\n*What prints?*\r\n- A) `5`\r\n- B) `9` ✅\r\n- C) `8`\r\n- D) `6`\r\n\r\n**Feedback:** Instead of re-summing each window (O(n·k)), we slide: subtract the element leaving the window, add the element entering. Windows of size 3: [2,1,5]=8, [1,5,1]=7, [5,1,3]=9, [1,3,2]=6. Max is 9.\r\n\r\n---"
+            },
+            {
+              "id": "u2-l2-q2",
+              "index": 2,
+              "title": "Complexity Choice",
+              "type": "complexity_choice",
+              "prompt": "What are their time complexities?",
+              "code": "# Version A\r\ndef max_sum_brute(arr, k):\r\n    max_sum = 0\r\n    for i in range(len(arr) - k + 1):\r\n        window_sum = sum(arr[i:i+k])\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum\r\n\r\n\r\n# Version B\r\ndef max_sum_sliding(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum",
+              "functionName": "max_sum_brute",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Both O(n)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "O(n·k) and O(n)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "O(n²) and O(n log n)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "O(n·k) and O(k)",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "",
+              "rawMarkdown": "```python\r\n# Version A\r\ndef max_sum_brute(arr, k):\r\n    max_sum = 0\r\n    for i in range(len(arr) - k + 1):\r\n        window_sum = sum(arr[i:i+k])\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum\r\n\r\n\r\n# Version B\r\ndef max_sum_sliding(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum\r\n```\r\n*What are their time complexities?*\r\n- A) Both O(n)\r\n- B) O(n·k) and O(n) ✅\r\n- C) O(n²) and O(n log n)\r\n- D) O(n·k) and O(k)\r\n\r\n---"
+            },
+            {
+              "id": "u2-l2-q3",
+              "index": 3,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def longest_subarray_with_sum(arr, target):\r\n    \"\"\"\r\n    Return the length of the longest contiguous subarray\r\n    whose elements sum to exactly target.\r\n    Return 0 if none exists.\r\n    \r\n    longest_subarray_with_sum([1, 2, 3, 1, 1], 3) -> 3  ([1,2] or [3] or [1,1,1])\r\n    longest_subarray_with_sum([1, -1, 5, -2, 3], 3) -> 4\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "longest_subarray_with_sum",
+              "tests": [
+                {
+                  "call": "longest_subarray_with_sum([1, 2, 3, 1, 1], 3)",
+                  "expected": "3  ([1,2] or [3] or [1,1,1])"
+                },
+                {
+                  "call": "longest_subarray_with_sum([1, -1, 5, -2, 3], 3)",
+                  "expected": "4"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef longest_subarray_with_sum(arr, target):\r\n    \"\"\"\r\n    Return the length of the longest contiguous subarray\r\n    whose elements sum to exactly target.\r\n    Return 0 if none exists.\r\n    \r\n    longest_subarray_with_sum([1, 2, 3, 1, 1], 3) -> 3  ([1,2] or [3] or [1,1,1])\r\n    longest_subarray_with_sum([1, -1, 5, -2, 3], 3) -> 4\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** A window that moves through an array without restarting\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\ndef max_sum_subarray(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    \r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    \r\n    return max_sum\r\n\r\nprint(max_sum_subarray([2, 1, 5, 1, 3, 2], 3))\r\n```\r\n*What prints?*\r\n- A) `5`\r\n- B) `9` ✅\r\n- C) `8`\r\n- D) `6`\r\n\r\n**Feedback:** Instead of re-summing each window (O(n·k)), we slide: subtract the element leaving the window, add the element entering. Windows of size 3: [2,1,5]=8, [1,5,1]=7, [5,1,3]=9, [1,3,2]=6. Max is 9.\r\n\r\n---\r\n\r\n**Question 2 — Complexity Choice**\r\n```python\r\n# Version A\r\ndef max_sum_brute(arr, k):\r\n    max_sum = 0\r\n    for i in range(len(arr) - k + 1):\r\n        window_sum = sum(arr[i:i+k])\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum\r\n\r\n\r\n# Version B\r\ndef max_sum_sliding(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum\r\n```\r\n*What are their time complexities?*\r\n- A) Both O(n)\r\n- B) O(n·k) and O(n) ✅\r\n- C) O(n²) and O(n log n)\r\n- D) O(n·k) and O(k)\r\n\r\n---\r\n\r\n**Question 3 — Write from Scratch**\r\n```python\r\ndef longest_subarray_with_sum(arr, target):\r\n    \"\"\"\r\n    Return the length of the longest contiguous subarray\r\n    whose elements sum to exactly target.\r\n    Return 0 if none exists.\r\n    \r\n    longest_subarray_with_sum([1, 2, 3, 1, 1], 3) -> 3  ([1,2] or [3] or [1,1,1])\r\n    longest_subarray_with_sum([1, -1, 5, -2, 3], 3) -> 4\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u2-l3",
+          "unit": 2,
+          "index": 3,
+          "title": "Lesson 2.3 — Prefix Sums",
+          "conceptIntroduced": "Precompute running totals to answer range queries in O(1)",
+          "questions": [
+            {
+              "id": "u2-l3-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def build_prefix(arr):\r\n    prefix = [0] * (len(arr) + 1)\r\n    for i in range(len(arr)):\r\n        prefix[i + 1] = prefix[i] + arr[i]\r\n    return prefix\r\n\r\ndef range_sum(prefix, left, right):\r\n    return prefix[right + 1] - prefix[left]\r\n\r\narr = [3, 1, 4, 1, 5, 9]\r\nprefix = build_prefix(arr)\r\nprint(range_sum(prefix, 1, 3))\r\nprint(range_sum(prefix, 0, 5))",
+              "functionName": "build_prefix",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`6`, `23`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`5`, `23`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`6`, `22`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Error",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`prefix = [0, 3, 4, 8, 9, 14, 23]`. `range_sum(1, 3)` = prefix[4] - prefix[1] = 9 - 3 = 6 (sum of arr[1..3] = 1+4+1). `range_sum(0, 5)` = prefix[6] - prefix[0] = 23 - 0 = 23.",
+              "rawMarkdown": "```python\r\ndef build_prefix(arr):\r\n    prefix = [0] * (len(arr) + 1)\r\n    for i in range(len(arr)):\r\n        prefix[i + 1] = prefix[i] + arr[i]\r\n    return prefix\r\n\r\ndef range_sum(prefix, left, right):\r\n    return prefix[right + 1] - prefix[left]\r\n\r\narr = [3, 1, 4, 1, 5, 9]\r\nprefix = build_prefix(arr)\r\nprint(range_sum(prefix, 1, 3))\r\nprint(range_sum(prefix, 0, 5))\r\n```\r\n*What prints?*\r\n- A) `6`, `23` ✅\r\n- B) `5`, `23`\r\n- C) `6`, `22`\r\n- D) Error\r\n\r\n**Feedback:** `prefix = [0, 3, 4, 8, 9, 14, 23]`. `range_sum(1, 3)` = prefix[4] - prefix[1] = 9 - 3 = 6 (sum of arr[1..3] = 1+4+1). `range_sum(0, 5)` = prefix[6] - prefix[0] = 23 - 0 = 23.\r\n\r\n---"
+            },
+            {
+              "id": "u2-l3-q4",
+              "index": 4,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def subarray_sum_equals_k(nums, k):\r\n    \"\"\"\r\n    Return the count of contiguous subarrays\r\n    whose sum equals k.\r\n    \r\n    subarray_sum_equals_k([1, 1, 1], 2)    -> 2\r\n    subarray_sum_equals_k([1, 2, 3], 3)    -> 2\r\n    subarray_sum_equals_k([-1, -1, 1], 0)  -> 1\r\n    \r\n    Aim for O(n) using a prefix sum hash map.\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "subarray_sum_equals_k",
+              "tests": [
+                {
+                  "call": "subarray_sum_equals_k([1, 1, 1], 2)",
+                  "expected": "2"
+                },
+                {
+                  "call": "subarray_sum_equals_k([1, 2, 3], 3)",
+                  "expected": "2"
+                },
+                {
+                  "call": "subarray_sum_equals_k([-1, -1, 1], 0)",
+                  "expected": "1"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef subarray_sum_equals_k(nums, k):\r\n    \"\"\"\r\n    Return the count of contiguous subarrays\r\n    whose sum equals k.\r\n    \r\n    subarray_sum_equals_k([1, 1, 1], 2)    -> 2\r\n    subarray_sum_equals_k([1, 2, 3], 3)    -> 2\r\n    subarray_sum_equals_k([-1, -1, 1], 0)  -> 1\r\n    \r\n    Aim for O(n) using a prefix sum hash map.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Precompute running totals to answer range queries in O(1)\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\ndef build_prefix(arr):\r\n    prefix = [0] * (len(arr) + 1)\r\n    for i in range(len(arr)):\r\n        prefix[i + 1] = prefix[i] + arr[i]\r\n    return prefix\r\n\r\ndef range_sum(prefix, left, right):\r\n    return prefix[right + 1] - prefix[left]\r\n\r\narr = [3, 1, 4, 1, 5, 9]\r\nprefix = build_prefix(arr)\r\nprint(range_sum(prefix, 1, 3))\r\nprint(range_sum(prefix, 0, 5))\r\n```\r\n*What prints?*\r\n- A) `6`, `23` ✅\r\n- B) `5`, `23`\r\n- C) `6`, `22`\r\n- D) Error\r\n\r\n**Feedback:** `prefix = [0, 3, 4, 8, 9, 14, 23]`. `range_sum(1, 3)` = prefix[4] - prefix[1] = 9 - 3 = 6 (sum of arr[1..3] = 1+4+1). `range_sum(0, 5)` = prefix[6] - prefix[0] = 23 - 0 = 23.\r\n\r\n---\r\n\r\n**Question 4 — Write from Scratch**\r\n```python\r\ndef subarray_sum_equals_k(nums, k):\r\n    \"\"\"\r\n    Return the count of contiguous subarrays\r\n    whose sum equals k.\r\n    \r\n    subarray_sum_equals_k([1, 1, 1], 2)    -> 2\r\n    subarray_sum_equals_k([1, 2, 3], 3)    -> 2\r\n    subarray_sum_equals_k([-1, -1, 1], 0)  -> 1\r\n    \r\n    Aim for O(n) using a prefix sum hash map.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u2-l4",
+          "unit": 2,
+          "index": 4,
+          "title": "Lesson 2.4 — Kadane's Algorithm",
+          "conceptIntroduced": "Maximum subarray — a classic DP-like array pattern",
+          "questions": [
+            {
+              "id": "u2-l4-q1",
+              "index": 1,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Build Kadane's algorithm to find the maximum subarray sum:",
+              "code": "def max_subarray(nums):\r\n    max_sum = nums[0]\r\n    for num in nums[1:]:\r\n    current = nums[0]\r\n        current = max(num, current + num)\r\n        max_sum = max(max_sum, current)\r\n    return max_sum",
+              "functionName": "max_subarray",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "At each step we decide: extend the current subarray, or start fresh? `max(num, current + num)` captures that choice. If the running sum is worse than just the current number, restart.",
+              "rawMarkdown": "*Build Kadane's algorithm to find the maximum subarray sum:*\r\n\r\nBlocks:\r\n```\r\ndef max_subarray(nums):\r\n    max_sum = nums[0]\r\n    for num in nums[1:]:\r\n    current = nums[0]\r\n        current = max(num, current + num)\r\n        max_sum = max(max_sum, current)\r\n    return max_sum\r\n```\r\n*Correct:*\r\n```python\r\ndef max_subarray(nums):\r\n    current = nums[0]\r\n    max_sum = nums[0]\r\n    for num in nums[1:]:\r\n        current = max(num, current + num)\r\n        max_sum = max(max_sum, current)\r\n    return max_sum\r\n```\r\n**Feedback:** At each step we decide: extend the current subarray, or start fresh? `max(num, current + num)` captures that choice. If the running sum is worse than just the current number, restart.\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Maximum subarray — a classic DP-like array pattern\r\n\r\n**Question 1 — Arrange the Blocks**\r\n\r\n*Build Kadane's algorithm to find the maximum subarray sum:*\r\n\r\nBlocks:\r\n```\r\ndef max_subarray(nums):\r\n    max_sum = nums[0]\r\n    for num in nums[1:]:\r\n    current = nums[0]\r\n        current = max(num, current + num)\r\n        max_sum = max(max_sum, current)\r\n    return max_sum\r\n```\r\n*Correct:*\r\n```python\r\ndef max_subarray(nums):\r\n    current = nums[0]\r\n    max_sum = nums[0]\r\n    for num in nums[1:]:\r\n        current = max(num, current + num)\r\n        max_sum = max(max_sum, current)\r\n    return max_sum\r\n```\r\n**Feedback:** At each step we decide: extend the current subarray, or start fresh? `max(num, current + num)` captures that choice. If the running sum is worse than just the current number, restart.\r\n\r\n---"
+        },
+        {
+          "id": "u2-l5",
+          "unit": 2,
+          "index": 5,
+          "title": "Lesson 2.5 — Sorting Patterns on Arrays",
+          "conceptIntroduced": "Using sort order to simplify array problems",
+          "questions": [
+            {
+              "id": "u2-l5-q1",
+              "index": 1,
+              "title": "Spot the Bug",
+              "type": "spot_bug",
+              "prompt": "This crashes on line 6. Why?",
+              "code": "def merge_intervals(intervals):\r\n    intervals.sort()\r\n    merged = [intervals[0]]\r\n    \r\n    for start, end in intervals[1:]:\r\n        if start <= merged[-1][1]:\r\n            merged[-1][1] = max(merged[-1][1], end)\r\n        else:\r\n            merged.append([start, end])\r\n    \r\n    return merged\r\n\r\nprint(merge_intervals([[1, 3], [2, 6], [8, 10]]))",
+              "functionName": "merge_intervals",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "You can't sort a list of lists",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`merged[-1][1]` is read-only because tuples are immutable  (if using tuples) — but here it's because `intervals[0]` is a list reference",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`start` and `end` can't be unpacked from a list",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`merged.append` doesn't work with lists of lists",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B —",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef merge_intervals(intervals):\r\n    intervals.sort()\r\n    merged = [intervals[0]]\r\n    \r\n    for start, end in intervals[1:]:\r\n        if start <= merged[-1][1]:\r\n            merged[-1][1] = max(merged[-1][1], end)\r\n        else:\r\n            merged.append([start, end])\r\n    \r\n    return merged\r\n\r\nprint(merge_intervals([[1, 3], [2, 6], [8, 10]]))\r\n```\r\n*This crashes on line 6. Why?*\r\n- A) You can't sort a list of lists\r\n- B) `merged[-1][1]` is read-only because tuples are immutable ✅ (if using tuples) — but here it's because `intervals[0]` is a list reference\r\n- C) `start` and `end` can't be unpacked from a list\r\n- D) `merged.append` doesn't work with lists of lists\r\n\r\n**Correct answer:** B — `merged[-1][1] = ...` works if `merged[-1]` is a mutable list. The real bug is that `merged = [intervals[0]]` stores a *reference* to the original list. Use `merged = [list(intervals[0])]` to avoid mutating input.\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Using sort order to simplify array problems\r\n\r\n**Question 1 — Spot the Bug**\r\n```python\r\ndef merge_intervals(intervals):\r\n    intervals.sort()\r\n    merged = [intervals[0]]\r\n    \r\n    for start, end in intervals[1:]:\r\n        if start <= merged[-1][1]:\r\n            merged[-1][1] = max(merged[-1][1], end)\r\n        else:\r\n            merged.append([start, end])\r\n    \r\n    return merged\r\n\r\nprint(merge_intervals([[1, 3], [2, 6], [8, 10]]))\r\n```\r\n*This crashes on line 6. Why?*\r\n- A) You can't sort a list of lists\r\n- B) `merged[-1][1]` is read-only because tuples are immutable ✅ (if using tuples) — but here it's because `intervals[0]` is a list reference\r\n- C) `start` and `end` can't be unpacked from a list\r\n- D) `merged.append` doesn't work with lists of lists\r\n\r\n**Correct answer:** B — `merged[-1][1] = ...` works if `merged[-1]` is a mutable list. The real bug is that `merged = [intervals[0]]` stores a *reference* to the original list. Use `merged = [list(intervals[0])]` to avoid mutating input.\r\n\r\n---"
+        },
+        {
+          "id": "u2-l6",
+          "unit": 2,
+          "index": 6,
+          "title": "Lesson 2.6 — Write Real Code: Array Patterns",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*This lesson is all \"Write from Scratch\" questions covering the unit's patterns.*\r\n\r\n**Question 1**\r\n```python\r\ndef product_except_self(nums):\r\n    \"\"\"\r\n    Return a list where each element is the product of\r\n    all other elements. Do NOT use division. Aim for O(n).\r\n    \r\n    product_except_self([1, 2, 3, 4]) -> [24, 12, 8, 6]\r\n    product_except_self([2, 3, 4])    -> [12, 8, 6]\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n**Question 2**\r\n```python\r\ndef container_with_most_water(heights):\r\n    \"\"\"\r\n    Given a list of wall heights, find the two walls\r\n    that hold the most water (water = min height × distance).\r\n    Return the maximum water volume.\r\n    \r\n    container_with_most_water([1, 8, 6, 2, 5, 4, 8, 3, 7]) -> 49\r\n    \"\"\"\r\n    # Hint: two pointers from both ends\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u2-l7",
+          "unit": 2,
+          "index": 7,
+          "title": "Lesson 2.7 — Unit 2 Boss Level",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*A 12-question timed challenge mixing all question types. Problems mirror real interview questions.*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-3",
+      "number": 3,
+      "title": "Strings & Hashing",
+      "topic": "Strings & Hashing",
+      "lessonsPlanned": 6,
+      "xp": 250,
+      "description": "*Question 1 — Trace the Output",
+      "lessons": [
+        {
+          "id": "u3-l1",
+          "unit": 3,
+          "index": 1,
+          "title": "Lesson 3.1 — String Basics in Python",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u3-l1-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "s = \"Hello, World!\"\r\n\r\nprint(s.lower())\r\nprint(s[7:12])\r\nprint(s[::-1])\r\nprint(len(s))",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`hello, world!`, `World`, `!dlroW ,olleH`, `13`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`hello, world!`, `World!`, `!dlroW ,olleH`, `13`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`Hello, world!`, `World`, `!dlroW ,olleH`, `12`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`hello, world!`, `world`, `!dlrow ,olleh`, `13`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`s[7:12]` is indices 7 through 11 = \"World\" (no exclamation). `s[::-1]` uses step -1 to reverse the entire string.",
+              "rawMarkdown": "```python\r\ns = \"Hello, World!\"\r\n\r\nprint(s.lower())\r\nprint(s[7:12])\r\nprint(s[::-1])\r\nprint(len(s))\r\n```\r\n*What prints?*\r\n- A) `hello, world!`, `World`, `!dlroW ,olleH`, `13` ✅\r\n- B) `hello, world!`, `World!`, `!dlroW ,olleH`, `13`\r\n- C) `Hello, world!`, `World`, `!dlroW ,olleH`, `12`\r\n- D) `hello, world!`, `world`, `!dlrow ,olleh`, `13`\r\n\r\n**Feedback:** `s[7:12]` is indices 7 through 11 = \"World\" (no exclamation). `s[::-1]` uses step -1 to reverse the entire string.\r\n\r\n---"
+            },
+            {
+              "id": "u3-l1-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def is_anagram(s, t):\r\n    \"\"\"\r\n    Return True if t is an anagram of s (same letters, different order).\r\n    Both strings contain only lowercase letters.\r\n    \r\n    is_anagram(\"anagram\", \"nagaram\") -> True\r\n    is_anagram(\"rat\", \"car\")         -> False\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "is_anagram",
+              "tests": [
+                {
+                  "call": "is_anagram(\"anagram\", \"nagaram\")",
+                  "expected": "True"
+                },
+                {
+                  "call": "is_anagram(\"rat\", \"car\")",
+                  "expected": "False"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef is_anagram(s, t):\r\n    \"\"\"\r\n    Return True if t is an anagram of s (same letters, different order).\r\n    Both strings contain only lowercase letters.\r\n    \r\n    is_anagram(\"anagram\", \"nagaram\") -> True\r\n    is_anagram(\"rat\", \"car\")         -> False\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Trace the Output**\r\n```python\r\ns = \"Hello, World!\"\r\n\r\nprint(s.lower())\r\nprint(s[7:12])\r\nprint(s[::-1])\r\nprint(len(s))\r\n```\r\n*What prints?*\r\n- A) `hello, world!`, `World`, `!dlroW ,olleH`, `13` ✅\r\n- B) `hello, world!`, `World!`, `!dlroW ,olleH`, `13`\r\n- C) `Hello, world!`, `World`, `!dlroW ,olleH`, `12`\r\n- D) `hello, world!`, `world`, `!dlrow ,olleh`, `13`\r\n\r\n**Feedback:** `s[7:12]` is indices 7 through 11 = \"World\" (no exclamation). `s[::-1]` uses step -1 to reverse the entire string.\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef is_anagram(s, t):\r\n    \"\"\"\r\n    Return True if t is an anagram of s (same letters, different order).\r\n    Both strings contain only lowercase letters.\r\n    \r\n    is_anagram(\"anagram\", \"nagaram\") -> True\r\n    is_anagram(\"rat\", \"car\")         -> False\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u3-l2",
+          "unit": 3,
+          "index": 2,
+          "title": "Lesson 3.2 — Hash Maps for String Problems",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u3-l2-q1",
+              "index": 1,
+              "title": "Complexity Choice",
+              "type": "complexity_choice",
+              "prompt": "What is the time complexity of each?",
+              "code": "def has_unique_chars_v1(s):\r\n    seen = set()\r\n    for ch in s:\r\n        if ch in seen:\r\n            return False\r\n        seen.add(ch)\r\n    return True\r\n\r\n\r\ndef has_unique_chars_v2(s):\r\n    return len(s) == len(set(s))",
+              "functionName": "has_unique_chars_v1",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "O(n) and O(n)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "O(n) and O(n²)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "O(n²) and O(n)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "O(1) and O(n)",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "Both are O(n). Building a set is O(n), and set `in` lookups are O(1). v2 is more Pythonic but both are equivalent in complexity.",
+              "rawMarkdown": "```python\r\ndef has_unique_chars_v1(s):\r\n    seen = set()\r\n    for ch in s:\r\n        if ch in seen:\r\n            return False\r\n        seen.add(ch)\r\n    return True\r\n\r\n\r\ndef has_unique_chars_v2(s):\r\n    return len(s) == len(set(s))\r\n```\r\n*What is the time complexity of each?*\r\n- A) O(n) and O(n) ✅\r\n- B) O(n) and O(n²)\r\n- C) O(n²) and O(n)\r\n- D) O(1) and O(n)\r\n\r\n**Feedback:** Both are O(n). Building a set is O(n), and set `in` lookups are O(1). v2 is more Pythonic but both are equivalent in complexity.\r\n\r\n---"
+            },
+            {
+              "id": "u3-l2-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def group_anagrams(words):\r\n    \"\"\"\r\n    Group a list of words into anagram families.\r\n    Return a list of groups (order within groups doesn't matter).\r\n    \r\n    group_anagrams([\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"])\r\n    -> [[\"eat\", \"tea\", \"ate\"], [\"tan\", \"nat\"], [\"bat\"]]\r\n    \"\"\"\r\n    # Hint: sorted(word) is the same for all anagrams\r\n    # your code here",
+              "functionName": "group_anagrams",
+              "tests": [
+                {
+                  "call": "group_anagrams([\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"])",
+                  "expected": "[[\"eat\", \"tea\", \"ate\"], [\"tan\", \"nat\"], [\"bat\"]]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef group_anagrams(words):\r\n    \"\"\"\r\n    Group a list of words into anagram families.\r\n    Return a list of groups (order within groups doesn't matter).\r\n    \r\n    group_anagrams([\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"])\r\n    -> [[\"eat\", \"tea\", \"ate\"], [\"tan\", \"nat\"], [\"bat\"]]\r\n    \"\"\"\r\n    # Hint: sorted(word) is the same for all anagrams\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Complexity Choice**\r\n```python\r\ndef has_unique_chars_v1(s):\r\n    seen = set()\r\n    for ch in s:\r\n        if ch in seen:\r\n            return False\r\n        seen.add(ch)\r\n    return True\r\n\r\n\r\ndef has_unique_chars_v2(s):\r\n    return len(s) == len(set(s))\r\n```\r\n*What is the time complexity of each?*\r\n- A) O(n) and O(n) ✅\r\n- B) O(n) and O(n²)\r\n- C) O(n²) and O(n)\r\n- D) O(1) and O(n)\r\n\r\n**Feedback:** Both are O(n). Building a set is O(n), and set `in` lookups are O(1). v2 is more Pythonic but both are equivalent in complexity.\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef group_anagrams(words):\r\n    \"\"\"\r\n    Group a list of words into anagram families.\r\n    Return a list of groups (order within groups doesn't matter).\r\n    \r\n    group_anagrams([\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"])\r\n    -> [[\"eat\", \"tea\", \"ate\"], [\"tan\", \"nat\"], [\"bat\"]]\r\n    \"\"\"\r\n    # Hint: sorted(word) is the same for all anagrams\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u3-l3",
+          "unit": 3,
+          "index": 3,
+          "title": "Lessons 3.3–3.6",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Sliding window on strings, Character frequency arrays, Rabin-Karp intuition, Longest substring without repeating characters)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-4",
+      "number": 4,
+      "title": "Stacks & Queues",
+      "topic": "Stacks & Queues",
+      "lessonsPlanned": 6,
+      "xp": 300,
+      "description": "*Concept introduced:",
+      "lessons": [
+        {
+          "id": "u4-l1",
+          "unit": 4,
+          "index": 1,
+          "title": "Lesson 4.1 — The Stack",
+          "conceptIntroduced": "LIFO — Last In, First Out",
+          "questions": [
+            {
+              "id": "u4-l1-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "stack = []\r\n\r\nstack.append(1)\r\nstack.append(2)\r\nstack.append(3)\r\n\r\nprint(stack.pop())\r\nprint(stack.pop())\r\nstack.append(4)\r\nprint(stack)",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`3`, `2`, `[1, 4]`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`1`, `2`, `[3, 4]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`3`, `2`, `[4]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`3`, `1`, `[2, 4]`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`list.append()` pushes to the top (end). `list.pop()` removes from the top (end). This is LIFO: last item pushed (3) is first popped.",
+              "rawMarkdown": "```python\r\nstack = []\r\n\r\nstack.append(1)\r\nstack.append(2)\r\nstack.append(3)\r\n\r\nprint(stack.pop())\r\nprint(stack.pop())\r\nstack.append(4)\r\nprint(stack)\r\n```\r\n*What prints?*\r\n- A) `3`, `2`, `[1, 4]` ✅\r\n- B) `1`, `2`, `[3, 4]`\r\n- C) `3`, `2`, `[4]`\r\n- D) `3`, `1`, `[2, 4]`\r\n\r\n**Feedback:** `list.append()` pushes to the top (end). `list.pop()` removes from the top (end). This is LIFO: last item pushed (3) is first popped.\r\n\r\n---"
+            },
+            {
+              "id": "u4-l1-q2",
+              "index": 2,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Build a function that uses a stack to check if parentheses are balanced:",
+              "code": "def is_balanced(s):\r\n    stack = []\r\n    for ch in s:\r\n    pairs = {')': '(', '}': '{', ']': '['}\r\n        if ch in '({[':\r\n        elif ch in ')}]':\r\n            stack.append(ch)\r\n            if not stack or stack[-1] != pairs[ch]:\r\n                return False\r\n            stack.pop()\r\n    return len(stack) == 0",
+              "functionName": "is_balanced",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "*Build a function that uses a stack to check if parentheses are balanced:*\r\n\r\nBlocks:\r\n```\r\ndef is_balanced(s):\r\n    stack = []\r\n    for ch in s:\r\n    pairs = {')': '(', '}': '{', ']': '['}\r\n        if ch in '({[':\r\n        elif ch in ')}]':\r\n            stack.append(ch)\r\n            if not stack or stack[-1] != pairs[ch]:\r\n                return False\r\n            stack.pop()\r\n    return len(stack) == 0\r\n```\r\n*Correct:*\r\n```python\r\ndef is_balanced(s):\r\n    stack = []\r\n    pairs = {')': '(', '}': '{', ']': '['}\r\n    for ch in s:\r\n        if ch in '({[':\r\n            stack.append(ch)\r\n        elif ch in ')}]':\r\n            if not stack or stack[-1] != pairs[ch]:\r\n                return False\r\n            stack.pop()\r\n    return len(stack) == 0\r\n```\r\n\r\n---"
+            },
+            {
+              "id": "u4-l1-q3",
+              "index": 3,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def evaluate_rpn(tokens):\r\n    \"\"\"\r\n    Evaluate a Reverse Polish Notation expression.\r\n    tokens is a list of strings (numbers and operators).\r\n    \r\n    evaluate_rpn([\"2\", \"1\", \"+\", \"3\", \"*\"]) -> 9\r\n    evaluate_rpn([\"4\", \"13\", \"5\", \"/\", \"+\"]) -> 6\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "evaluate_rpn",
+              "tests": [
+                {
+                  "call": "evaluate_rpn([\"2\", \"1\", \"+\", \"3\", \"*\"])",
+                  "expected": "9"
+                },
+                {
+                  "call": "evaluate_rpn([\"4\", \"13\", \"5\", \"/\", \"+\"])",
+                  "expected": "6"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef evaluate_rpn(tokens):\r\n    \"\"\"\r\n    Evaluate a Reverse Polish Notation expression.\r\n    tokens is a list of strings (numbers and operators).\r\n    \r\n    evaluate_rpn([\"2\", \"1\", \"+\", \"3\", \"*\"]) -> 9\r\n    evaluate_rpn([\"4\", \"13\", \"5\", \"/\", \"+\"]) -> 6\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** LIFO — Last In, First Out\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\nstack = []\r\n\r\nstack.append(1)\r\nstack.append(2)\r\nstack.append(3)\r\n\r\nprint(stack.pop())\r\nprint(stack.pop())\r\nstack.append(4)\r\nprint(stack)\r\n```\r\n*What prints?*\r\n- A) `3`, `2`, `[1, 4]` ✅\r\n- B) `1`, `2`, `[3, 4]`\r\n- C) `3`, `2`, `[4]`\r\n- D) `3`, `1`, `[2, 4]`\r\n\r\n**Feedback:** `list.append()` pushes to the top (end). `list.pop()` removes from the top (end). This is LIFO: last item pushed (3) is first popped.\r\n\r\n---\r\n\r\n**Question 2 — Arrange the Blocks**\r\n\r\n*Build a function that uses a stack to check if parentheses are balanced:*\r\n\r\nBlocks:\r\n```\r\ndef is_balanced(s):\r\n    stack = []\r\n    for ch in s:\r\n    pairs = {')': '(', '}': '{', ']': '['}\r\n        if ch in '({[':\r\n        elif ch in ')}]':\r\n            stack.append(ch)\r\n            if not stack or stack[-1] != pairs[ch]:\r\n                return False\r\n            stack.pop()\r\n    return len(stack) == 0\r\n```\r\n*Correct:*\r\n```python\r\ndef is_balanced(s):\r\n    stack = []\r\n    pairs = {')': '(', '}': '{', ']': '['}\r\n    for ch in s:\r\n        if ch in '({[':\r\n            stack.append(ch)\r\n        elif ch in ')}]':\r\n            if not stack or stack[-1] != pairs[ch]:\r\n                return False\r\n            stack.pop()\r\n    return len(stack) == 0\r\n```\r\n\r\n---\r\n\r\n**Question 3 — Write from Scratch**\r\n```python\r\ndef evaluate_rpn(tokens):\r\n    \"\"\"\r\n    Evaluate a Reverse Polish Notation expression.\r\n    tokens is a list of strings (numbers and operators).\r\n    \r\n    evaluate_rpn([\"2\", \"1\", \"+\", \"3\", \"*\"]) -> 9\r\n    evaluate_rpn([\"4\", \"13\", \"5\", \"/\", \"+\"]) -> 6\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u4-l2",
+          "unit": 4,
+          "index": 2,
+          "title": "Lesson 4.2 — The Queue and Deque",
+          "conceptIntroduced": "FIFO — First In, First Out; `collections.deque`",
+          "questions": [
+            {
+              "id": "u4-l2-q1",
+              "index": 1,
+              "title": "Spot the Bug",
+              "type": "spot_bug",
+              "prompt": "This processes tasks in the wrong order. What's the fix?",
+              "code": "from collections import deque\r\n\r\ndef process_tasks(tasks):\r\n    queue = deque(tasks)\r\n    results = []\r\n    \r\n    while queue:\r\n        task = queue.pop()   # process front first\r\n        results.append(task)\r\n    \r\n    return results\r\n\r\nprint(process_tasks([1, 2, 3, 4]))",
+              "functionName": "process_tasks",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Use `queue.popleft()` instead of `queue.pop()`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "Use a list instead of deque",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "Reverse the input first",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Use `queue.popright()`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`deque.pop()` removes from the *right* (the end you appended to) — that's stack behavior (LIFO). For queue behavior (FIFO), use `popleft()` which removes from the *left* (front). `deque` is O(1) for both ends; a list's `pop(0)` is O(n).",
+              "rawMarkdown": "```python\r\nfrom collections import deque\r\n\r\ndef process_tasks(tasks):\r\n    queue = deque(tasks)\r\n    results = []\r\n    \r\n    while queue:\r\n        task = queue.pop()   # process front first\r\n        results.append(task)\r\n    \r\n    return results\r\n\r\nprint(process_tasks([1, 2, 3, 4]))\r\n```\r\n*This processes tasks in the wrong order. What's the fix?*\r\n- A) Use `queue.popleft()` instead of `queue.pop()` ✅\r\n- B) Use a list instead of deque\r\n- C) Reverse the input first\r\n- D) Use `queue.popright()`\r\n\r\n**Feedback:** `deque.pop()` removes from the *right* (the end you appended to) — that's stack behavior (LIFO). For queue behavior (FIFO), use `popleft()` which removes from the *left* (front). `deque` is O(1) for both ends; a list's `pop(0)` is O(n).\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** FIFO — First In, First Out; `collections.deque`\r\n\r\n**Question 1 — Spot the Bug**\r\n```python\r\nfrom collections import deque\r\n\r\ndef process_tasks(tasks):\r\n    queue = deque(tasks)\r\n    results = []\r\n    \r\n    while queue:\r\n        task = queue.pop()   # process front first\r\n        results.append(task)\r\n    \r\n    return results\r\n\r\nprint(process_tasks([1, 2, 3, 4]))\r\n```\r\n*This processes tasks in the wrong order. What's the fix?*\r\n- A) Use `queue.popleft()` instead of `queue.pop()` ✅\r\n- B) Use a list instead of deque\r\n- C) Reverse the input first\r\n- D) Use `queue.popright()`\r\n\r\n**Feedback:** `deque.pop()` removes from the *right* (the end you appended to) — that's stack behavior (LIFO). For queue behavior (FIFO), use `popleft()` which removes from the *left* (front). `deque` is O(1) for both ends; a list's `pop(0)` is O(n).\r\n\r\n---"
+        },
+        {
+          "id": "u4-l3",
+          "unit": 4,
+          "index": 3,
+          "title": "Lesson 4.3 — Monotonic Stack",
+          "conceptIntroduced": "A stack that maintains a sorted order — powerful for \"next greater element\" problems",
+          "questions": [
+            {
+              "id": "u4-l3-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def next_greater(nums):\r\n    result = [-1] * len(nums)\r\n    stack = []  # stores indices\r\n    \r\n    for i, num in enumerate(nums):\r\n        while stack and nums[stack[-1]] < num:\r\n            idx = stack.pop()\r\n            result[idx] = num\r\n        stack.append(i)\r\n    \r\n    return result\r\n\r\nprint(next_greater([2, 1, 2, 4, 3]))",
+              "functionName": "next_greater",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`[4, 2, 4, -1, -1]`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`[2, 2, 4, -1, -1]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`[4, 4, 4, -1, -1]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`[-1, 2, 4, -1, -1]`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef next_greater(nums):\r\n    result = [-1] * len(nums)\r\n    stack = []  # stores indices\r\n    \r\n    for i, num in enumerate(nums):\r\n        while stack and nums[stack[-1]] < num:\r\n            idx = stack.pop()\r\n            result[idx] = num\r\n        stack.append(i)\r\n    \r\n    return result\r\n\r\nprint(next_greater([2, 1, 2, 4, 3]))\r\n```\r\n*What prints?*\r\n- A) `[4, 2, 4, -1, -1]` ✅\r\n- B) `[2, 2, 4, -1, -1]`\r\n- C) `[4, 4, 4, -1, -1]`\r\n- D) `[-1, 2, 4, -1, -1]`\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** A stack that maintains a sorted order — powerful for \"next greater element\" problems\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\ndef next_greater(nums):\r\n    result = [-1] * len(nums)\r\n    stack = []  # stores indices\r\n    \r\n    for i, num in enumerate(nums):\r\n        while stack and nums[stack[-1]] < num:\r\n            idx = stack.pop()\r\n            result[idx] = num\r\n        stack.append(i)\r\n    \r\n    return result\r\n\r\nprint(next_greater([2, 1, 2, 4, 3]))\r\n```\r\n*What prints?*\r\n- A) `[4, 2, 4, -1, -1]` ✅\r\n- B) `[2, 2, 4, -1, -1]`\r\n- C) `[4, 4, 4, -1, -1]`\r\n- D) `[-1, 2, 4, -1, -1]`\r\n\r\n---"
+        },
+        {
+          "id": "u4-l4",
+          "unit": 4,
+          "index": 4,
+          "title": "Lessons 4.4–4.6",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Implementing a stack with min/max in O(1), LRU Cache introduction using OrderedDict, Queue from two stacks)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-5",
+      "number": 5,
+      "title": "Linked Lists",
+      "topic": "Linked Lists",
+      "lessonsPlanned": 7,
+      "xp": 350,
+      "description": "*Concept introduced:",
+      "lessons": [
+        {
+          "id": "u5-l1",
+          "unit": 5,
+          "index": 1,
+          "title": "Lesson 5.1 — What is a Linked List?",
+          "conceptIntroduced": "Nodes, pointers, traversal — no arrays",
+          "questions": [
+            {
+              "id": "u5-l1-q1",
+              "index": 1,
+              "title": "Multiple Choice — Concept",
+              "type": "multiple_choice",
+              "prompt": "In a singly linked list, what does the `.next` attribute of the last node hold?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "A pointer back to the head",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`None`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The index of the last node",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The length of the list",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "",
+              "rawMarkdown": "*In a singly linked list, what does the `.next` attribute of the last node hold?*\r\n- A) A pointer back to the head\r\n- B) `None` ✅\r\n- C) The index of the last node\r\n- D) The length of the list\r\n\r\n---"
+            },
+            {
+              "id": "u5-l1-q2",
+              "index": 2,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "class Node:\r\n    def __init__(self, val):\r\n        self.val = val\r\n        self.next = None\r\n\r\n# Build list: 1 -> 2 -> 3\r\nhead = Node(1)\r\nhead.next = Node(2)\r\nhead.next.next = Node(3)\r\n\r\ncurr = head\r\nwhile curr:\r\n    print(curr.val)\r\n    curr = curr.next",
+              "functionName": "__init__",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`1`, `2`, `3`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`3`, `2`, `1`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`1`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Infinite loop",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "",
+              "rawMarkdown": "```python\r\nclass Node:\r\n    def __init__(self, val):\r\n        self.val = val\r\n        self.next = None\r\n\r\n# Build list: 1 -> 2 -> 3\r\nhead = Node(1)\r\nhead.next = Node(2)\r\nhead.next.next = Node(3)\r\n\r\ncurr = head\r\nwhile curr:\r\n    print(curr.val)\r\n    curr = curr.next\r\n```\r\n*What prints?*\r\n- A) `1`, `2`, `3` ✅\r\n- B) `3`, `2`, `1`\r\n- C) `1`\r\n- D) Infinite loop\r\n\r\n---"
+            },
+            {
+              "id": "u5-l1-q3",
+              "index": 3,
+              "title": "Fill in the Blank",
+              "type": "fill_blank",
+              "prompt": "What fills the two blanks?",
+              "code": "def linked_list_length(head):\r\n    count = 0\r\n    curr = ____\r\n    while curr:\r\n        count += 1\r\n        curr = ____\r\n    return count",
+              "functionName": "linked_list_length",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef linked_list_length(head):\r\n    count = 0\r\n    curr = ____\r\n    while curr:\r\n        count += 1\r\n        curr = ____\r\n    return count\r\n```\r\n*What fills the two blanks?*\r\n- Blank 1: `head`\r\n- Blank 2: `curr.next`\r\n\r\n---"
+            },
+            {
+              "id": "u5-l1-q4",
+              "index": 4,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def reverse_linked_list(head):\r\n    \"\"\"\r\n    Reverse a singly linked list in-place.\r\n    Return the new head.\r\n    \r\n    Input:  1 -> 2 -> 3 -> 4 -> None\r\n    Output: 4 -> 3 -> 2 -> 1 -> None\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "reverse_linked_list",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef reverse_linked_list(head):\r\n    \"\"\"\r\n    Reverse a singly linked list in-place.\r\n    Return the new head.\r\n    \r\n    Input:  1 -> 2 -> 3 -> 4 -> None\r\n    Output: 4 -> 3 -> 2 -> 1 -> None\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Nodes, pointers, traversal — no arrays\r\n\r\n**Question 1 — Multiple Choice — Concept**\r\n\r\n*In a singly linked list, what does the `.next` attribute of the last node hold?*\r\n- A) A pointer back to the head\r\n- B) `None` ✅\r\n- C) The index of the last node\r\n- D) The length of the list\r\n\r\n---\r\n\r\n**Question 2 — Trace the Output**\r\n```python\r\nclass Node:\r\n    def __init__(self, val):\r\n        self.val = val\r\n        self.next = None\r\n\r\n# Build list: 1 -> 2 -> 3\r\nhead = Node(1)\r\nhead.next = Node(2)\r\nhead.next.next = Node(3)\r\n\r\ncurr = head\r\nwhile curr:\r\n    print(curr.val)\r\n    curr = curr.next\r\n```\r\n*What prints?*\r\n- A) `1`, `2`, `3` ✅\r\n- B) `3`, `2`, `1`\r\n- C) `1`\r\n- D) Infinite loop\r\n\r\n---\r\n\r\n**Question 3 — Fill in the Blank**\r\n```python\r\ndef linked_list_length(head):\r\n    count = 0\r\n    curr = ____\r\n    while curr:\r\n        count += 1\r\n        curr = ____\r\n    return count\r\n```\r\n*What fills the two blanks?*\r\n- Blank 1: `head`\r\n- Blank 2: `curr.next`\r\n\r\n---\r\n\r\n**Question 4 — Write from Scratch**\r\n```python\r\ndef reverse_linked_list(head):\r\n    \"\"\"\r\n    Reverse a singly linked list in-place.\r\n    Return the new head.\r\n    \r\n    Input:  1 -> 2 -> 3 -> 4 -> None\r\n    Output: 4 -> 3 -> 2 -> 1 -> None\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u5-l2",
+          "unit": 5,
+          "index": 2,
+          "title": "Lesson 5.2 — Fast and Slow Pointers",
+          "conceptIntroduced": "Floyd's cycle detection — two pointers at different speeds",
+          "questions": [
+            {
+              "id": "u5-l2-q1",
+              "index": 1,
+              "title": "Multiple Choice — Concept",
+              "type": "multiple_choice",
+              "prompt": "In Floyd's cycle detection, you have a `slow` pointer (moves 1 step) and `fast` pointer (moves 2 steps). If they ever point to the same node, what does that mean?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "The list has an even number of nodes",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "The list has a cycle",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`fast` has lapped `slow` twice",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The list is a palindrome",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "",
+              "rawMarkdown": "*In Floyd's cycle detection, you have a `slow` pointer (moves 1 step) and `fast` pointer (moves 2 steps). If they ever point to the same node, what does that mean?*\r\n- A) The list has an even number of nodes\r\n- B) The list has a cycle ✅\r\n- C) `fast` has lapped `slow` twice\r\n- D) The list is a palindrome\r\n\r\n---"
+            },
+            {
+              "id": "u5-l2-q2",
+              "index": 2,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Build a function that finds the middle of a linked list:",
+              "code": "def find_middle(head):\r\nslow = head\r\n    while fast and fast.next:\r\nfast = head\r\n        slow = slow.next\r\n        fast = fast.next.next\r\n    return slow",
+              "functionName": "find_middle",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "When `fast` reaches the end, `slow` is at the middle. `fast` moves at 2× the speed — by the time fast has traversed the full list, slow has only gone halfway.",
+              "rawMarkdown": "*Build a function that finds the middle of a linked list:*\r\n\r\nBlocks:\r\n```\r\ndef find_middle(head):\r\nslow = head\r\n    while fast and fast.next:\r\nfast = head\r\n        slow = slow.next\r\n        fast = fast.next.next\r\n    return slow\r\n```\r\n*Correct:*\r\n```python\r\ndef find_middle(head):\r\n    slow = head\r\n    fast = head\r\n    while fast and fast.next:\r\n        slow = slow.next\r\n        fast = fast.next.next\r\n    return slow\r\n```\r\n**Feedback:** When `fast` reaches the end, `slow` is at the middle. `fast` moves at 2× the speed — by the time fast has traversed the full list, slow has only gone halfway.\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Floyd's cycle detection — two pointers at different speeds\r\n\r\n**Question 1 — Multiple Choice — Concept**\r\n\r\n*In Floyd's cycle detection, you have a `slow` pointer (moves 1 step) and `fast` pointer (moves 2 steps). If they ever point to the same node, what does that mean?*\r\n- A) The list has an even number of nodes\r\n- B) The list has a cycle ✅\r\n- C) `fast` has lapped `slow` twice\r\n- D) The list is a palindrome\r\n\r\n---\r\n\r\n**Question 2 — Arrange the Blocks**\r\n\r\n*Build a function that finds the middle of a linked list:*\r\n\r\nBlocks:\r\n```\r\ndef find_middle(head):\r\nslow = head\r\n    while fast and fast.next:\r\nfast = head\r\n        slow = slow.next\r\n        fast = fast.next.next\r\n    return slow\r\n```\r\n*Correct:*\r\n```python\r\ndef find_middle(head):\r\n    slow = head\r\n    fast = head\r\n    while fast and fast.next:\r\n        slow = slow.next\r\n        fast = fast.next.next\r\n    return slow\r\n```\r\n**Feedback:** When `fast` reaches the end, `slow` is at the middle. `fast` moves at 2× the speed — by the time fast has traversed the full list, slow has only gone halfway.\r\n\r\n---"
+        },
+        {
+          "id": "u5-l3",
+          "unit": 5,
+          "index": 3,
+          "title": "Lessons 5.3–5.7",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Merge two sorted lists, Remove nth node from end, Palindrome linked list, Merge K sorted lists, LRU Cache with doubly linked list + hash map)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-6",
+      "number": 6,
+      "title": "Recursion",
+      "topic": "Recursion",
+      "lessonsPlanned": 7,
+      "xp": 350,
+      "description": "*Concept introduced:",
+      "lessons": [
+        {
+          "id": "u6-l1",
+          "unit": 6,
+          "index": 1,
+          "title": "Lesson 6.1 — Base Case First",
+          "conceptIntroduced": "Every recursive function needs a stop condition",
+          "questions": [
+            {
+              "id": "u6-l1-q1",
+              "index": 1,
+              "title": "Spot the Bug",
+              "type": "spot_bug",
+              "prompt": "What happens when you run this?",
+              "code": "def countdown(n):\r\n    print(n)\r\n    countdown(n - 1)\r\n\r\ncountdown(5)",
+              "functionName": "countdown",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Prints 5, 4, 3, 2, 1, 0",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Prints 5, 4, 3, 2, 1",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "Prints 5 then crashes with RecursionError",
+                  "isCorrect": true
+                },
+                {
+                  "key": "D",
+                  "text": "Prints nothing",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "C",
+              "feedback": "There's no base case — the function calls itself forever until Python hits its recursion limit (~1000 calls) and raises `RecursionError`. Add `if n <= 0: return` before the recursive call.",
+              "rawMarkdown": "```python\r\ndef countdown(n):\r\n    print(n)\r\n    countdown(n - 1)\r\n\r\ncountdown(5)\r\n```\r\n*What happens when you run this?*\r\n- A) Prints 5, 4, 3, 2, 1, 0\r\n- B) Prints 5, 4, 3, 2, 1\r\n- C) Prints 5 then crashes with RecursionError ✅\r\n- D) Prints nothing\r\n\r\n**Feedback:** There's no base case — the function calls itself forever until Python hits its recursion limit (~1000 calls) and raises `RecursionError`. Add `if n <= 0: return` before the recursive call.\r\n\r\n---"
+            },
+            {
+              "id": "u6-l1-q2",
+              "index": 2,
+              "title": "Fill in the Blank",
+              "type": "fill_blank",
+              "prompt": "What is the base case condition?",
+              "code": "def factorial(n):\r\n    if ____:        # base case\r\n        return 1\r\n    return n * factorial(n - 1)\r\n\r\nprint(factorial(5))  # 120",
+              "functionName": "factorial",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`n == 0`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`n < 0`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`n == 1`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`n > 1`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "Both `n == 0` and `n == 1` work mathematically. `n == 0` is more complete since `factorial(0) = 1` by definition. `n <= 1` is even safer.",
+              "rawMarkdown": "```python\r\ndef factorial(n):\r\n    if ____:        # base case\r\n        return 1\r\n    return n * factorial(n - 1)\r\n\r\nprint(factorial(5))  # 120\r\n```\r\n*What is the base case condition?*\r\n- A) `n == 0` ✅\r\n- B) `n < 0`\r\n- C) `n == 1`\r\n- D) `n > 1`\r\n\r\n**Feedback:** Both `n == 0` and `n == 1` work mathematically. `n == 0` is more complete since `factorial(0) = 1` by definition. `n <= 1` is even safer.\r\n\r\n---"
+            },
+            {
+              "id": "u6-l1-q3",
+              "index": 3,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def mystery(n):\r\n    if n <= 0:\r\n        return 0\r\n    return n + mystery(n - 2)\r\n\r\nprint(mystery(6))\r\nprint(mystery(5))",
+              "functionName": "mystery",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`12`, `9`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`6`, `5`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`21`, `15`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`12`, `10`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "`mystery(6)` = 6 + mystery(4) = 6 + 4 + mystery(2) = 6+4+2+mystery(0) = 6+4+2+0 = 12. `mystery(5)` = 5+3+1+mystery(-1) = 5+3+1+0 = 9.",
+              "rawMarkdown": "```python\r\ndef mystery(n):\r\n    if n <= 0:\r\n        return 0\r\n    return n + mystery(n - 2)\r\n\r\nprint(mystery(6))\r\nprint(mystery(5))\r\n```\r\n*What prints?*\r\n- A) `12`, `9` ✅\r\n- B) `6`, `5`\r\n- C) `21`, `15`\r\n- D) `12`, `10`\r\n\r\n**Feedback:** `mystery(6)` = 6 + mystery(4) = 6 + 4 + mystery(2) = 6+4+2+mystery(0) = 6+4+2+0 = 12. `mystery(5)` = 5+3+1+mystery(-1) = 5+3+1+0 = 9.\r\n\r\n---"
+            },
+            {
+              "id": "u6-l1-q4",
+              "index": 4,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def power(base, exp):\r\n    \"\"\"\r\n    Compute base^exp recursively without using **.\r\n    Assume exp >= 0.\r\n    \r\n    power(2, 10) -> 1024\r\n    power(3, 0)  -> 1\r\n    power(5, 3)  -> 125\r\n    \r\n    Challenge: Can you do it in O(log n) steps?\r\n    Hint: 2^8 = (2^4)^2\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "power",
+              "tests": [
+                {
+                  "call": "power(2, 10)",
+                  "expected": "1024"
+                },
+                {
+                  "call": "power(3, 0)",
+                  "expected": "1"
+                },
+                {
+                  "call": "power(5, 3)",
+                  "expected": "125"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef power(base, exp):\r\n    \"\"\"\r\n    Compute base^exp recursively without using **.\r\n    Assume exp >= 0.\r\n    \r\n    power(2, 10) -> 1024\r\n    power(3, 0)  -> 1\r\n    power(5, 3)  -> 125\r\n    \r\n    Challenge: Can you do it in O(log n) steps?\r\n    Hint: 2^8 = (2^4)^2\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Every recursive function needs a stop condition\r\n\r\n**Question 1 — Spot the Bug**\r\n```python\r\ndef countdown(n):\r\n    print(n)\r\n    countdown(n - 1)\r\n\r\ncountdown(5)\r\n```\r\n*What happens when you run this?*\r\n- A) Prints 5, 4, 3, 2, 1, 0\r\n- B) Prints 5, 4, 3, 2, 1\r\n- C) Prints 5 then crashes with RecursionError ✅\r\n- D) Prints nothing\r\n\r\n**Feedback:** There's no base case — the function calls itself forever until Python hits its recursion limit (~1000 calls) and raises `RecursionError`. Add `if n <= 0: return` before the recursive call.\r\n\r\n---\r\n\r\n**Question 2 — Fill in the Blank**\r\n```python\r\ndef factorial(n):\r\n    if ____:        # base case\r\n        return 1\r\n    return n * factorial(n - 1)\r\n\r\nprint(factorial(5))  # 120\r\n```\r\n*What is the base case condition?*\r\n- A) `n == 0` ✅\r\n- B) `n < 0`\r\n- C) `n == 1`\r\n- D) `n > 1`\r\n\r\n**Feedback:** Both `n == 0` and `n == 1` work mathematically. `n == 0` is more complete since `factorial(0) = 1` by definition. `n <= 1` is even safer.\r\n\r\n---\r\n\r\n**Question 3 — Trace the Output**\r\n```python\r\ndef mystery(n):\r\n    if n <= 0:\r\n        return 0\r\n    return n + mystery(n - 2)\r\n\r\nprint(mystery(6))\r\nprint(mystery(5))\r\n```\r\n*What prints?*\r\n- A) `12`, `9` ✅\r\n- B) `6`, `5`\r\n- C) `21`, `15`\r\n- D) `12`, `10`\r\n\r\n**Feedback:** `mystery(6)` = 6 + mystery(4) = 6 + 4 + mystery(2) = 6+4+2+mystery(0) = 6+4+2+0 = 12. `mystery(5)` = 5+3+1+mystery(-1) = 5+3+1+0 = 9.\r\n\r\n---\r\n\r\n**Question 4 — Write from Scratch**\r\n```python\r\ndef power(base, exp):\r\n    \"\"\"\r\n    Compute base^exp recursively without using **.\r\n    Assume exp >= 0.\r\n    \r\n    power(2, 10) -> 1024\r\n    power(3, 0)  -> 1\r\n    power(5, 3)  -> 125\r\n    \r\n    Challenge: Can you do it in O(log n) steps?\r\n    Hint: 2^8 = (2^4)^2\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u6-l2",
+          "unit": 6,
+          "index": 2,
+          "title": "Lesson 6.2 — The Call Stack",
+          "conceptIntroduced": "Visualizing recursion as a stack of function calls",
+          "questions": [
+            {
+              "id": "u6-l2-q1",
+              "index": 1,
+              "title": "Match the Pairs",
+              "type": "match_pairs",
+              "prompt": "Match the recursive call to the order it returns:",
+              "code": "def sum_list(arr, i=0):\r\n    if i == len(arr):\r\n        return 0\r\n    return arr[i] + sum_list(arr, i + 1)\r\n\r\nsum_list([1, 2, 3])",
+              "functionName": "sum_list",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`sum_list([1,2,3], 0)` — returns 6",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`sum_list([1,2,3], 1)` — returns 5",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`sum_list([1,2,3], 2)` — returns 3",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`sum_list([1,2,3], 3)` — returns 0",
+                  "isCorrect": true
+                }
+              ],
+              "correctAnswer": "D",
+              "feedback": "Recursion unwinds like a stack — the deepest call returns first. `i=3` hits the base case and returns 0. Then `i=2` returns `3+0=3`, then `i=1` returns `2+3=5`, finally `i=0` returns `1+5=6`.",
+              "rawMarkdown": "*Match the recursive call to the order it returns:*\r\n\r\n```python\r\ndef sum_list(arr, i=0):\r\n    if i == len(arr):\r\n        return 0\r\n    return arr[i] + sum_list(arr, i + 1)\r\n\r\nsum_list([1, 2, 3])\r\n```\r\n\r\n*Which call returns first?*\r\n- A) `sum_list([1,2,3], 0)` — returns 6\r\n- B) `sum_list([1,2,3], 1)` — returns 5\r\n- C) `sum_list([1,2,3], 2)` — returns 3\r\n- D) `sum_list([1,2,3], 3)` — returns 0 ✅\r\n\r\n**Feedback:** Recursion unwinds like a stack — the deepest call returns first. `i=3` hits the base case and returns 0. Then `i=2` returns `3+0=3`, then `i=1` returns `2+3=5`, finally `i=0` returns `1+5=6`.\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Visualizing recursion as a stack of function calls\r\n\r\n**Question 1 — Match the Pairs**\r\n\r\n*Match the recursive call to the order it returns:*\r\n\r\n```python\r\ndef sum_list(arr, i=0):\r\n    if i == len(arr):\r\n        return 0\r\n    return arr[i] + sum_list(arr, i + 1)\r\n\r\nsum_list([1, 2, 3])\r\n```\r\n\r\n*Which call returns first?*\r\n- A) `sum_list([1,2,3], 0)` — returns 6\r\n- B) `sum_list([1,2,3], 1)` — returns 5\r\n- C) `sum_list([1,2,3], 2)` — returns 3\r\n- D) `sum_list([1,2,3], 3)` — returns 0 ✅\r\n\r\n**Feedback:** Recursion unwinds like a stack — the deepest call returns first. `i=3` hits the base case and returns 0. Then `i=2` returns `3+0=3`, then `i=1` returns `2+3=5`, finally `i=0` returns `1+5=6`.\r\n\r\n---"
+        },
+        {
+          "id": "u6-l3",
+          "unit": 6,
+          "index": 3,
+          "title": "Lesson 6.3 — Recursive Data Structures",
+          "conceptIntroduced": "Trees are naturally recursive — a tree is a node + subtrees",
+          "questions": [
+            {
+              "id": "u6-l3-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "class TreeNode:\r\n    def __init__(self, val, left=None, right=None):\r\n        self.val = val\r\n        self.left = left\r\n        self.right = right\r\n\r\ndef tree_sum(node):\r\n    if node is None:\r\n        return 0\r\n    return node.val + tree_sum(node.left) + tree_sum(node.right)\r\n\r\nroot = TreeNode(1,\r\n    TreeNode(2, TreeNode(4), TreeNode(5)),\r\n    TreeNode(3)\r\n)\r\nprint(tree_sum(root))",
+              "functionName": "__init__",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`6`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`10`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`15`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "D",
+                  "text": "`9`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "C",
+              "feedback": "",
+              "rawMarkdown": "```python\r\nclass TreeNode:\r\n    def __init__(self, val, left=None, right=None):\r\n        self.val = val\r\n        self.left = left\r\n        self.right = right\r\n\r\ndef tree_sum(node):\r\n    if node is None:\r\n        return 0\r\n    return node.val + tree_sum(node.left) + tree_sum(node.right)\r\n\r\nroot = TreeNode(1,\r\n    TreeNode(2, TreeNode(4), TreeNode(5)),\r\n    TreeNode(3)\r\n)\r\nprint(tree_sum(root))\r\n```\r\n*What prints?*\r\n- A) `6`\r\n- B) `10`\r\n- C) `15` ✅\r\n- D) `9`\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Trees are naturally recursive — a tree is a node + subtrees\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\nclass TreeNode:\r\n    def __init__(self, val, left=None, right=None):\r\n        self.val = val\r\n        self.left = left\r\n        self.right = right\r\n\r\ndef tree_sum(node):\r\n    if node is None:\r\n        return 0\r\n    return node.val + tree_sum(node.left) + tree_sum(node.right)\r\n\r\nroot = TreeNode(1,\r\n    TreeNode(2, TreeNode(4), TreeNode(5)),\r\n    TreeNode(3)\r\n)\r\nprint(tree_sum(root))\r\n```\r\n*What prints?*\r\n- A) `6`\r\n- B) `10`\r\n- C) `15` ✅\r\n- D) `9`\r\n\r\n---"
+        },
+        {
+          "id": "u6-l4",
+          "unit": 6,
+          "index": 4,
+          "title": "Lessons 6.4–6.7",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Fibonacci with memoization, Generate all permutations, Subsets/power set, Merge sort as recursion)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-7",
+      "number": 7,
+      "title": "Sorting Algorithms",
+      "topic": "Sorting Algorithms",
+      "lessonsPlanned": 6,
+      "xp": 400,
+      "description": "*Question 1 — Trace the Output",
+      "lessons": [
+        {
+          "id": "u7-l1",
+          "unit": 7,
+          "index": 1,
+          "title": "Lesson 7.1 — Bubble Sort",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u7-l1-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def bubble_sort(arr):\r\n    n = len(arr)\r\n    for i in range(n):\r\n        for j in range(0, n - i - 1):\r\n            if arr[j] > arr[j + 1]:\r\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\r\n    return arr\r\n\r\nprint(bubble_sort([64, 34, 25, 12, 22, 11, 90]))",
+              "functionName": "bubble_sort",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`[90, 64, 34, 25, 22, 12, 11]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`[11, 12, 22, 25, 34, 64, 90]`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`[64, 34, 25, 12, 22, 11, 90]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`[25, 34, 64, 90, 12, 11, 22]`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef bubble_sort(arr):\r\n    n = len(arr)\r\n    for i in range(n):\r\n        for j in range(0, n - i - 1):\r\n            if arr[j] > arr[j + 1]:\r\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\r\n    return arr\r\n\r\nprint(bubble_sort([64, 34, 25, 12, 22, 11, 90]))\r\n```\r\n*What prints?*\r\n- A) `[90, 64, 34, 25, 22, 12, 11]`\r\n- B) `[11, 12, 22, 25, 34, 64, 90]` ✅\r\n- C) `[64, 34, 25, 12, 22, 11, 90]`\r\n- D) `[25, 34, 64, 90, 12, 11, 22]`\r\n\r\n---"
+            },
+            {
+              "id": "u7-l1-q2",
+              "index": 2,
+              "title": "Complexity Choice",
+              "type": "complexity_choice",
+              "prompt": "What is the worst-case and best-case time complexity of Bubble Sort?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "O(n log n) worst, O(n) best",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "O(n²) worst, O(n²) best",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "O(n²) worst, O(n) best",
+                  "isCorrect": true
+                },
+                {
+                  "key": "D",
+                  "text": "O(n) worst, O(1) best",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Worst case is O(n²) (reversed input — every pair swaps every pass). With an early-exit optimization (stop if no swaps happened in a pass), best case on already-sorted input is O(n).",
+              "rawMarkdown": "*What is the worst-case and best-case time complexity of Bubble Sort?*\r\n- A) O(n log n) worst, O(n) best\r\n- B) O(n²) worst, O(n²) best\r\n- C) O(n²) worst, O(n) best ✅\r\n- D) O(n) worst, O(1) best\r\n\r\n**Feedback:** Worst case is O(n²) (reversed input — every pair swaps every pass). With an early-exit optimization (stop if no swaps happened in a pass), best case on already-sorted input is O(n).\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Trace the Output**\r\n```python\r\ndef bubble_sort(arr):\r\n    n = len(arr)\r\n    for i in range(n):\r\n        for j in range(0, n - i - 1):\r\n            if arr[j] > arr[j + 1]:\r\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\r\n    return arr\r\n\r\nprint(bubble_sort([64, 34, 25, 12, 22, 11, 90]))\r\n```\r\n*What prints?*\r\n- A) `[90, 64, 34, 25, 22, 12, 11]`\r\n- B) `[11, 12, 22, 25, 34, 64, 90]` ✅\r\n- C) `[64, 34, 25, 12, 22, 11, 90]`\r\n- D) `[25, 34, 64, 90, 12, 11, 22]`\r\n\r\n---\r\n\r\n**Question 2 — Complexity Choice**\r\n\r\n*What is the worst-case and best-case time complexity of Bubble Sort?*\r\n- A) O(n log n) worst, O(n) best\r\n- B) O(n²) worst, O(n²) best\r\n- C) O(n²) worst, O(n) best ✅\r\n- D) O(n) worst, O(1) best\r\n\r\n**Feedback:** Worst case is O(n²) (reversed input — every pair swaps every pass). With an early-exit optimization (stop if no swaps happened in a pass), best case on already-sorted input is O(n).\r\n\r\n---"
+        },
+        {
+          "id": "u7-l2",
+          "unit": 7,
+          "index": 2,
+          "title": "Lesson 7.2 — Merge Sort",
+          "conceptIntroduced": "Divide and conquer — split, sort halves, merge",
+          "questions": [
+            {
+              "id": "u7-l2-q1",
+              "index": 1,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Build the merge helper function:",
+              "code": "def merge(left, right):\r\n    result = []\r\n    i = j = 0\r\n    while i < len(left) and j < len(right):\r\n        if left[i] <= right[j]:\r\n            result.append(left[i])\r\n            i += 1\r\n        else:\r\n            result.append(right[j])\r\n            j += 1\r\n    result.extend(left[i:])\r\n    result.extend(right[j:])\r\n    return result",
+              "functionName": "merge",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "The function crashes",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Equal elements still merge correctly  (trick question — `<` still works for correctness, just unstable)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Elements get lost",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Duplicates cause an infinite loop",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Changing `<=` to `<` makes merge sort *unstable* — equal elements from `right` will come before equal elements from `left`. For a sort to be stable, equal elements must preserve their original relative order. `<=` ensures left array's equal elements come first.",
+              "rawMarkdown": "*Build the merge helper function:*\r\n\r\nBlocks:\r\n```\r\ndef merge(left, right):\r\n    result = []\r\n    i = j = 0\r\n    while i < len(left) and j < len(right):\r\n        if left[i] <= right[j]:\r\n            result.append(left[i])\r\n            i += 1\r\n        else:\r\n            result.append(right[j])\r\n            j += 1\r\n    result.extend(left[i:])\r\n    result.extend(right[j:])\r\n    return result\r\n```\r\n*This one is already in order — identify which line is wrong if we change `<=` to `<`:*\r\n\r\n**Question (Spot the Bug):** If we use `<` instead of `<=` in the comparison, what breaks?\r\n- A) The function crashes\r\n- B) Equal elements still merge correctly ✅ (trick question — `<` still works for correctness, just unstable)\r\n- C) Elements get lost\r\n- D) Duplicates cause an infinite loop\r\n\r\n**Feedback:** Changing `<=` to `<` makes merge sort *unstable* — equal elements from `right` will come before equal elements from `left`. For a sort to be stable, equal elements must preserve their original relative order. `<=` ensures left array's equal elements come first.\r\n\r\n---"
+            },
+            {
+              "id": "u7-l2-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def merge_sort(arr):\r\n    \"\"\"\r\n    Sort arr using merge sort. Return the sorted list.\r\n    Do not modify the original list.\r\n    \r\n    merge_sort([3, 1, 4, 1, 5, 9, 2, 6]) -> [1, 1, 2, 3, 4, 5, 6, 9]\r\n    \"\"\"\r\n    # your code here\r\n    # (you may define and call a helper merge() function)",
+              "functionName": "merge_sort",
+              "tests": [
+                {
+                  "call": "merge_sort([3, 1, 4, 1, 5, 9, 2, 6])",
+                  "expected": "[1, 1, 2, 3, 4, 5, 6, 9]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef merge_sort(arr):\r\n    \"\"\"\r\n    Sort arr using merge sort. Return the sorted list.\r\n    Do not modify the original list.\r\n    \r\n    merge_sort([3, 1, 4, 1, 5, 9, 2, 6]) -> [1, 1, 2, 3, 4, 5, 6, 9]\r\n    \"\"\"\r\n    # your code here\r\n    # (you may define and call a helper merge() function)\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Divide and conquer — split, sort halves, merge\r\n\r\n**Question 1 — Arrange the Blocks**\r\n\r\n*Build the merge helper function:*\r\n\r\nBlocks:\r\n```\r\ndef merge(left, right):\r\n    result = []\r\n    i = j = 0\r\n    while i < len(left) and j < len(right):\r\n        if left[i] <= right[j]:\r\n            result.append(left[i])\r\n            i += 1\r\n        else:\r\n            result.append(right[j])\r\n            j += 1\r\n    result.extend(left[i:])\r\n    result.extend(right[j:])\r\n    return result\r\n```\r\n*This one is already in order — identify which line is wrong if we change `<=` to `<`:*\r\n\r\n**Question (Spot the Bug):** If we use `<` instead of `<=` in the comparison, what breaks?\r\n- A) The function crashes\r\n- B) Equal elements still merge correctly ✅ (trick question — `<` still works for correctness, just unstable)\r\n- C) Elements get lost\r\n- D) Duplicates cause an infinite loop\r\n\r\n**Feedback:** Changing `<=` to `<` makes merge sort *unstable* — equal elements from `right` will come before equal elements from `left`. For a sort to be stable, equal elements must preserve their original relative order. `<=` ensures left array's equal elements come first.\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef merge_sort(arr):\r\n    \"\"\"\r\n    Sort arr using merge sort. Return the sorted list.\r\n    Do not modify the original list.\r\n    \r\n    merge_sort([3, 1, 4, 1, 5, 9, 2, 6]) -> [1, 1, 2, 3, 4, 5, 6, 9]\r\n    \"\"\"\r\n    # your code here\r\n    # (you may define and call a helper merge() function)\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u7-l3",
+          "unit": 7,
+          "index": 3,
+          "title": "Lesson 7.3 — Quick Sort",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u7-l3-q1",
+              "index": 1,
+              "title": "Multiple Choice — Concept",
+              "type": "multiple_choice",
+              "prompt": "Quick sort picks a \"pivot\" and partitions elements into two groups. Which partition strategy leads to O(n²) worst-case behavior?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Always picking the median element",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Always picking the first element on an already-sorted array",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Randomly picking the pivot",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Picking the last element on a random array",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "If you always pick the first element and the array is sorted, the pivot is always the smallest — one partition gets 0 elements, the other gets n-1. This degenerates to O(n²). Random pivot selection or median-of-three avoids this.",
+              "rawMarkdown": "*Quick sort picks a \"pivot\" and partitions elements into two groups. Which partition strategy leads to O(n²) worst-case behavior?*\r\n- A) Always picking the median element\r\n- B) Always picking the first element on an already-sorted array ✅\r\n- C) Randomly picking the pivot\r\n- D) Picking the last element on a random array\r\n\r\n**Feedback:** If you always pick the first element and the array is sorted, the pivot is always the smallest — one partition gets 0 elements, the other gets n-1. This degenerates to O(n²). Random pivot selection or median-of-three avoids this.\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Multiple Choice — Concept**\r\n\r\n*Quick sort picks a \"pivot\" and partitions elements into two groups. Which partition strategy leads to O(n²) worst-case behavior?*\r\n- A) Always picking the median element\r\n- B) Always picking the first element on an already-sorted array ✅\r\n- C) Randomly picking the pivot\r\n- D) Picking the last element on a random array\r\n\r\n**Feedback:** If you always pick the first element and the array is sorted, the pivot is always the smallest — one partition gets 0 elements, the other gets n-1. This degenerates to O(n²). Random pivot selection or median-of-three avoids this.\r\n\r\n---"
+        },
+        {
+          "id": "u7-l4",
+          "unit": 7,
+          "index": 4,
+          "title": "Lessons 7.4–7.6",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Counting Sort and Radix Sort, Python's `sorted()` and Timsort, Sorting interview patterns: k closest points, top k frequent)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-8",
+      "number": 8,
+      "title": "Binary Search",
+      "topic": "Binary Search",
+      "lessonsPlanned": 5,
+      "xp": 300,
+      "description": "*Question 1 — Spot the Bug",
+      "lessons": [
+        {
+          "id": "u8-l1",
+          "unit": 8,
+          "index": 1,
+          "title": "Lesson 8.1 — Classic Binary Search",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u8-l1-q1",
+              "index": 1,
+              "title": "Spot the Bug",
+              "type": "spot_bug",
+              "prompt": "What is the bug?",
+              "code": "def binary_search(arr, target):\r\n    left = 0\r\n    right = len(arr)   # bug here\r\n    \r\n    while left < right:\r\n        mid = (left + right) // 2\r\n        if arr[mid] == target:\r\n            return mid\r\n        elif arr[mid] < target:\r\n            left = mid + 1\r\n        else:\r\n            right = mid - 1\r\n    \r\n    return -1",
+              "functionName": "binary_search",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`mid` calculation could overflow",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`right` should be `len(arr) - 1`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The while condition should be `<=`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`left = mid + 1` should be `left = mid`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "`arr[len(arr)]` is out of bounds. `right` should start at `len(arr) - 1`. With `right = len(arr)`, the first `mid` calculation could yield an out-of-bounds index on the first pass.",
+              "rawMarkdown": "```python\r\ndef binary_search(arr, target):\r\n    left = 0\r\n    right = len(arr)   # bug here\r\n    \r\n    while left < right:\r\n        mid = (left + right) // 2\r\n        if arr[mid] == target:\r\n            return mid\r\n        elif arr[mid] < target:\r\n            left = mid + 1\r\n        else:\r\n            right = mid - 1\r\n    \r\n    return -1\r\n```\r\n*What is the bug?*\r\n- A) `mid` calculation could overflow\r\n- B) `right` should be `len(arr) - 1` ✅\r\n- C) The while condition should be `<=`\r\n- D) `left = mid + 1` should be `left = mid`\r\n\r\n**Feedback:** `arr[len(arr)]` is out of bounds. `right` should start at `len(arr) - 1`. With `right = len(arr)`, the first `mid` calculation could yield an out-of-bounds index on the first pass.\r\n\r\n---"
+            },
+            {
+              "id": "u8-l1-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def search_rotated(nums, target):\r\n    \"\"\"\r\n    Search for target in a sorted array that has been rotated.\r\n    Return the index if found, else -1.\r\n    \r\n    search_rotated([4, 5, 6, 7, 0, 1, 2], 0) -> 4\r\n    search_rotated([4, 5, 6, 7, 0, 1, 2], 3) -> -1\r\n    search_rotated([1], 0)                    -> -1\r\n    \r\n    Must run in O(log n).\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "search_rotated",
+              "tests": [
+                {
+                  "call": "search_rotated([4, 5, 6, 7, 0, 1, 2], 0)",
+                  "expected": "4"
+                },
+                {
+                  "call": "search_rotated([4, 5, 6, 7, 0, 1, 2], 3)",
+                  "expected": "-1"
+                },
+                {
+                  "call": "search_rotated([1], 0)",
+                  "expected": "-1"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef search_rotated(nums, target):\r\n    \"\"\"\r\n    Search for target in a sorted array that has been rotated.\r\n    Return the index if found, else -1.\r\n    \r\n    search_rotated([4, 5, 6, 7, 0, 1, 2], 0) -> 4\r\n    search_rotated([4, 5, 6, 7, 0, 1, 2], 3) -> -1\r\n    search_rotated([1], 0)                    -> -1\r\n    \r\n    Must run in O(log n).\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Spot the Bug**\r\n```python\r\ndef binary_search(arr, target):\r\n    left = 0\r\n    right = len(arr)   # bug here\r\n    \r\n    while left < right:\r\n        mid = (left + right) // 2\r\n        if arr[mid] == target:\r\n            return mid\r\n        elif arr[mid] < target:\r\n            left = mid + 1\r\n        else:\r\n            right = mid - 1\r\n    \r\n    return -1\r\n```\r\n*What is the bug?*\r\n- A) `mid` calculation could overflow\r\n- B) `right` should be `len(arr) - 1` ✅\r\n- C) The while condition should be `<=`\r\n- D) `left = mid + 1` should be `left = mid`\r\n\r\n**Feedback:** `arr[len(arr)]` is out of bounds. `right` should start at `len(arr) - 1`. With `right = len(arr)`, the first `mid` calculation could yield an out-of-bounds index on the first pass.\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef search_rotated(nums, target):\r\n    \"\"\"\r\n    Search for target in a sorted array that has been rotated.\r\n    Return the index if found, else -1.\r\n    \r\n    search_rotated([4, 5, 6, 7, 0, 1, 2], 0) -> 4\r\n    search_rotated([4, 5, 6, 7, 0, 1, 2], 3) -> -1\r\n    search_rotated([1], 0)                    -> -1\r\n    \r\n    Must run in O(log n).\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u8-l2",
+          "unit": 8,
+          "index": 2,
+          "title": "Lessons 8.2–8.5",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Find first and last position, Search in 2D matrix, Binary search on the answer — \"minimum max\", Koko eating bananas)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-9",
+      "number": 9,
+      "title": "Trees & Binary Search Trees",
+      "topic": "Trees & BSTs",
+      "lessonsPlanned": 8,
+      "xp": 450,
+      "description": "*Concept introduced:",
+      "lessons": [
+        {
+          "id": "u9-l1",
+          "unit": 9,
+          "index": 1,
+          "title": "Lesson 9.1 — Tree Traversals",
+          "conceptIntroduced": "Inorder, Preorder, Postorder — by tracing, not memorization",
+          "questions": [
+            {
+              "id": "u9-l1-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "class TreeNode:\r\n    def __init__(self, val, left=None, right=None):\r\n        self.val = val\r\n        self.left = left\r\n        self.right = right\r\n\r\ndef inorder(node):\r\n    if node is None:\r\n        return\r\n    inorder(node.left)\r\n    print(node.val, end=\" \")\r\n    inorder(node.right)\r\n\r\nroot = TreeNode(4,\r\n    TreeNode(2, TreeNode(1), TreeNode(3)),\r\n    TreeNode(6, TreeNode(5), TreeNode(7))\r\n)\r\n\r\ninorder(root)",
+              "functionName": "__init__",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`4 2 1 3 6 5 7`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`1 2 3 4 5 6 7`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`1 3 2 5 7 6 4`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`4 2 6 1 3 5 7`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Inorder visits left → root → right. For a BST, this always produces elements in sorted order. The tree is a valid BST (left < parent < right at every node), so inorder gives 1 2 3 4 5 6 7.",
+              "rawMarkdown": "```python\r\nclass TreeNode:\r\n    def __init__(self, val, left=None, right=None):\r\n        self.val = val\r\n        self.left = left\r\n        self.right = right\r\n\r\ndef inorder(node):\r\n    if node is None:\r\n        return\r\n    inorder(node.left)\r\n    print(node.val, end=\" \")\r\n    inorder(node.right)\r\n\r\nroot = TreeNode(4,\r\n    TreeNode(2, TreeNode(1), TreeNode(3)),\r\n    TreeNode(6, TreeNode(5), TreeNode(7))\r\n)\r\n\r\ninorder(root)\r\n```\r\n*What prints?*\r\n- A) `4 2 1 3 6 5 7`\r\n- B) `1 2 3 4 5 6 7` ✅\r\n- C) `1 3 2 5 7 6 4`\r\n- D) `4 2 6 1 3 5 7`\r\n\r\n**Feedback:** Inorder visits left → root → right. For a BST, this always produces elements in sorted order. The tree is a valid BST (left < parent < right at every node), so inorder gives 1 2 3 4 5 6 7.\r\n\r\n---"
+            },
+            {
+              "id": "u9-l1-q2",
+              "index": 2,
+              "title": "Multiple Choice — Concept",
+              "type": "multiple_choice",
+              "prompt": "Without running any code — which traversal would produce `4 2 1 3 6 5 7` for this tree?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Inorder",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Preorder",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Postorder",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Level-order",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Preorder visits root → left → right. Starting at 4, go left to 2, go left to 1 (leaf), back to 3 (leaf), back to 4, go right to 6, go left to 5, back to 7. Result: 4 2 1 3 6 5 7.",
+              "rawMarkdown": "*Without running any code — which traversal would produce `4 2 1 3 6 5 7` for this tree?*\r\n- A) Inorder\r\n- B) Preorder ✅\r\n- C) Postorder\r\n- D) Level-order\r\n\r\n**Feedback:** Preorder visits root → left → right. Starting at 4, go left to 2, go left to 1 (leaf), back to 3 (leaf), back to 4, go right to 6, go left to 5, back to 7. Result: 4 2 1 3 6 5 7.\r\n\r\n---"
+            },
+            {
+              "id": "u9-l1-q3",
+              "index": 3,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def max_depth(root):\r\n    \"\"\"\r\n    Return the maximum depth (height) of a binary tree.\r\n    An empty tree has depth 0. A single node has depth 1.\r\n    \r\n    For the tree: \r\n        3\r\n       / \\\r\n      9  20\r\n        /  \\\r\n       15   7\r\n    max_depth returns 3.\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "max_depth",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef max_depth(root):\r\n    \"\"\"\r\n    Return the maximum depth (height) of a binary tree.\r\n    An empty tree has depth 0. A single node has depth 1.\r\n    \r\n    For the tree: \r\n        3\r\n       / \\\r\n      9  20\r\n        /  \\\r\n       15   7\r\n    max_depth returns 3.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Inorder, Preorder, Postorder — by tracing, not memorization\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\nclass TreeNode:\r\n    def __init__(self, val, left=None, right=None):\r\n        self.val = val\r\n        self.left = left\r\n        self.right = right\r\n\r\ndef inorder(node):\r\n    if node is None:\r\n        return\r\n    inorder(node.left)\r\n    print(node.val, end=\" \")\r\n    inorder(node.right)\r\n\r\nroot = TreeNode(4,\r\n    TreeNode(2, TreeNode(1), TreeNode(3)),\r\n    TreeNode(6, TreeNode(5), TreeNode(7))\r\n)\r\n\r\ninorder(root)\r\n```\r\n*What prints?*\r\n- A) `4 2 1 3 6 5 7`\r\n- B) `1 2 3 4 5 6 7` ✅\r\n- C) `1 3 2 5 7 6 4`\r\n- D) `4 2 6 1 3 5 7`\r\n\r\n**Feedback:** Inorder visits left → root → right. For a BST, this always produces elements in sorted order. The tree is a valid BST (left < parent < right at every node), so inorder gives 1 2 3 4 5 6 7.\r\n\r\n---\r\n\r\n**Question 2 — Multiple Choice — Concept**\r\n\r\n*Without running any code — which traversal would produce `4 2 1 3 6 5 7` for this tree?*\r\n- A) Inorder\r\n- B) Preorder ✅\r\n- C) Postorder\r\n- D) Level-order\r\n\r\n**Feedback:** Preorder visits root → left → right. Starting at 4, go left to 2, go left to 1 (leaf), back to 3 (leaf), back to 4, go right to 6, go left to 5, back to 7. Result: 4 2 1 3 6 5 7.\r\n\r\n---\r\n\r\n**Question 3 — Write from Scratch**\r\n```python\r\ndef max_depth(root):\r\n    \"\"\"\r\n    Return the maximum depth (height) of a binary tree.\r\n    An empty tree has depth 0. A single node has depth 1.\r\n    \r\n    For the tree: \r\n        3\r\n       / \\\r\n      9  20\r\n        /  \\\r\n       15   7\r\n    max_depth returns 3.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u9-l2",
+          "unit": 9,
+          "index": 2,
+          "title": "Lesson 9.2 — BST Operations",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u9-l2-q1",
+              "index": 1,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Build BST insert:",
+              "code": "def insert(root, val):\r\n    if root is None:\r\n        return TreeNode(val)\r\n    if val < root.val:\r\n        root.left = insert(root.left, val)\r\n    elif val > root.val:\r\n        root.right = insert(root.right, val)\r\n    return root",
+              "functionName": "insert",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "*Build BST insert:*\r\n\r\nBlocks:\r\n```\r\ndef insert(root, val):\r\n    if root is None:\r\n        return TreeNode(val)\r\n    if val < root.val:\r\n        root.left = insert(root.left, val)\r\n    elif val > root.val:\r\n        root.right = insert(root.right, val)\r\n    return root\r\n```\r\n*(Already in order — this lesson asks students to TRACE through an insertion of val=5 into a given tree and predict the resulting structure.)*\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Arrange the Blocks**\r\n\r\n*Build BST insert:*\r\n\r\nBlocks:\r\n```\r\ndef insert(root, val):\r\n    if root is None:\r\n        return TreeNode(val)\r\n    if val < root.val:\r\n        root.left = insert(root.left, val)\r\n    elif val > root.val:\r\n        root.right = insert(root.right, val)\r\n    return root\r\n```\r\n*(Already in order — this lesson asks students to TRACE through an insertion of val=5 into a given tree and predict the resulting structure.)*\r\n\r\n---"
+        },
+        {
+          "id": "u9-l3",
+          "unit": 9,
+          "index": 3,
+          "title": "Lessons 9.3–9.8",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Validate BST, Lowest Common Ancestor, Level-order BFS traversal, Serialize and deserialize a tree, Construct BST from preorder, Diameter of binary tree)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-10",
+      "number": 10,
+      "title": "Graphs & BFS/DFS",
+      "topic": "Graphs & BFS/DFS",
+      "lessonsPlanned": 8,
+      "xp": 500,
+      "description": "*Question 1 — Multiple Choice — Concept",
+      "lessons": [
+        {
+          "id": "u10-l1",
+          "unit": 10,
+          "index": 1,
+          "title": "Lesson 10.1 — Graph Representations",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u10-l1-q1",
+              "index": 1,
+              "title": "Multiple Choice — Concept",
+              "type": "multiple_choice",
+              "prompt": "Which representation uses less space for a sparse graph (few edges)?",
+              "code": "# Adjacency Matrix (n=4 nodes)\r\nmatrix = [\r\n    [0, 1, 0, 0],\r\n    [1, 0, 1, 1],\r\n    [0, 1, 0, 0],\r\n    [0, 1, 0, 0]\r\n]\r\n\r\n# Adjacency List (same graph)\r\nadj = {\r\n    0: [1],\r\n    1: [0, 2, 3],\r\n    2: [1],\r\n    3: [1]\r\n}",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Adjacency Matrix — O(1) edge lookups",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Adjacency List — O(V + E) vs O(V²)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Both use the same space",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Adjacency Matrix — better for large graphs",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "",
+              "rawMarkdown": "*Which representation uses less space for a sparse graph (few edges)?*\r\n\r\n```python\r\n# Adjacency Matrix (n=4 nodes)\r\nmatrix = [\r\n    [0, 1, 0, 0],\r\n    [1, 0, 1, 1],\r\n    [0, 1, 0, 0],\r\n    [0, 1, 0, 0]\r\n]\r\n\r\n# Adjacency List (same graph)\r\nadj = {\r\n    0: [1],\r\n    1: [0, 2, 3],\r\n    2: [1],\r\n    3: [1]\r\n}\r\n```\r\n- A) Adjacency Matrix — O(1) edge lookups\r\n- B) Adjacency List — O(V + E) vs O(V²) ✅\r\n- C) Both use the same space\r\n- D) Adjacency Matrix — better for large graphs\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Multiple Choice — Concept**\r\n\r\n*Which representation uses less space for a sparse graph (few edges)?*\r\n\r\n```python\r\n# Adjacency Matrix (n=4 nodes)\r\nmatrix = [\r\n    [0, 1, 0, 0],\r\n    [1, 0, 1, 1],\r\n    [0, 1, 0, 0],\r\n    [0, 1, 0, 0]\r\n]\r\n\r\n# Adjacency List (same graph)\r\nadj = {\r\n    0: [1],\r\n    1: [0, 2, 3],\r\n    2: [1],\r\n    3: [1]\r\n}\r\n```\r\n- A) Adjacency Matrix — O(1) edge lookups\r\n- B) Adjacency List — O(V + E) vs O(V²) ✅\r\n- C) Both use the same space\r\n- D) Adjacency Matrix — better for large graphs\r\n\r\n---"
+        },
+        {
+          "id": "u10-l2",
+          "unit": 10,
+          "index": 2,
+          "title": "Lesson 10.2 — BFS",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u10-l2-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "from collections import deque\r\n\r\ndef bfs(graph, start):\r\n    visited = set()\r\n    queue = deque([start])\r\n    visited.add(start)\r\n    result = []\r\n    \r\n    while queue:\r\n        node = queue.popleft()\r\n        result.append(node)\r\n        for neighbor in graph[node]:\r\n            if neighbor not in visited:\r\n                visited.add(neighbor)\r\n                queue.append(neighbor)\r\n    \r\n    return result\r\n\r\ngraph = {\r\n    'A': ['B', 'C'],\r\n    'B': ['A', 'D', 'E'],\r\n    'C': ['A', 'F'],\r\n    'D': ['B'],\r\n    'E': ['B'],\r\n    'F': ['C']\r\n}\r\n\r\nprint(bfs(graph, 'A'))",
+              "functionName": "bfs",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`['A', 'B', 'D', 'E', 'C', 'F']`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`['A', 'B', 'C', 'D', 'E', 'F']`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`['A', 'C', 'F', 'B', 'D', 'E']`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`['A', 'B', 'C', 'F', 'E', 'D']`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "BFS explores layer by layer. Layer 0: A. Layer 1: B, C (A's neighbors). Layer 2: D, E (B's unvisited neighbors), F (C's unvisited neighbor). Result: A B C D E F.",
+              "rawMarkdown": "```python\r\nfrom collections import deque\r\n\r\ndef bfs(graph, start):\r\n    visited = set()\r\n    queue = deque([start])\r\n    visited.add(start)\r\n    result = []\r\n    \r\n    while queue:\r\n        node = queue.popleft()\r\n        result.append(node)\r\n        for neighbor in graph[node]:\r\n            if neighbor not in visited:\r\n                visited.add(neighbor)\r\n                queue.append(neighbor)\r\n    \r\n    return result\r\n\r\ngraph = {\r\n    'A': ['B', 'C'],\r\n    'B': ['A', 'D', 'E'],\r\n    'C': ['A', 'F'],\r\n    'D': ['B'],\r\n    'E': ['B'],\r\n    'F': ['C']\r\n}\r\n\r\nprint(bfs(graph, 'A'))\r\n```\r\n*What prints?*\r\n- A) `['A', 'B', 'D', 'E', 'C', 'F']`\r\n- B) `['A', 'B', 'C', 'D', 'E', 'F']` ✅\r\n- C) `['A', 'C', 'F', 'B', 'D', 'E']`\r\n- D) `['A', 'B', 'C', 'F', 'E', 'D']`\r\n\r\n**Feedback:** BFS explores layer by layer. Layer 0: A. Layer 1: B, C (A's neighbors). Layer 2: D, E (B's unvisited neighbors), F (C's unvisited neighbor). Result: A B C D E F.\r\n\r\n---"
+            },
+            {
+              "id": "u10-l2-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def shortest_path(graph, start, end):\r\n    \"\"\"\r\n    Return the length of the shortest path (in edges)\r\n    from start to end in an unweighted graph.\r\n    Return -1 if no path exists.\r\n    \r\n    Use BFS.\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "shortest_path",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef shortest_path(graph, start, end):\r\n    \"\"\"\r\n    Return the length of the shortest path (in edges)\r\n    from start to end in an unweighted graph.\r\n    Return -1 if no path exists.\r\n    \r\n    Use BFS.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Trace the Output**\r\n```python\r\nfrom collections import deque\r\n\r\ndef bfs(graph, start):\r\n    visited = set()\r\n    queue = deque([start])\r\n    visited.add(start)\r\n    result = []\r\n    \r\n    while queue:\r\n        node = queue.popleft()\r\n        result.append(node)\r\n        for neighbor in graph[node]:\r\n            if neighbor not in visited:\r\n                visited.add(neighbor)\r\n                queue.append(neighbor)\r\n    \r\n    return result\r\n\r\ngraph = {\r\n    'A': ['B', 'C'],\r\n    'B': ['A', 'D', 'E'],\r\n    'C': ['A', 'F'],\r\n    'D': ['B'],\r\n    'E': ['B'],\r\n    'F': ['C']\r\n}\r\n\r\nprint(bfs(graph, 'A'))\r\n```\r\n*What prints?*\r\n- A) `['A', 'B', 'D', 'E', 'C', 'F']`\r\n- B) `['A', 'B', 'C', 'D', 'E', 'F']` ✅\r\n- C) `['A', 'C', 'F', 'B', 'D', 'E']`\r\n- D) `['A', 'B', 'C', 'F', 'E', 'D']`\r\n\r\n**Feedback:** BFS explores layer by layer. Layer 0: A. Layer 1: B, C (A's neighbors). Layer 2: D, E (B's unvisited neighbors), F (C's unvisited neighbor). Result: A B C D E F.\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef shortest_path(graph, start, end):\r\n    \"\"\"\r\n    Return the length of the shortest path (in edges)\r\n    from start to end in an unweighted graph.\r\n    Return -1 if no path exists.\r\n    \r\n    Use BFS.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u10-l3",
+          "unit": 10,
+          "index": 3,
+          "title": "Lesson 10.3 — DFS",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u10-l3-q1",
+              "index": 1,
+              "title": "Fill in the Blank",
+              "type": "fill_blank",
+              "prompt": "What goes in blank 1?",
+              "code": "def dfs_iterative(graph, start):\r\n    visited = set()\r\n    stack = [start]\r\n    result = []\r\n    \r\n    while stack:\r\n        node = stack.____()    # blank 1\r\n        if node not in visited:\r\n            visited.add(node)\r\n            result.append(node)\r\n            for neighbor in graph[node]:\r\n                if neighbor not in visited:\r\n                    stack.append(neighbor)\r\n    \r\n    return result",
+              "functionName": "dfs_iterative",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "DFS uses a *stack* (LIFO). `pop()` removes from the end, which gives us the most-recently-added neighbor first — that's depth-first behavior. If you used `popleft()`, it would become BFS.",
+              "rawMarkdown": "```python\r\ndef dfs_iterative(graph, start):\r\n    visited = set()\r\n    stack = [start]\r\n    result = []\r\n    \r\n    while stack:\r\n        node = stack.____()    # blank 1\r\n        if node not in visited:\r\n            visited.add(node)\r\n            result.append(node)\r\n            for neighbor in graph[node]:\r\n                if neighbor not in visited:\r\n                    stack.append(neighbor)\r\n    \r\n    return result\r\n```\r\n*What goes in blank 1?*\r\n\r\n**Correct:** `pop`\r\n**Feedback:** DFS uses a *stack* (LIFO). `pop()` removes from the end, which gives us the most-recently-added neighbor first — that's depth-first behavior. If you used `popleft()`, it would become BFS.\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Fill in the Blank**\r\n```python\r\ndef dfs_iterative(graph, start):\r\n    visited = set()\r\n    stack = [start]\r\n    result = []\r\n    \r\n    while stack:\r\n        node = stack.____()    # blank 1\r\n        if node not in visited:\r\n            visited.add(node)\r\n            result.append(node)\r\n            for neighbor in graph[node]:\r\n                if neighbor not in visited:\r\n                    stack.append(neighbor)\r\n    \r\n    return result\r\n```\r\n*What goes in blank 1?*\r\n\r\n**Correct:** `pop`\r\n**Feedback:** DFS uses a *stack* (LIFO). `pop()` removes from the end, which gives us the most-recently-added neighbor first — that's depth-first behavior. If you used `popleft()`, it would become BFS.\r\n\r\n---"
+        },
+        {
+          "id": "u10-l4",
+          "unit": 10,
+          "index": 4,
+          "title": "Lessons 10.4–10.8",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Number of islands, Clone graph, Course schedule / topological sort, Dijkstra's algorithm, Union Find)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-11",
+      "number": 11,
+      "title": "Dynamic Programming",
+      "topic": "Dynamic Programming",
+      "lessonsPlanned": 8,
+      "xp": 550,
+      "description": "*Concept introduced:",
+      "lessons": [
+        {
+          "id": "u11-l1",
+          "unit": 11,
+          "index": 1,
+          "title": "Lesson 11.1 — What is DP? (From Fibonacci)",
+          "conceptIntroduced": "Overlapping subproblems — discovered by watching a naive solution be slow",
+          "questions": [
+            {
+              "id": "u11-l1-q1",
+              "index": 1,
+              "title": "Spot the Bug (Performance)",
+              "type": "spot_bug",
+              "prompt": "What is the time complexity of `fib_naive`?",
+              "code": "def fib_naive(n):\r\n    if n <= 1:\r\n        return n\r\n    return fib_naive(n - 1) + fib_naive(n - 2)\r\n\r\n# This takes forever for large n. Why?\r\nprint(fib_naive(40))",
+              "functionName": "fib_naive",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "O(n)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "O(n²)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "O(2ⁿ)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "D",
+                  "text": "O(n log n)",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Each call spawns two more calls, creating an exponential tree. `fib(40)` makes over 300 million calls! `fib(5)` alone recalculates `fib(3)` twice, `fib(2)` three times. DP fixes this by storing results we've already computed.",
+              "rawMarkdown": "```python\r\ndef fib_naive(n):\r\n    if n <= 1:\r\n        return n\r\n    return fib_naive(n - 1) + fib_naive(n - 2)\r\n\r\n# This takes forever for large n. Why?\r\nprint(fib_naive(40))\r\n```\r\n*What is the time complexity of `fib_naive`?*\r\n- A) O(n)\r\n- B) O(n²)\r\n- C) O(2ⁿ) ✅\r\n- D) O(n log n)\r\n\r\n**Feedback:** Each call spawns two more calls, creating an exponential tree. `fib(40)` makes over 300 million calls! `fib(5)` alone recalculates `fib(3)` twice, `fib(2)` three times. DP fixes this by storing results we've already computed.\r\n\r\n---"
+            },
+            {
+              "id": "u11-l1-q2",
+              "index": 2,
+              "title": "Fix the Code",
+              "type": "fix_code",
+              "prompt": "Fix this function so it actually memoizes:",
+              "code": "def fib_memo(n, memo={}):\r\n    if n <= 1:\r\n        return n\r\n    if n in memo:\r\n        return memo[n]\r\n    result = fib_memo(n - 1) + fib_memo(n - 2)\r\n    # BUG: we compute result but never store it\r\n    return result",
+              "functionName": "fib_memo",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef fib_memo(n, memo={}):\r\n    if n <= 1:\r\n        return n\r\n    if n in memo:\r\n        return memo[n]\r\n    result = fib_memo(n - 1) + fib_memo(n - 2)\r\n    # BUG: we compute result but never store it\r\n    return result\r\n```\r\n*Fix this function so it actually memoizes:*\r\n\r\n**Correct fix:** Add `memo[n] = result` before `return result`.\r\n\r\n---"
+            },
+            {
+              "id": "u11-l1-q3",
+              "index": 3,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def fib_dp(n):\r\n    \"\"\"\r\n    Compute the nth Fibonacci number using bottom-up DP.\r\n    Use only O(1) space (no array, no dict).\r\n    \r\n    fib_dp(0) -> 0\r\n    fib_dp(1) -> 1\r\n    fib_dp(10) -> 55\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "fib_dp",
+              "tests": [
+                {
+                  "call": "fib_dp(0)",
+                  "expected": "0"
+                },
+                {
+                  "call": "fib_dp(1)",
+                  "expected": "1"
+                },
+                {
+                  "call": "fib_dp(10)",
+                  "expected": "55"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef fib_dp(n):\r\n    \"\"\"\r\n    Compute the nth Fibonacci number using bottom-up DP.\r\n    Use only O(1) space (no array, no dict).\r\n    \r\n    fib_dp(0) -> 0\r\n    fib_dp(1) -> 1\r\n    fib_dp(10) -> 55\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Concept introduced:** Overlapping subproblems — discovered by watching a naive solution be slow\r\n\r\n**Question 1 — Spot the Bug (Performance)**\r\n```python\r\ndef fib_naive(n):\r\n    if n <= 1:\r\n        return n\r\n    return fib_naive(n - 1) + fib_naive(n - 2)\r\n\r\n# This takes forever for large n. Why?\r\nprint(fib_naive(40))\r\n```\r\n*What is the time complexity of `fib_naive`?*\r\n- A) O(n)\r\n- B) O(n²)\r\n- C) O(2ⁿ) ✅\r\n- D) O(n log n)\r\n\r\n**Feedback:** Each call spawns two more calls, creating an exponential tree. `fib(40)` makes over 300 million calls! `fib(5)` alone recalculates `fib(3)` twice, `fib(2)` three times. DP fixes this by storing results we've already computed.\r\n\r\n---\r\n\r\n**Question 2 — Fix the Code**\r\n```python\r\ndef fib_memo(n, memo={}):\r\n    if n <= 1:\r\n        return n\r\n    if n in memo:\r\n        return memo[n]\r\n    result = fib_memo(n - 1) + fib_memo(n - 2)\r\n    # BUG: we compute result but never store it\r\n    return result\r\n```\r\n*Fix this function so it actually memoizes:*\r\n\r\n**Correct fix:** Add `memo[n] = result` before `return result`.\r\n\r\n---\r\n\r\n**Question 3 — Write from Scratch**\r\n```python\r\ndef fib_dp(n):\r\n    \"\"\"\r\n    Compute the nth Fibonacci number using bottom-up DP.\r\n    Use only O(1) space (no array, no dict).\r\n    \r\n    fib_dp(0) -> 0\r\n    fib_dp(1) -> 1\r\n    fib_dp(10) -> 55\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u11-l2",
+          "unit": 11,
+          "index": 2,
+          "title": "Lesson 11.2 — 1D DP: Climbing Stairs and Variants",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u11-l2-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def climb_stairs(n):\r\n    if n <= 2:\r\n        return n\r\n    \r\n    prev2 = 1\r\n    prev1 = 2\r\n    \r\n    for _ in range(3, n + 1):\r\n        curr = prev1 + prev2\r\n        prev2 = prev1\r\n        prev1 = curr\r\n    \r\n    return prev1\r\n\r\nprint(climb_stairs(4))\r\nprint(climb_stairs(5))",
+              "functionName": "climb_stairs",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`5`, `8`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "`4`, `5`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "`3`, `5`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`8`, `13`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "To reach step n, you came from step n-1 (one step) or n-2 (two steps). `ways(n) = ways(n-1) + ways(n-2)`. For n=4: 1,2,3,5. For n=5: 1,2,3,5,8. It's Fibonacci, shifted!",
+              "rawMarkdown": "```python\r\ndef climb_stairs(n):\r\n    if n <= 2:\r\n        return n\r\n    \r\n    prev2 = 1\r\n    prev1 = 2\r\n    \r\n    for _ in range(3, n + 1):\r\n        curr = prev1 + prev2\r\n        prev2 = prev1\r\n        prev1 = curr\r\n    \r\n    return prev1\r\n\r\nprint(climb_stairs(4))\r\nprint(climb_stairs(5))\r\n```\r\n*What prints?*\r\n- A) `5`, `8` ✅\r\n- B) `4`, `5`\r\n- C) `3`, `5`\r\n- D) `8`, `13`\r\n\r\n**Feedback:** To reach step n, you came from step n-1 (one step) or n-2 (two steps). `ways(n) = ways(n-1) + ways(n-2)`. For n=4: 1,2,3,5. For n=5: 1,2,3,5,8. It's Fibonacci, shifted!\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Trace the Output**\r\n```python\r\ndef climb_stairs(n):\r\n    if n <= 2:\r\n        return n\r\n    \r\n    prev2 = 1\r\n    prev1 = 2\r\n    \r\n    for _ in range(3, n + 1):\r\n        curr = prev1 + prev2\r\n        prev2 = prev1\r\n        prev1 = curr\r\n    \r\n    return prev1\r\n\r\nprint(climb_stairs(4))\r\nprint(climb_stairs(5))\r\n```\r\n*What prints?*\r\n- A) `5`, `8` ✅\r\n- B) `4`, `5`\r\n- C) `3`, `5`\r\n- D) `8`, `13`\r\n\r\n**Feedback:** To reach step n, you came from step n-1 (one step) or n-2 (two steps). `ways(n) = ways(n-1) + ways(n-2)`. For n=4: 1,2,3,5. For n=5: 1,2,3,5,8. It's Fibonacci, shifted!\r\n\r\n---"
+        },
+        {
+          "id": "u11-l3",
+          "unit": 11,
+          "index": 3,
+          "title": "Lesson 11.3 — 2D DP: Grids and Matrices",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u11-l3-q1",
+              "index": 1,
+              "title": "Multiple Choice — Concept",
+              "type": "multiple_choice",
+              "prompt": "You want to count unique paths in a grid from top-left to bottom-right, moving only right or down. The grid is m×n. What is the recurrence?",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`dp[i][j] = dp[i-1][j] * dp[i][j-1]`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`dp[i][j] = dp[i-1][j] + dp[i][j-1]`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`dp[i][j] = max(dp[i-1][j], dp[i][j-1])`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`dp[i][j] = dp[i-1][j-1] + 1`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "",
+              "rawMarkdown": "*You want to count unique paths in a grid from top-left to bottom-right, moving only right or down. The grid is m×n. What is the recurrence?*\r\n- A) `dp[i][j] = dp[i-1][j] * dp[i][j-1]`\r\n- B) `dp[i][j] = dp[i-1][j] + dp[i][j-1]` ✅\r\n- C) `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`\r\n- D) `dp[i][j] = dp[i-1][j-1] + 1`\r\n\r\n---"
+            },
+            {
+              "id": "u11-l3-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def unique_paths(m, n):\r\n    \"\"\"\r\n    Return the number of unique paths in an m x n grid\r\n    moving only right or down from top-left to bottom-right.\r\n    \r\n    unique_paths(3, 7) -> 28\r\n    unique_paths(3, 2) -> 3\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "unique_paths",
+              "tests": [
+                {
+                  "call": "unique_paths(3, 7)",
+                  "expected": "28"
+                },
+                {
+                  "call": "unique_paths(3, 2)",
+                  "expected": "3"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef unique_paths(m, n):\r\n    \"\"\"\r\n    Return the number of unique paths in an m x n grid\r\n    moving only right or down from top-left to bottom-right.\r\n    \r\n    unique_paths(3, 7) -> 28\r\n    unique_paths(3, 2) -> 3\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Multiple Choice — Concept**\r\n\r\n*You want to count unique paths in a grid from top-left to bottom-right, moving only right or down. The grid is m×n. What is the recurrence?*\r\n- A) `dp[i][j] = dp[i-1][j] * dp[i][j-1]`\r\n- B) `dp[i][j] = dp[i-1][j] + dp[i][j-1]` ✅\r\n- C) `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`\r\n- D) `dp[i][j] = dp[i-1][j-1] + 1`\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef unique_paths(m, n):\r\n    \"\"\"\r\n    Return the number of unique paths in an m x n grid\r\n    moving only right or down from top-left to bottom-right.\r\n    \r\n    unique_paths(3, 7) -> 28\r\n    unique_paths(3, 2) -> 3\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u11-l4",
+          "unit": 11,
+          "index": 4,
+          "title": "Lessons 11.4–11.8",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: 0/1 Knapsack, Coin Change, Longest Common Subsequence, Word Break, Edit Distance)*\r\n\r\n---\r\n\r\n---"
+        }
+      ]
+    },
+    {
+      "id": "unit-12",
+      "number": 12,
+      "title": "Advanced Patterns",
+      "topic": "Advanced Patterns",
+      "lessonsPlanned": 6,
+      "xp": 500,
+      "description": "*Question 1 — Trace the Output",
+      "lessons": [
+        {
+          "id": "u12-l1",
+          "unit": 12,
+          "index": 1,
+          "title": "Lesson 12.1 — Heap / Priority Queue",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u12-l1-q1",
+              "index": 1,
+              "title": "Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "import heapq\r\n\r\nnums = [3, 1, 4, 1, 5, 9, 2, 6]\r\nheapq.heapify(nums)\r\n\r\nprint(heapq.heappop(nums))\r\nprint(heapq.heappop(nums))\r\nprint(heapq.heappop(nums))",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "`9`, `6`, `5`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "`1`, `1`, `2`",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "`3`, `1`, `4`",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "`1`, `2`, `3`",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Python's `heapq` is a **min-heap** — `heappop` always removes the *smallest* element. After heapify, the structure is valid but not fully sorted. The three smallest elements are 1, 1, 2.",
+              "rawMarkdown": "```python\r\nimport heapq\r\n\r\nnums = [3, 1, 4, 1, 5, 9, 2, 6]\r\nheapq.heapify(nums)\r\n\r\nprint(heapq.heappop(nums))\r\nprint(heapq.heappop(nums))\r\nprint(heapq.heappop(nums))\r\n```\r\n*What prints?*\r\n- A) `9`, `6`, `5`\r\n- B) `1`, `1`, `2` ✅\r\n- C) `3`, `1`, `4`\r\n- D) `1`, `2`, `3`\r\n\r\n**Feedback:** Python's `heapq` is a **min-heap** — `heappop` always removes the *smallest* element. After heapify, the structure is valid but not fully sorted. The three smallest elements are 1, 1, 2.\r\n\r\n---"
+            },
+            {
+              "id": "u12-l1-q2",
+              "index": 2,
+              "title": "Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "",
+              "code": "def top_k_frequent(nums, k):\r\n    \"\"\"\r\n    Return the k most frequent elements.\r\n    \r\n    top_k_frequent([1, 1, 1, 2, 2, 3], 2) -> [1, 2]\r\n    top_k_frequent([1], 1)                 -> [1]\r\n    \r\n    Aim for O(n log k) using a heap.\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "top_k_frequent",
+              "tests": [
+                {
+                  "call": "top_k_frequent([1, 1, 1, 2, 2, 3], 2)",
+                  "expected": "[1, 2]"
+                },
+                {
+                  "call": "top_k_frequent([1], 1)",
+                  "expected": "[1]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "```python\r\ndef top_k_frequent(nums, k):\r\n    \"\"\"\r\n    Return the k most frequent elements.\r\n    \r\n    top_k_frequent([1, 1, 1, 2, 2, 3], 2) -> [1, 2]\r\n    top_k_frequent([1], 1)                 -> [1]\r\n    \r\n    Aim for O(n log k) using a heap.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Trace the Output**\r\n```python\r\nimport heapq\r\n\r\nnums = [3, 1, 4, 1, 5, 9, 2, 6]\r\nheapq.heapify(nums)\r\n\r\nprint(heapq.heappop(nums))\r\nprint(heapq.heappop(nums))\r\nprint(heapq.heappop(nums))\r\n```\r\n*What prints?*\r\n- A) `9`, `6`, `5`\r\n- B) `1`, `1`, `2` ✅\r\n- C) `3`, `1`, `4`\r\n- D) `1`, `2`, `3`\r\n\r\n**Feedback:** Python's `heapq` is a **min-heap** — `heappop` always removes the *smallest* element. After heapify, the structure is valid but not fully sorted. The three smallest elements are 1, 1, 2.\r\n\r\n---\r\n\r\n**Question 2 — Write from Scratch**\r\n```python\r\ndef top_k_frequent(nums, k):\r\n    \"\"\"\r\n    Return the k most frequent elements.\r\n    \r\n    top_k_frequent([1, 1, 1, 2, 2, 3], 2) -> [1, 2]\r\n    top_k_frequent([1], 1)                 -> [1]\r\n    \r\n    Aim for O(n log k) using a heap.\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+        },
+        {
+          "id": "u12-l2",
+          "unit": 12,
+          "index": 2,
+          "title": "Lesson 12.2 — Trie",
+          "conceptIntroduced": "",
+          "questions": [
+            {
+              "id": "u12-l2-q1",
+              "index": 1,
+              "title": "Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Build a Trie insert method:",
+              "code": "class TrieNode:\r\n    def __init__(self):\r\n        self.children = {}\r\n        self.is_end = False\r\n\r\nclass Trie:\r\n    def __init__(self):\r\n        self.root = TrieNode()\r\n\r\n    def insert(self, word):\r\n        node = self.root\r\n        for char in word:\r\n            if char not in node.children:\r\n                node.children[char] = TrieNode()\r\n            node = node.children[char]\r\n        node.is_end = True",
+              "functionName": "__init__",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "",
+              "rawMarkdown": "*Build a Trie insert method:*\r\n\r\nBlocks:\r\n```\r\nclass TrieNode:\r\n    def __init__(self):\r\n        self.children = {}\r\n        self.is_end = False\r\n\r\nclass Trie:\r\n    def __init__(self):\r\n        self.root = TrieNode()\r\n\r\n    def insert(self, word):\r\n        node = self.root\r\n        for char in word:\r\n            if char not in node.children:\r\n                node.children[char] = TrieNode()\r\n            node = node.children[char]\r\n        node.is_end = True\r\n```\r\n*(Students arrange the method body lines)*\r\n\r\n---"
+            }
+          ],
+          "rawMarkdown": "**Question 1 — Arrange the Blocks**\r\n\r\n*Build a Trie insert method:*\r\n\r\nBlocks:\r\n```\r\nclass TrieNode:\r\n    def __init__(self):\r\n        self.children = {}\r\n        self.is_end = False\r\n\r\nclass Trie:\r\n    def __init__(self):\r\n        self.root = TrieNode()\r\n\r\n    def insert(self, word):\r\n        node = self.root\r\n        for char in word:\r\n            if char not in node.children:\r\n                node.children[char] = TrieNode()\r\n            node = node.children[char]\r\n        node.is_end = True\r\n```\r\n*(Students arrange the method body lines)*\r\n\r\n---"
+        },
+        {
+          "id": "u12-l3",
+          "unit": 12,
+          "index": 3,
+          "title": "Lessons 12.3–12.6",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "*(Covering: Backtracking — N-Queens, Bit manipulation patterns, Segment trees introduction, Comprehensive review)*\r\n\r\n---\r\n\r\n---\r\n\r\n## Appendix A: Question Type Distribution Per Lesson\r\n\r\nEach lesson of 8–12 questions uses this approximate distribution:\r\n\r\n| Question Type | Frequency | Placement |\r\n|---------------|-----------|-----------|\r\n| Trace the Output | 2–3 | First (warm up) |\r\n| Spot the Bug | 1–2 | Early/Middle |\r\n| Complexity Choice | 1 | Middle |\r\n| Fill in the Blank | 1–2 | Middle |\r\n| Arrange the Blocks | 1 | Middle |\r\n| Fix the Code | 0–1 | Late |\r\n| Write from Scratch | 2–3 | Last (hardest) |\r\n\r\n---\r\n\r\n## Appendix B: Teaching Philosophy Notes"
+        },
+        {
+          "id": "u12-l4",
+          "unit": 12,
+          "index": 4,
+          "title": "Why No Lectures?",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "The course never opens a lesson with \"A stack is a LIFO data structure.\" Instead, students are shown code that uses a stack and asked what it prints. They form their own mental model before vocabulary is introduced. When they get it wrong, the feedback panel provides the vocabulary as an explanation of *why they were wrong* — anchored to a concrete failure they just experienced."
+        },
+        {
+          "id": "u12-l5",
+          "unit": 12,
+          "index": 5,
+          "title": "Progression Within Each Question Type",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "**Fill in the Blank** questions follow this internal progression:\r\n1. Blank is a single token (e.g., `length`, `-1`, `pop`)\r\n2. Blank is an expression (e.g., `len(arr) // 2`)\r\n3. Blank is an entire line\r\n4. Multiple blanks in the same function\r\n\r\n**Write from Scratch** questions progress across units:\r\n1. 3 lines with a clear pattern (Unit 1–2)\r\n2. 5–10 lines with a hint about the approach (Unit 3–6)\r\n3. 10–20 lines with no hints (Unit 7–10)\r\n4. 20+ lines, interview-style — no hints, edge cases in test suite (Unit 11–12)"
+        },
+        {
+          "id": "u12-l6",
+          "unit": 12,
+          "index": 6,
+          "title": "Code Style Standards",
+          "conceptIntroduced": "",
+          "questions": [],
+          "rawMarkdown": "All code in this course follows these conventions:\r\n- **Realistic formatting** — always multi-line, properly indented, real variable names\r\n- **Type hints** where they help clarity (later units)\r\n- **Docstrings** on all Write from Scratch prompts\r\n- **Test cases in docstrings** so students can manually trace before submitting\r\n- No compressed one-liners in teaching examples (only valid in \"Spot the Bug — is this Pythonic?\" challenges)"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "markdownPath": "course_content/curriculum.md",
+    "convertedAt": "2026-03-18T17:46:07.064Z"
+  }
+}

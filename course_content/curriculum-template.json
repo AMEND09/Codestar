@@ -1,0 +1,266 @@
+{
+  "metadata": {
+    "title": "<Course Title>",
+    "subtitle": "<Short course tagline>",
+    "totalUnits": 2,
+    "totalLessons": 2,
+    "totalXp": 200,
+    "philosophy": "<What is the learning philosophy for this curriculum?>"
+  },
+  "questionTypes": [
+    {
+      "type": "Trace the Output",
+      "description": "Given code, predict what it prints.",
+      "cognitiveLevel": "Recognize"
+    },
+    {
+      "type": "Spot the Bug",
+      "description": "Find the error in broken code.",
+      "cognitiveLevel": "Recognize"
+    },
+    {
+      "type": "Multiple Choice — Concept",
+      "description": "Choose the correct explanation.",
+      "cognitiveLevel": "Recall"
+    },
+    {
+      "type": "Fill in the Blank",
+      "description": "Complete a missing piece of code.",
+      "cognitiveLevel": "Recall"
+    },
+    {
+      "type": "Arrange the Blocks",
+      "description": "Drag/drop lines into the correct order.",
+      "cognitiveLevel": "Construct"
+    },
+    {
+      "type": "Fix the Code",
+      "description": "Edit broken code in a text editor.",
+      "cognitiveLevel": "Construct"
+    },
+    {
+      "type": "Write from Scratch",
+      "description": "Write a function given a docstring.",
+      "cognitiveLevel": "Produce"
+    },
+    {
+      "type": "Complexity Choice",
+      "description": "Choose the Big O for shown code.",
+      "cognitiveLevel": "Analyze"
+    },
+    {
+      "type": "Match the Pairs",
+      "description": "Match data structures to their properties.",
+      "cognitiveLevel": "Recognize"
+    }
+  ],
+  "overview": [
+    {
+      "unit": 1,
+      "topic": "<Unit 1 Topic>",
+      "lessons": 1,
+      "xp": 100
+    },
+    {
+      "unit": 2,
+      "topic": "<Unit 2 Topic>",
+      "lessons": 1,
+      "xp": 100
+    }
+  ],
+  "units": [
+    {
+      "id": "unit-1",
+      "number": 1,
+      "title": "Unit 1 — <Name>",
+      "topic": "<Unit topic>",
+      "lessonsPlanned": 1,
+      "xp": 100,
+      "description": "<Short description of the unit>",
+      "lessons": [
+        {
+          "id": "u1-l1",
+          "unit": 1,
+          "index": 1,
+          "title": "Lesson 1.1 — <Lesson Title>",
+          "conceptIntroduced": "<What is introduced?>",
+          "questions": [
+            {
+              "id": "u1-l1-q1",
+              "index": 1,
+              "title": "Example: Trace the Output",
+              "type": "trace_output",
+              "prompt": "What prints?",
+              "code": "def example():\n    return 1 + 1\n\nprint(example())",
+              "functionName": "example",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "1", "isCorrect": false },
+                { "key": "B", "text": "2", "isCorrect": true },
+                { "key": "C", "text": "3", "isCorrect": false },
+                { "key": "D", "text": "Error", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "`1 + 1` evaluates to 2.",
+              "rawMarkdown": "**Question 1 — Trace the Output**\n```python\ndef example():\n    return 1 + 1\n\nprint(example())\n```\n*What prints?*\n- A) `1`\n- B) `2` ✅\n- C) `3`\n- D) `Error`\n\n**Feedback:** `1 + 1` evaluates to 2."
+            },
+            {
+              "id": "u1-l1-q2",
+              "index": 2,
+              "title": "Example: Multiple Choice",
+              "type": "multiple_choice",
+              "prompt": "Which line produces an error?",
+              "code": "a = [1, 2, 3]\nprint(a[0])\nprint(a[3])",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "print(a[0])", "isCorrect": false },
+                { "key": "B", "text": "print(a[3])", "isCorrect": true },
+                { "key": "C", "text": "The code runs without errors", "isCorrect": false },
+                { "key": "D", "text": "Neither line runs", "isCorrect": false }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Index 3 is out of range for a list of length 3.",
+              "rawMarkdown": "**Question 2 — Multiple Choice**\n\nWhich line raises an error?\n\n```python\na = [1, 2, 3]\nprint(a[0])\nprint(a[3])\n```"
+            },
+            {
+              "id": "u1-l1-q3",
+              "index": 3,
+              "title": "Example: Fill in the Blank",
+              "type": "fill_blank",
+              "prompt": "Fill in the blank to create a loop that prints 0–2.",
+              "code": "for i in ____:\n    print(i)",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "range(3)",
+              "feedback": "`range(3)` generates 0, 1, 2.",
+              "rawMarkdown": "**Question 3 — Fill in the Blank**\n\nFill in the blank to create a loop that prints 0–2.\n\n```python\nfor i in ____:\n    print(i)\n```"
+            },
+            {
+              "id": "u1-l1-q4",
+              "index": 4,
+              "title": "Example: Arrange the Blocks",
+              "type": "arrange_blocks",
+              "prompt": "Reorder the lines to swap two variables using a temporary variable.",
+              "code": "temp = a\na = b\nb = temp",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Make sure the temporary variable stores the original value of `a` before overwriting it.",
+              "rawMarkdown": "**Question 4 — Arrange the Blocks**\n\n*Swap `a` and `b` using a temporary variable:*\n\nBlocks:\n```python\nb = temp\ntemp = a\na = b\n```\n*Correct:*\n```python\ntemp = a\na = b\nb = temp\n```"
+            },
+            {
+              "id": "u1-l1-q5",
+              "index": 5,
+              "title": "Example: Fix the Code",
+              "type": "code_challenge",
+              "prompt": "Fix the function so it returns the sum of a list.",
+              "code": "def sum_list(nums):\n    total = 0\n    for n in nums \\ missing colon\n        total += n\n    return total",
+              "functionName": "sum_list",
+              "tests": [
+                { "call": "sum_list([1, 2, 3])", "expected": "6" },
+                { "call": "sum_list([])", "expected": "0" }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Make sure the for loop has a colon at the end of the line.",
+              "rawMarkdown": "**Question 5 — Fix the Code**\n\nFix the function so it returns the sum of a list.\n\n```python\ndef sum_list(nums):\n    total = 0\n    for n in nums \\ missing colon\n        total += n\n    return total\n```"
+            },
+            {
+              "id": "u1-l1-q6",
+              "index": 6,
+              "title": "Example: Match the Pairs",
+              "type": "match_pairs",
+              "prompt": "Match each expression with its output.",
+              "code": "# This question uses matchingPairs",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Pick the correct output for each expression.",
+              "matchingPairs": [
+                { "id": "a", "left": "len([1, 2, 3])", "right": "3" },
+                { "id": "b", "left": "sum([1, 2, 3])", "right": "6" }
+              ],
+              "rawMarkdown": "**Question 6 — Match the Pairs**\n\n*Match each expression with its output.*\n"
+            },
+            {
+              "id": "u1-l1-q7",
+              "index": 7,
+              "title": "Example: Insight",
+              "type": "insight",
+              "prompt": "Read the note and continue.",
+              "code": "",
+              "functionName": "",
+              "tests": [],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "This is an informational prompt; click Continue when ready.",
+              "rawMarkdown": "**Insight**: This lesson introduces the basics. Read carefully and then continue."
+            }
+          ],
+          "rawMarkdown": "<You can leave this field as a markdown string that contains the full lesson content.>"
+        }
+      ]
+    },
+    {
+      "id": "unit-2",
+      "number": 2,
+      "title": "Unit 2 — <Name>",
+      "topic": "<Unit topic>",
+      "lessonsPlanned": 1,
+      "xp": 100,
+      "description": "<Short description of the second unit>",
+      "lessons": [
+        {
+          "id": "u2-l1",
+          "unit": 2,
+          "index": 1,
+          "title": "Lesson 2.1 — <Lesson Title>",
+          "conceptIntroduced": "<What is introduced?>",
+          "questions": [
+            {
+              "id": "u2-l1-q1",
+              "index": 1,
+              "title": "Example: Complexity Choice",
+              "type": "complexity_choice",
+              "prompt": "What is the time complexity of this loop?",
+              "code": "for i in range(n):\n    for j in range(n):\n        print(i, j)",
+              "functionName": "",
+              "tests": [],
+              "choices": [
+                { "key": "A", "text": "O(n)", "isCorrect": false },
+                { "key": "B", "text": "O(n log n)", "isCorrect": false },
+                { "key": "C", "text": "O(n²)", "isCorrect": true },
+                { "key": "D", "text": "O(1)", "isCorrect": false }
+              ],
+              "correctAnswer": "C",
+              "feedback": "This has a nested loop over n, so it is O(n²).",
+              "rawMarkdown": "**Question 1 — Complexity Choice**\n\nWhat is the time complexity of this loop?\n\n```python\nfor i in range(n):\n    for j in range(n):\n        print(i, j)\n```"
+            },
+            {
+              "id": "u2-l1-q2",
+              "index": 2,
+              "title": "Example: Write from Scratch",
+              "type": "write_from_scratch",
+              "prompt": "Implement a function that returns the square of a number.",
+              "code": "def square(n):\n    # your code here",
+              "functionName": "square",
+              "tests": [
+                { "call": "square(3)", "expected": "9" },
+                { "call": "square(-2)", "expected": "4" }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Return `n * n`.",
+              "rawMarkdown": "**Question 2 — Write from Scratch**\n\nImplement a function that returns the square of a number.\n\n```python\ndef square(n):\n    # your code here\n```"
+            }
+          ],
+          "rawMarkdown": "<You can leave this field as a markdown string that contains the full lesson content.>"
+        }
+      ]
+    }
+  ]
+}
