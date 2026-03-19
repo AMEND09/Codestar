@@ -699,21 +699,26 @@
 }
 
 .roadmap {
+  --roadmap-sticky-top: 0.5rem;
   padding-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .unit-card {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
+  padding-bottom: 1.4rem;
 }
 
 .unit-header {
   position: sticky;
-  top: calc(var(--top-bar-height, 64px) + 0.5rem);
+  top: calc(var(--top-bar-height, 72px) + 0.5rem);
   z-index: 30;
   border: 2px solid rgba(0, 0, 0, 0.1);
   border-radius: 18px;
   padding: 1.2rem 1.2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.2rem;
   color: #ffffff;
   box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
 }
@@ -775,6 +780,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.55rem;
+  padding-top: 0.35rem;
 }
 
 .path-item {
@@ -782,6 +788,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.unit-path .path-item:first-child {
+  margin-top: 0.35rem;
 }
 
 .lesson-node {
@@ -809,7 +819,7 @@
   color: #ffffff;
   box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35), 0 0 0 10px color-mix(in srgb, var(--unit-color, #58cc02) 20%, transparent);
   transform: scale(1.1);
-  animation: pulse 2.2s ease-in-out infinite;
+  animation: none;
 }
 
 .lesson-node.locked {

@@ -110,10 +110,35 @@ type AvailableCourse = {
   dataPath: string
 }
 
+type CourseProgress = {
+  startLessonId: string
+  completedLessons: string[]
+}
+
+type CourseProgressMap = Record<string, CourseProgress>
+
+type UserCoreStatePayload = {
+  streak: number
+  gems: number
+  lives: number
+  maxLives: number
+  startLessonId: string
+  completedLessons: string[]
+  lastLifeRefillDate: string
+  lastLessonDate: string
+}
+
+type UserExtendedStatePayload = UserCoreStatePayload & {
+  activeCourseSlug: string
+  purchasedCourses: string[]
+  streakFreezeActive: boolean
+}
+
 type AuthMode = 'login' | 'register'
 
 const STRINGS = ['{}', '()', ';', '[]', '</>', '=>', '!=', '::']
 const MAX_LIVES = 5
+const COURSE_PROGRESS_STORAGE_PREFIX = 'codestar_course_progress_v1'
 const PB_URL = (import.meta.env.VITE_POCKETBASE_URL as string | undefined) || 'http://127.0.0.1:8090'
 const pb = new PocketBase(PB_URL)
 
@@ -240,6 +265,104 @@ function parseCompletedLessons(raw: unknown): string[] {
   return []
 }
 
+function dedupeLessons(lessons: string[]) {
+  return [...new Set(lessons)]
+}
+
+function normalizeCourseProgress(value: unknown): CourseProgress {
+  const startLessonId = typeof (value as any)?.startLessonId === 'string' ? (value as any).startLessonId : ''
+  const completedLessons = parseCompletedLessons((value as any)?.completedLessons)
+  return {
+    startLessonId,
+    completedLessons: dedupeLessons(completedLessons),
+  }
+}
+
+function parseCourseProgressMap(raw: unknown): CourseProgressMap {
+  if (!raw || typeof raw !== 'object') return {}
+
+  const parsed: CourseProgressMap = {}
+  for (const [slug, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!slug) continue
+    parsed[slug] = normalizeCourseProgress(value)
+  }
+
+  return parsed
+}
+
+function courseProgressStorageKey(userId: string) {
+  return `${COURSE_PROGRESS_STORAGE_PREFIX}:${userId}`
+}
+
+function readStoredCourseProgress(userId: string): CourseProgressMap {
+  try {
+    const raw = localStorage.getItem(courseProgressStorageKey(userId))
+    if (!raw) return {}
+    const parsed = JSON.parse(raw)
+    return parseCourseProgressMap(parsed)
+  } catch {
+    return {}
+  }
+}
+
+function buildCoreUserStatePayload(state: {
+  streak: number
+  gems: number
+  lives: number
+  startLessonId: string
+  completedLessons: string[]
+  lastLifeRefillDate: string
+  lastLessonDate: string
+}): UserCoreStatePayload {
+  return {
+    streak: state.streak,
+    gems: state.gems,
+    lives: state.lives,
+    maxLives: MAX_LIVES,
+    startLessonId: state.startLessonId,
+    completedLessons: dedupeLessons(state.completedLessons),
+    lastLifeRefillDate: state.lastLifeRefillDate,
+    lastLessonDate: state.lastLessonDate,
+  }
+}
+
+function buildExtendedUserStatePayload(
+  core: UserCoreStatePayload,
+  extras: {
+    activeCourseSlug: string
+    purchasedCourses: string[]
+    streakFreezeActive: boolean
+  },
+): UserExtendedStatePayload {
+  return {
+    ...core,
+    activeCourseSlug: extras.activeCourseSlug,
+    purchasedCourses: dedupeLessons(extras.purchasedCourses),
+    streakFreezeActive: extras.streakFreezeActive,
+  }
+}
+
+async function updateUserStateWithFallback(userId: string, payload: UserExtendedStatePayload) {
+  try {
+    return await pb.collection('users').update(userId, payload, { $autoCancel: false })
+  } catch (error) {
+    console.warn('Extended user-state sync failed, retrying with core fields only:', error)
+
+    const corePayload: UserCoreStatePayload = {
+      streak: payload.streak,
+      gems: payload.gems,
+      lives: payload.lives,
+      maxLives: payload.maxLives,
+      startLessonId: payload.startLessonId,
+      completedLessons: payload.completedLessons,
+      lastLifeRefillDate: payload.lastLifeRefillDate,
+      lastLessonDate: payload.lastLessonDate,
+    }
+
+    return pb.collection('users').update(userId, corePayload, { $autoCancel: false })
+  }
+}
+
 function normalizeGameState(record: RecordModel | null): GameState {
   const today = todayKey()
   const streak = typeof record?.streak === 'number' ? record.streak : 0
@@ -342,11 +465,12 @@ function App() {
 
   // Navigation & new feature state
   const [homeTab, setHomeTab] = useState<HomeTab>('learn')
-  const [availableCourses, setAvailableCourses] = useState<AvailableCourse[]>(DEFAULT_COURSES)
+  const [availableCourses] = useState<AvailableCourse[]>(DEFAULT_COURSES)
   const [activeCourseSlug, setActiveCourseSlug] = useState('python-dsa')
   const [purchasedCourses, setPurchasedCourses] = useState<string[]>(['python-dsa'])
   const [streakFreezeActive, setStreakFreezeActive] = useState(false)
   const [shopConfirmId, setShopConfirmId] = useState<string | null>(null)
+  const [courseProgressBySlug, setCourseProgressBySlug] = useState<CourseProgressMap>({})
 
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((_token, record) => {
@@ -392,8 +516,22 @@ function App() {
         setStreak(normalized.streak)
         setLives(normalized.lives)
         setGems(normalized.gems)
-        setStartLessonId(normalized.startLessonId)
-        setCompletedLessons(normalized.completedLessons)
+        const storedProgress = readStoredCourseProgress(freshRecord.id)
+        const mergedProgress: CourseProgressMap = {
+          ...storedProgress,
+          [normalized.activeCourseSlug]: {
+            startLessonId: normalized.startLessonId,
+            completedLessons: dedupeLessons(normalized.completedLessons),
+          },
+        }
+        const activeProgress = mergedProgress[normalized.activeCourseSlug] ?? {
+          startLessonId: normalized.startLessonId,
+          completedLessons: dedupeLessons(normalized.completedLessons),
+        }
+
+        setCourseProgressBySlug(mergedProgress)
+        setStartLessonId(activeProgress.startLessonId)
+        setCompletedLessons(activeProgress.completedLessons)
         setLastLifeRefillDate(normalized.lastLifeRefillDate)
         setLastLessonDate(normalized.lastLessonDate)
         setActiveCourseSlug(normalized.activeCourseSlug)
@@ -405,19 +543,22 @@ function App() {
         setScreen(hasStarted ? 'home' : 'placement')
 
         // Sync back any default fills (e.g. today's lives)
-        void pb.collection('users').update(freshRecord.id, {
+        const corePayload = buildCoreUserStatePayload({
           streak: normalized.streak,
           gems: normalized.gems,
           lives: normalized.lives,
-          maxLives: MAX_LIVES,
           startLessonId: normalized.startLessonId,
           completedLessons: normalized.completedLessons,
           lastLifeRefillDate: normalized.lastLifeRefillDate,
           lastLessonDate: normalized.lastLessonDate,
+        })
+        const extendedPayload = buildExtendedUserStatePayload(corePayload, {
           activeCourseSlug: normalized.activeCourseSlug,
           purchasedCourses: normalized.purchasedCourses,
           streakFreezeActive: normalized.streakFreezeActive,
-        }, { $autoCancel: false })
+        })
+
+        void updateUserStateWithFallback(freshRecord.id, extendedPayload)
       }).catch((err) => {
         console.warn('Failed to fetch latest save state:', err)
         // Fallback to local record if offline
@@ -425,8 +566,22 @@ function App() {
         setStreak(normalized.streak)
         setLives(normalized.lives)
         setGems(normalized.gems)
-        setStartLessonId(normalized.startLessonId)
-        setCompletedLessons(normalized.completedLessons)
+        const storedProgress = readStoredCourseProgress(userRecord.id)
+        const mergedProgress: CourseProgressMap = {
+          ...storedProgress,
+          [normalized.activeCourseSlug]: {
+            startLessonId: normalized.startLessonId,
+            completedLessons: dedupeLessons(normalized.completedLessons),
+          },
+        }
+        const activeProgress = mergedProgress[normalized.activeCourseSlug] ?? {
+          startLessonId: normalized.startLessonId,
+          completedLessons: dedupeLessons(normalized.completedLessons),
+        }
+
+        setCourseProgressBySlug(mergedProgress)
+        setStartLessonId(activeProgress.startLessonId)
+        setCompletedLessons(activeProgress.completedLessons)
         setLastLifeRefillDate(normalized.lastLifeRefillDate)
         setLastLessonDate(normalized.lastLessonDate)
         setActiveCourseSlug(normalized.activeCourseSlug)
@@ -442,19 +597,22 @@ function App() {
     if (!userRecord || !gameHydrated) return
 
     const timer = setTimeout(() => {
-      void pb.collection('users').update(userRecord.id, {
+      const corePayload = buildCoreUserStatePayload({
         streak,
         gems,
         lives,
-        maxLives: MAX_LIVES,
         startLessonId,
         completedLessons,
         lastLifeRefillDate,
         lastLessonDate,
+      })
+      const extendedPayload = buildExtendedUserStatePayload(corePayload, {
         activeCourseSlug,
         purchasedCourses,
         streakFreezeActive,
-      }, { $autoCancel: false }).then((record) => {
+      })
+
+      void updateUserStateWithFallback(userRecord.id, extendedPayload).then((record) => {
         setUserRecord(record)
       }).catch((error) => {
         console.warn('Failed to sync game state:', error)
@@ -476,6 +634,58 @@ function App() {
     streakFreezeActive,
     userRecord?.id,
   ])
+
+  useEffect(() => {
+    if (!userRecord?.id || !gameHydrated) return
+
+    const nextProgress = normalizeCourseProgress({
+      startLessonId,
+      completedLessons,
+    })
+
+    setCourseProgressBySlug((prev) => {
+      const current = prev[activeCourseSlug]
+      const unchanged =
+        current?.startLessonId === nextProgress.startLessonId &&
+        JSON.stringify(current?.completedLessons ?? []) === JSON.stringify(nextProgress.completedLessons)
+
+      if (unchanged) return prev
+
+      return {
+        ...prev,
+        [activeCourseSlug]: nextProgress,
+      }
+    })
+  }, [activeCourseSlug, completedLessons, gameHydrated, startLessonId, userRecord?.id])
+
+  useEffect(() => {
+    if (!userRecord?.id || !gameHydrated) return
+
+    const activeProgress = courseProgressBySlug[activeCourseSlug] ?? {
+      startLessonId: '',
+      completedLessons: [],
+    }
+
+    const currentCompleted = JSON.stringify(dedupeLessons(completedLessons))
+    const nextCompleted = JSON.stringify(dedupeLessons(activeProgress.completedLessons))
+
+    if (startLessonId !== activeProgress.startLessonId) {
+      setStartLessonId(activeProgress.startLessonId)
+    }
+    if (currentCompleted !== nextCompleted) {
+      setCompletedLessons(activeProgress.completedLessons)
+    }
+  }, [activeCourseSlug, completedLessons, courseProgressBySlug, gameHydrated, startLessonId, userRecord?.id])
+
+  useEffect(() => {
+    if (!userRecord?.id || !gameHydrated) return
+
+    try {
+      localStorage.setItem(courseProgressStorageKey(userRecord.id), JSON.stringify(courseProgressBySlug))
+    } catch {
+      console.warn('Failed to persist course progress locally.')
+    }
+  }, [courseProgressBySlug, gameHydrated, userRecord?.id])
 
   useEffect(() => {
     if (!gameHydrated) return
@@ -907,6 +1117,7 @@ function App() {
     setActiveCourseSlug('python-dsa')
     setPurchasedCourses(['python-dsa'])
     setStreakFreezeActive(false)
+    setCourseProgressBySlug({})
   }
 
   function finishPlacement() {
@@ -1455,8 +1666,6 @@ json.dumps(results)
                 gems={gems}
                 onSelect={(slug) => {
                   setActiveCourseSlug(slug)
-                  setStartLessonId('')
-                  setCompletedLessons([])
                   setHomeTab('learn')
                 }}
                 onPurchase={(course) => {
@@ -1464,8 +1673,6 @@ json.dumps(results)
                     setGems(g => g - course.price)
                     setPurchasedCourses(p => [...p, course.slug])
                     setActiveCourseSlug(course.slug)
-                    setStartLessonId('')
-                    setCompletedLessons([])
                     setHomeTab('learn')
                   }
                 }}
