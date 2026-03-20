@@ -2,6 +2,119 @@
   min-height: 100vh;
   color: var(--text);
   background: var(--bg);
+  overflow-x: clip; 
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  padding: 1rem;
+}
+
+.exit-modal {
+  width: min(470px, 100%);
+  background: var(--surface2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 1.4rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.43);
+}
+
+.exit-modal h3 {
+  margin: 0;
+  font-size: 1.45rem;
+  margin-bottom: 0.5rem;
+}
+
+.exit-modal p {
+  margin: 0;
+  color: #c7d8ff;
+  margin-bottom: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.modal-actions .modal-btn {
+  min-width: 130px;
+}
+
+.modal-btn {
+  border: 1px solid transparent;
+  border-radius: 14px;
+  height: 46px;
+  padding: 0 18px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.modal-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.modal-btn:active {
+  transform: translateY(1px);
+}
+
+.modal-btn-primary {
+  background: linear-gradient(180deg, #7ce61e 0%, #58cc02 60%, #3d8f02 100%);
+  color: #102500;
+  border-color: rgba(28, 120, 0, 0.5);
+}
+
+.modal-btn-neutral {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e8eaf0;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.app-shell.app-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.loading-panel {
+  text-align: center;
+}
+
+.loading-spinner {
+  display: inline-flex;
+  gap: 0.4rem;
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.loading-brace {
+  display: inline-block;
+  color: #58cc02;
+  animation: dance-brace 1s ease-in-out infinite;
+}
+
+.loading-brace:nth-child(1) { animation-delay: 0s; }
+.loading-brace:nth-child(2) { animation-delay: 0.1s; }
+.loading-brace:nth-child(3) { animation-delay: 0.2s; }
+.loading-brace:nth-child(4) { animation-delay: 0.3s; }
+
+@keyframes dance-brace {
+  0% { transform: translateY(0) scale(1); opacity: 0.8; }
+  25% { transform: translateY(-10px) scale(1.15); opacity: 1; }
+  50% { transform: translateY(0) scale(1); opacity: 0.9; }
+  75% { transform: translateY(-6px) scale(1.08); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 0.8; }
 }
 
 .app-placement,
@@ -424,7 +537,6 @@
 
 .tab-content {
   flex: 1;
-  overflow-y: auto;
   padding-bottom: 80px; /* space for mobile bottom bar */
 }
 
@@ -561,15 +673,22 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.1rem;
+  gap: 8px;
+  font-size: 1.5rem;
   font-weight: 900;
   color: var(--accent);
   letter-spacing: -0.5px;
 }
 
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+}
+
+/* Remove mascot icon next to logo */
 .logo-owl {
-  font-size: 1.5rem;
+  display: none;
 }
 
 .top-bar-stats {
@@ -725,6 +844,7 @@
 
 .unit-card:nth-child(5n + 1) {
   --unit-color: #58cc02;
+  --unit-depth: #58a700;
 }
 .unit-card:nth-child(5n + 1) .unit-header {
   background: var(--unit-color);
@@ -732,6 +852,7 @@
 
 .unit-card:nth-child(5n + 2) {
   --unit-color: #1cb0f6;
+  --unit-depth: #1899d6;
 }
 .unit-card:nth-child(5n + 2) .unit-header {
   background: var(--unit-color);
@@ -739,6 +860,7 @@
 
 .unit-card:nth-child(5n + 3) {
   --unit-color: #ff4b4b;
+  --unit-depth: #ea2b2b;
 }
 .unit-card:nth-child(5n + 3) .unit-header {
   background: var(--unit-color);
@@ -746,6 +868,7 @@
 
 .unit-card:nth-child(5n + 4) {
   --unit-color: #ce82ff;
+  --unit-depth: #a559ce;
 }
 .unit-card:nth-child(5n + 4) .unit-header {
   background: var(--unit-color);
@@ -753,6 +876,7 @@
 
 .unit-card:nth-child(5n + 5) {
   --unit-color: #ffc800;
+  --unit-depth: #cc9f00;
 }
 .unit-card:nth-child(5n + 5) .unit-header {
   background: var(--unit-color);
@@ -803,35 +927,73 @@
   place-items: center;
   background: var(--unit-color, #e5e5e5);
   color: #ffffff;
-  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 0 var(--unit-depth, #cfcfcf);
   cursor: pointer;
   transition: transform 0.1s;
+  position: relative;
+  z-index: 1;
+}
+
+.lesson-node::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: -2px;
+  right: -2px;
+  bottom: -15px;
+  background: rgba(0,0,0,0.15);
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+  transition: transform 0.1s;
+}
+
+.lesson-node:active:not(.locked) {
+  transform: translateY(8px);
+  box-shadow: 0 0 0 transparent;
+}
+
+.lesson-node:active:not(.locked)::after {
+  transform: translateY(-8px);
 }
 
 .lesson-node.done {
   background: var(--unit-color, #58cc02);
   color: #ffffff;
-  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 0 var(--unit-depth, #58a700);
 }
 
 .lesson-node.current {
   background: var(--unit-color, #58cc02);
   color: #ffffff;
-  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.35), 0 0 0 10px color-mix(in srgb, var(--unit-color, #58cc02) 20%, transparent);
+  box-shadow: 0 8px 0 var(--unit-depth, #58a700), 0 0 0 10px color-mix(in srgb, var(--unit-color, #58cc02) 20%, transparent);
   transform: scale(1.1);
   animation: none;
 }
 
+.lesson-node.current:active {
+  transform: scale(1.1) translateY(8px);
+  box-shadow: 0 0 0 transparent, 0 0 0 10px color-mix(in srgb, var(--unit-color, #58cc02) 20%, transparent);
+}
+
+.lesson-node.current:active::after {
+  transform: translateY(-8px);
+}
+
 .lesson-node.locked {
-  background: #e5e5e5;
-  color: rgba(0, 0, 0, 0.45);
-  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.12);
+  background: var(--surface2, #232738);
+  color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.4);
   cursor: not-allowed;
 }
 
+.lesson-node.locked::after {
+  background: rgba(0,0,0,0.15);
+}
+
 .lesson-node.locked svg {
-  color: #afafaf; /* locked star color inside the gray node */
-  fill: #b5b5b5;
+  color: rgba(255, 255, 255, 0.2);
+  fill: rgba(255, 255, 255, 0.1);
 }
 
 .symbol-mascot {
@@ -1134,31 +1296,39 @@
 }\n
 .path-item { position: relative; }
 .lesson-popover {
+  --popover-shift-x: 0px;
   position: absolute;
   top: auto;
   bottom: 85px; /* Sits cleanly above the node */
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% + var(--popover-shift-x)));
   background: var(--unit-color, #58cc02);
   border-radius: 16px;
   padding: 16px 20px 20px 20px;
-  width: 290px;
+  width: min(290px, calc(100vw - 24px));
   color: white;
   z-index: 99999;
-  animation: popin 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
-  pointer-events: none;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.42), 0 8px 18px rgba(0, 0, 0, 0.24);
+    animation: popin 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+    pointer-events: none;
+  }
+
+  .lesson-popover::before {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: calc(50% - var(--popover-shift-x));
+    transform: translateX(-50%) rotate(45deg);
+    width: 18px;
+    height: 18px;
+    background: var(--unit-color, #58cc02);
+    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
+    z-index: -1;
 }
 
 .lesson-popover.locked {
-  background: #1f1f27;
+  background: #1f2028;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.lesson-popover.locked .popover-title,
-.lesson-popover.locked .popover-concept {
-  opacity: 1;
-  color: rgba(255, 255, 255, 0.9);
 }
 
 .lesson-popover.locked .start-btn {
@@ -1170,12 +1340,12 @@
 }
 
 .lesson-popover.locked .popover-arrow {
-  border-top-color: #1f1f27;
+  border-top-color: #1f2028;
 }
 
 @keyframes popin {
-  0% { opacity: 0; transform: translateX(-50%) scale(0.6) translateY(20px); }
-  100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+  0% { opacity: 0; transform: translateX(calc(-50% + var(--popover-shift-x))) scale(0.6) translateY(20px); }
+  100% { opacity: 1; transform: translateX(calc(-50% + var(--popover-shift-x))) scale(1) translateY(0); }
 }
 
 .popover-content {
@@ -1235,7 +1405,7 @@
 .popover-arrow {
   position: absolute;
   bottom: -15px;
-  left: 50%;
+  left: calc(50% - var(--popover-shift-x));
   transform: translateX(-50%);
   width: 0;
   height: 0;

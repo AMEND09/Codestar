@@ -927,7 +927,7 @@
           "unit": 2,
           "index": 2,
           "title": "Lesson 2.2 — Sliding Window",
-          "conceptIntroduced": "A window that moves through an array without restarting",
+          "conceptIntroduced": "A window is a dynamic range (fixed or growing size) that slides over the array while updating state in O(1) per step",
           "questions": [
             {
               "id": "u2-l2-q1",
@@ -1021,6 +1021,33 @@
               "correctAnswer": "",
               "feedback": "",
               "rawMarkdown": "```python\r\ndef longest_subarray_with_sum(arr, target):\r\n    \"\"\"\r\n    Return the length of the longest contiguous subarray\r\n    whose elements sum to exactly target.\r\n    Return 0 if none exists.\r\n    \r\n    longest_subarray_with_sum([1, 2, 3, 1, 1], 3) -> 3  ([1,2] or [3] or [1,1,1])\r\n    longest_subarray_with_sum([1, -1, 5, -2, 3], 3) -> 4\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"
+            },
+            {
+              "id": "u2-l2-q4",
+              "index": 4,
+              "title": "Write from Scratch: Longest Unique-Char Substring",
+              "type": "write_from_scratch",
+              "prompt": "Implement the sliding window for substrings with unique chars.",
+              "code": "def longest_unique_substring(s):\r\n    \"\"\"\r\n    Return length of the longest substring without repeated characters.\r\n    longest_unique_substring('abcabcbb') -> 3 ('abc')\r\n    longest_unique_substring('bbbbb') -> 1 ('b')\r\n    longest_unique_substring('pwwkew') -> 3 ('wke')\r\n    \"\"\"\r\n    # your code here",
+              "functionName": "longest_unique_substring",
+              "tests": [
+                {
+                  "call": "longest_unique_substring('abcabcbb')",
+                  "expected": "3"
+                },
+                {
+                  "call": "longest_unique_substring('bbbbb')",
+                  "expected": "1"
+                },
+                {
+                  "call": "longest_unique_substring('pwwkew')",
+                  "expected": "3"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Maintain a map of last seen indexes; expand right, and when duplicate is found, slide left to lastSeen+1. Update max length at each step.",
+              "rawMarkdown": "```python\r\ndef longest_unique_substring(s):\r\n    window = {}\r\n    left = 0\r\n    max_len = 0\r\n\r\n    for right, ch in enumerate(s):\r\n        if ch in window and window[ch] >= left:\r\n            left = window[ch] + 1\r\n        window[ch] = right\r\n        max_len = max(max_len, right - left + 1)\r\n\r\n    return max_len\r\n```\r\n\r\n---"
             }
           ],
           "rawMarkdown": "**Concept introduced:** A window that moves through an array without restarting\r\n\r\n**Question 1 — Trace the Output**\r\n```python\r\ndef max_sum_subarray(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    \r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    \r\n    return max_sum\r\n\r\nprint(max_sum_subarray([2, 1, 5, 1, 3, 2], 3))\r\n```\r\n*What prints?*\r\n- A) `5`\r\n- B) `9` ✅\r\n- C) `8`\r\n- D) `6`\r\n\r\n**Feedback:** Instead of re-summing each window (O(n·k)), we slide: subtract the element leaving the window, add the element entering. Windows of size 3: [2,1,5]=8, [1,5,1]=7, [5,1,3]=9, [1,3,2]=6. Max is 9.\r\n\r\n---\r\n\r\n**Question 2 — Complexity Choice**\r\n```python\r\n# Version A\r\ndef max_sum_brute(arr, k):\r\n    max_sum = 0\r\n    for i in range(len(arr) - k + 1):\r\n        window_sum = sum(arr[i:i+k])\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum\r\n\r\n\r\n# Version B\r\ndef max_sum_sliding(arr, k):\r\n    window_sum = sum(arr[:k])\r\n    max_sum = window_sum\r\n    for i in range(k, len(arr)):\r\n        window_sum += arr[i] - arr[i - k]\r\n        max_sum = max(max_sum, window_sum)\r\n    return max_sum\r\n```\r\n*What are their time complexities?*\r\n- A) Both O(n)\r\n- B) O(n·k) and O(n) ✅\r\n- C) O(n²) and O(n log n)\r\n- D) O(n·k) and O(k)\r\n\r\n---\r\n\r\n**Question 3 — Write from Scratch**\r\n```python\r\ndef longest_subarray_with_sum(arr, target):\r\n    \"\"\"\r\n    Return the length of the longest contiguous subarray\r\n    whose elements sum to exactly target.\r\n    Return 0 if none exists.\r\n    \r\n    longest_subarray_with_sum([1, 2, 3, 1, 1], 3) -> 3  ([1,2] or [3] or [1,1,1])\r\n    longest_subarray_with_sum([1, -1, 5, -2, 3], 3) -> 4\r\n    \"\"\"\r\n    # your code here\r\n```\r\n\r\n---"

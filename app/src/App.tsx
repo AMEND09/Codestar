@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 import type { DragEvent, FormEvent } from 'react'
 import { BookOpen, Check, Flame, Gem, Heart, LogOut, Play, Settings, ShoppingBag, Star, X } from 'lucide-react'
 import { Highlight, themes } from 'prism-react-renderer'
@@ -96,6 +96,7 @@ type GameState = {
   activeCourseSlug: string
   purchasedCourses: string[]
   streakFreezeActive: boolean
+  courseProgressBySlug: CourseProgressMap
 }
 
 type HomeTab = 'learn' | 'courses' | 'shop' | 'settings'
@@ -132,11 +133,11 @@ type UserExtendedStatePayload = UserCoreStatePayload & {
   activeCourseSlug: string
   purchasedCourses: string[]
   streakFreezeActive: boolean
+  courseProgressBySlug: CourseProgressMap
 }
 
 type AuthMode = 'login' | 'register'
 
-const STRINGS = ['{}', '()', ';', '[]', '</>', '=>', '!=', '::']
 const MAX_LIVES = 5
 const COURSE_PROGRESS_STORAGE_PREFIX = 'codestar_course_progress_v1'
 const PB_URL = (import.meta.env.VITE_POCKETBASE_URL as string | undefined) || 'http://127.0.0.1:8090'
@@ -279,10 +280,31 @@ function normalizeCourseProgress(value: unknown): CourseProgress {
 }
 
 function parseCourseProgressMap(raw: unknown): CourseProgressMap {
-  if (!raw || typeof raw !== 'object') return {}
+  if (!raw) return {}
+
+  let target = raw
+  let attempts = 0
+  while (typeof target === 'string' && attempts < 3) {
+    try {
+      target = JSON.parse(target)
+      attempts++
+    } catch {
+      break
+    }
+  }
+
+  if (typeof target !== 'object' || target === null || Array.isArray(target)) return {}
+
+  // Defend against accidentally double-nested payloads (where the DB column contains a JSON object that has a 'courseProgressBySlug' root key)
+  if (Object.keys(target).length === 1 && 'courseProgressBySlug' in target) {
+    const unnested = (target as any).courseProgressBySlug
+    if (typeof unnested === 'object' && unnested !== null && !Array.isArray(unnested)) {
+      target = unnested
+    }
+  }
 
   const parsed: CourseProgressMap = {}
-  for (const [slug, value] of Object.entries(raw as Record<string, unknown>)) {
+  for (const [slug, value] of Object.entries(target as Record<string, unknown>)) {
     if (!slug) continue
     parsed[slug] = normalizeCourseProgress(value)
   }
@@ -332,6 +354,7 @@ function buildExtendedUserStatePayload(
     activeCourseSlug: string
     purchasedCourses: string[]
     streakFreezeActive: boolean
+    courseProgressBySlug: CourseProgressMap
   },
 ): UserExtendedStatePayload {
   return {
@@ -339,6 +362,7 @@ function buildExtendedUserStatePayload(
     activeCourseSlug: extras.activeCourseSlug,
     purchasedCourses: dedupeLessons(extras.purchasedCourses),
     streakFreezeActive: extras.streakFreezeActive,
+    courseProgressBySlug: extras.courseProgressBySlug,
   }
 }
 
@@ -348,13 +372,19 @@ async function updateUserStateWithFallback(userId: string, payload: UserExtended
   } catch (error) {
     console.warn('Extended user-state sync failed, retrying with core fields only:', error)
 
+    const mergedCompleted = payload.courseProgressBySlug
+      ? dedupeLessons(
+          Object.values(payload.courseProgressBySlug).flatMap((progress) => progress.completedLessons),
+        )
+      : dedupeLessons(payload.completedLessons)
+
     const corePayload: UserCoreStatePayload = {
       streak: payload.streak,
       gems: payload.gems,
       lives: payload.lives,
       maxLives: payload.maxLives,
       startLessonId: payload.startLessonId,
-      completedLessons: payload.completedLessons,
+      completedLessons: mergedCompleted,
       lastLifeRefillDate: payload.lastLifeRefillDate,
       lastLessonDate: payload.lastLessonDate,
     }
@@ -369,12 +399,28 @@ function normalizeGameState(record: RecordModel | null): GameState {
   const gems = typeof record?.gems === 'number' ? record.gems : 120
   const rawLives = typeof record?.lives === 'number' ? record.lives : MAX_LIVES
   const startLessonId = typeof record?.startLessonId === 'string' ? record.startLessonId : ''
-  const completedLessons = parseCompletedLessons(record?.completedLessons)
+  let completedLessons = parseCompletedLessons(record?.completedLessons)
   const lastLifeRefillDate = typeof record?.lastLifeRefillDate === 'string' ? record.lastLifeRefillDate : today
   const lastLessonDate = typeof record?.lastLessonDate === 'string' ? record.lastLessonDate : ''
   const activeCourseSlug = typeof record?.activeCourseSlug === 'string' && record.activeCourseSlug ? record.activeCourseSlug : 'python-dsa'
   const purchasedCourses = parseCompletedLessons(record?.purchasedCourses)
   const streakFreezeActive = typeof record?.streakFreezeActive === 'boolean' ? record.streakFreezeActive : false
+  let courseProgressBySlug = parseCourseProgressMap((record as any)?.courseProgressBySlug)
+
+  const courseProgressLessons = Object.values(courseProgressBySlug).flatMap((progress) => progress.completedLessons)
+  if (courseProgressLessons.length > 0) {
+    completedLessons = dedupeLessons(courseProgressLessons)
+  }
+
+  // Legacy compatibility: if only root completedLessons exists, preserve in map under active course
+  if (Object.keys(courseProgressBySlug).length === 0 && completedLessons.length > 0) {
+    courseProgressBySlug = {
+      [activeCourseSlug]: {
+        startLessonId,
+        completedLessons: dedupeLessons(completedLessons),
+      },
+    }
+  }
 
   const lives = lastLifeRefillDate === today ? Math.max(0, Math.min(MAX_LIVES, rawLives)) : MAX_LIVES
 
@@ -389,6 +435,7 @@ function normalizeGameState(record: RecordModel | null): GameState {
     activeCourseSlug,
     purchasedCourses: purchasedCourses.length > 0 ? purchasedCourses : ['python-dsa'],
     streakFreezeActive,
+    courseProgressBySlug,
   }
 }
 
@@ -422,6 +469,7 @@ function App() {
 
   const [userRecord, setUserRecord] = useState<RecordModel | null>(null)
   const [gameHydrated, setGameHydrated] = useState(false)
+  const [showExitModal, setShowExitModal] = useState(false)
 
   const [streak, setStreak] = useState(0)
   const [lives, setLives] = useState(MAX_LIVES)
@@ -446,6 +494,7 @@ function App() {
   const [codeChecking, setCodeChecking] = useState(false)
 
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null)
+  const [popoverShiftByLesson, setPopoverShiftByLesson] = useState<Record<string, number>>({})
   const [activeLessonId, setActiveLessonId] = useState('')
   const [lessonIndex, setLessonIndex] = useState(0)
   const [lessonChoice, setLessonChoice] = useState('')
@@ -472,10 +521,13 @@ function App() {
   const [shopConfirmId, setShopConfirmId] = useState<string | null>(null)
   const [courseProgressBySlug, setCourseProgressBySlug] = useState<CourseProgressMap>({})
 
+  const lastSavedPayloadRef = useRef<string>('')
+
   useEffect(() => {
     const unsubscribe = pb.authStore.onChange((_token, record) => {
       setUserRecord(record ?? null)
       if (!record) {
+        lastSavedPayloadRef.current = ''
         setGameHydrated(false)
         setScreen('auth')
       }
@@ -483,6 +535,7 @@ function App() {
 
     setUserRecord(pb.authStore.record ?? null)
     if (!pb.authStore.record) {
+      lastSavedPayloadRef.current = ''
       setScreen('auth')
     }
 
@@ -519,15 +572,19 @@ function App() {
         const storedProgress = readStoredCourseProgress(freshRecord.id)
         const mergedProgress: CourseProgressMap = {
           ...storedProgress,
-          [normalized.activeCourseSlug]: {
-            startLessonId: normalized.startLessonId,
-            completedLessons: dedupeLessons(normalized.completedLessons),
-          },
+          ...normalized.courseProgressBySlug,
         }
-        const activeProgress = mergedProgress[normalized.activeCourseSlug] ?? {
-          startLessonId: normalized.startLessonId,
-          completedLessons: dedupeLessons(normalized.completedLessons),
+
+        // If the active course isn't in the map yet, initialize it with whatever legacy flat progress we have
+        if (!mergedProgress[normalized.activeCourseSlug]) {
+          const isLegacy = Object.keys(normalized.courseProgressBySlug).length === 0
+          mergedProgress[normalized.activeCourseSlug] = {
+            startLessonId: isLegacy ? normalized.startLessonId : '',
+            completedLessons: isLegacy ? dedupeLessons(normalized.completedLessons) : [],
+          }
         }
+
+        const activeProgress = mergedProgress[normalized.activeCourseSlug]
 
         setCourseProgressBySlug(mergedProgress)
         setStartLessonId(activeProgress.startLessonId)
@@ -539,10 +596,62 @@ function App() {
         setStreakFreezeActive(normalized.streakFreezeActive)
         setGameHydrated(true)
 
-        const hasStarted = normalized.startLessonId.length > 0
-        setScreen(hasStarted ? 'home' : 'placement')
+        const allCourseCompletedLessons = dedupeLessons(
+          Object.values(mergedProgress).flatMap((progress) => progress.completedLessons),
+        )
 
-        // Sync back any default fills (e.g. today's lives)
+        const corePayload = buildCoreUserStatePayload({
+          streak: normalized.streak,
+          gems: normalized.gems,
+          lives: normalized.lives,
+          startLessonId: activeProgress.startLessonId,
+          completedLessons: allCourseCompletedLessons.length > 0 ? allCourseCompletedLessons : normalized.completedLessons,
+          lastLifeRefillDate: normalized.lastLifeRefillDate,
+          lastLessonDate: normalized.lastLessonDate,
+        })
+        const extendedPayload = buildExtendedUserStatePayload(corePayload, {
+          activeCourseSlug: normalized.activeCourseSlug,
+          purchasedCourses: normalized.purchasedCourses,
+          streakFreezeActive: normalized.streakFreezeActive,
+          courseProgressBySlug: mergedProgress,
+        })
+        lastSavedPayloadRef.current = JSON.stringify(extendedPayload)
+
+        const hasStarted = activeProgress.startLessonId.length > 0
+        setScreen(hasStarted ? 'home' : 'placement')
+      }).catch((err) => {
+        console.warn('Failed to fetch latest save state:', err)
+        // Fallback to local record if offline
+        const normalized = normalizeGameState(userRecord)
+        setStreak(normalized.streak)
+        setLives(normalized.lives)
+        setGems(normalized.gems)
+        const storedProgress = readStoredCourseProgress(userRecord.id)
+        const mergedProgress: CourseProgressMap = {
+          ...storedProgress,
+          ...normalized.courseProgressBySlug,
+        }
+
+        if (!mergedProgress[normalized.activeCourseSlug]) {
+          const isLegacy = Object.keys(normalized.courseProgressBySlug).length === 0
+          mergedProgress[normalized.activeCourseSlug] = {
+            startLessonId: isLegacy ? normalized.startLessonId : '',
+            completedLessons: isLegacy ? dedupeLessons(normalized.completedLessons) : [],
+          }
+        }
+
+        const activeProgress = mergedProgress[normalized.activeCourseSlug]
+
+        setCourseProgressBySlug(mergedProgress)
+        setStartLessonId(activeProgress.startLessonId)
+        setCompletedLessons(activeProgress.completedLessons)
+        setLastLifeRefillDate(normalized.lastLifeRefillDate)
+        setLastLessonDate(normalized.lastLessonDate)
+        setActiveCourseSlug(normalized.activeCourseSlug)
+        setPurchasedCourses(normalized.purchasedCourses)
+        setStreakFreezeActive(normalized.streakFreezeActive)
+        setGameHydrated(true)
+
         const corePayload = buildCoreUserStatePayload({
           streak: normalized.streak,
           gems: normalized.gems,
@@ -556,39 +665,11 @@ function App() {
           activeCourseSlug: normalized.activeCourseSlug,
           purchasedCourses: normalized.purchasedCourses,
           streakFreezeActive: normalized.streakFreezeActive,
+          courseProgressBySlug: mergedProgress,
         })
+        lastSavedPayloadRef.current = JSON.stringify(extendedPayload)
 
-        void updateUserStateWithFallback(freshRecord.id, extendedPayload)
-      }).catch((err) => {
-        console.warn('Failed to fetch latest save state:', err)
-        // Fallback to local record if offline
-        const normalized = normalizeGameState(userRecord)
-        setStreak(normalized.streak)
-        setLives(normalized.lives)
-        setGems(normalized.gems)
-        const storedProgress = readStoredCourseProgress(userRecord.id)
-        const mergedProgress: CourseProgressMap = {
-          ...storedProgress,
-          [normalized.activeCourseSlug]: {
-            startLessonId: normalized.startLessonId,
-            completedLessons: dedupeLessons(normalized.completedLessons),
-          },
-        }
-        const activeProgress = mergedProgress[normalized.activeCourseSlug] ?? {
-          startLessonId: normalized.startLessonId,
-          completedLessons: dedupeLessons(normalized.completedLessons),
-        }
-
-        setCourseProgressBySlug(mergedProgress)
-        setStartLessonId(activeProgress.startLessonId)
-        setCompletedLessons(activeProgress.completedLessons)
-        setLastLifeRefillDate(normalized.lastLifeRefillDate)
-        setLastLessonDate(normalized.lastLessonDate)
-        setActiveCourseSlug(normalized.activeCourseSlug)
-        setPurchasedCourses(normalized.purchasedCourses)
-        setStreakFreezeActive(normalized.streakFreezeActive)
-        setGameHydrated(true)
-        const hasStarted = normalized.startLessonId.length > 0
+        const hasStarted = activeProgress.startLessonId.length > 0
         setScreen(hasStarted ? 'home' : 'placement')
       })
     }, [userRecord?.id, courseLoaded, gameHydrated])
@@ -597,12 +678,15 @@ function App() {
     if (!userRecord || !gameHydrated) return
 
     const timer = setTimeout(() => {
+      const allCourseCompletedLessons = dedupeLessons(
+        Object.values(courseProgressBySlug).flatMap((progress) => progress.completedLessons),
+      )
       const corePayload = buildCoreUserStatePayload({
         streak,
         gems,
         lives,
         startLessonId,
-        completedLessons,
+        completedLessons: allCourseCompletedLessons.length > 0 ? allCourseCompletedLessons : completedLessons,
         lastLifeRefillDate,
         lastLessonDate,
       })
@@ -610,7 +694,15 @@ function App() {
         activeCourseSlug,
         purchasedCourses,
         streakFreezeActive,
+        courseProgressBySlug,
       })
+
+      const payloadString = JSON.stringify(extendedPayload)
+      if (payloadString === lastSavedPayloadRef.current) {
+        return // No meaningful state changed
+      }
+
+      lastSavedPayloadRef.current = payloadString
 
       void updateUserStateWithFallback(userRecord.id, extendedPayload).then((record) => {
         setUserRecord(record)
@@ -632,12 +724,31 @@ function App() {
     activeCourseSlug,
     purchasedCourses,
     streakFreezeActive,
+    courseProgressBySlug,
     userRecord?.id,
   ])
 
-  useEffect(() => {
-    if (!userRecord?.id || !gameHydrated) return
+  const prevCourseSlugRef = useRef(activeCourseSlug)
 
+  useEffect(() => {
+    if (!userRecord?.id || !gameHydrated) {
+      prevCourseSlugRef.current = activeCourseSlug
+      return
+    }
+
+    // 1. Handle course switching
+    if (prevCourseSlugRef.current !== activeCourseSlug) {
+      const activeProgress = courseProgressBySlug[activeCourseSlug] ?? {
+        startLessonId: '',
+        completedLessons: [],
+      }
+      setStartLessonId(activeProgress.startLessonId)
+      setCompletedLessons(activeProgress.completedLessons)
+      prevCourseSlugRef.current = activeCourseSlug
+      return // Wait for the state to update before saving
+    }
+
+    // 2. Handle progress updates for the current course
     const nextProgress = normalizeCourseProgress({
       startLessonId,
       completedLessons,
@@ -656,26 +767,7 @@ function App() {
         [activeCourseSlug]: nextProgress,
       }
     })
-  }, [activeCourseSlug, completedLessons, gameHydrated, startLessonId, userRecord?.id])
-
-  useEffect(() => {
-    if (!userRecord?.id || !gameHydrated) return
-
-    const activeProgress = courseProgressBySlug[activeCourseSlug] ?? {
-      startLessonId: '',
-      completedLessons: [],
-    }
-
-    const currentCompleted = JSON.stringify(dedupeLessons(completedLessons))
-    const nextCompleted = JSON.stringify(dedupeLessons(activeProgress.completedLessons))
-
-    if (startLessonId !== activeProgress.startLessonId) {
-      setStartLessonId(activeProgress.startLessonId)
-    }
-    if (currentCompleted !== nextCompleted) {
-      setCompletedLessons(activeProgress.completedLessons)
-    }
-  }, [activeCourseSlug, completedLessons, courseProgressBySlug, gameHydrated, startLessonId, userRecord?.id])
+  }, [activeCourseSlug, completedLessons, gameHydrated, startLessonId, userRecord?.id, courseProgressBySlug])
 
   useEffect(() => {
     if (!userRecord?.id || !gameHydrated) return
@@ -745,6 +837,16 @@ function App() {
     return found < 0 ? 0 : found
   }, [lessonTrack, startLessonId])
 
+  // Healing effect: If startLessonId pushes us forward, ensure all previous lessons are marked completed
+  useEffect(() => {
+    if (!gameHydrated || lessonTrack.length === 0 || startIndex === 0) return
+    const implicitlyDone = lessonTrack.slice(0, startIndex).map((l) => l.id)
+    const missing = implicitlyDone.filter((id) => !completedLessons.includes(id))
+    if (missing.length > 0) {
+      setCompletedLessons((prev) => [...new Set([...prev, ...missing])])
+    }
+  }, [gameHydrated, lessonTrack, startIndex, completedLessons])
+
   const nextLessonId = useMemo(() => {
     const upcoming = lessonTrack.find((lesson, index) => {
       if (index < startIndex) return false
@@ -753,6 +855,54 @@ function App() {
 
     return upcoming ? upcoming.id : ''
   }, [completedLessons, lessonTrack, startIndex])
+
+  useEffect(() => {
+    if (screen !== 'home' || homeTab !== 'learn' || !selectedLessonId) return
+
+    const edgePadding = 12
+    const popoverId = `lesson-popover-${selectedLessonId}`
+
+    const measure = () => {
+      const popover = document.getElementById(popoverId)
+      const node = document.getElementById(`lesson-${selectedLessonId}`)
+      if (!popover || !node) return
+
+      const nodeRect = node.getBoundingClientRect()
+      const popoverWidth = Math.min(290, window.innerWidth - 24)
+      
+      const nodeCenter = nodeRect.left + nodeRect.width / 2
+      const naturalLeft = nodeCenter - popoverWidth / 2
+      const naturalRight = nodeCenter + popoverWidth / 2
+
+      let shiftX = 0
+
+      if (naturalLeft < edgePadding) {
+        shiftX = edgePadding - naturalLeft
+      } else if (naturalRight > window.innerWidth - edgePadding) {
+        shiftX = window.innerWidth - edgePadding - naturalRight
+      }
+
+      const roundedShift = Math.round(shiftX)
+      setPopoverShiftByLesson((prev) => {
+        if ((prev[selectedLessonId] ?? 0) === roundedShift) return prev
+        return {
+          ...prev,
+          [selectedLessonId]: roundedShift,
+        }
+      })
+    }
+
+    // Force a micro-delay to ensure DOM has updated before measuring bounds
+    const timeout = setTimeout(measure, 10)
+    window.addEventListener('resize', measure)
+    window.addEventListener('scroll', measure)
+
+    return () => {
+      clearTimeout(timeout)
+      window.removeEventListener('resize', measure)
+      window.removeEventListener('scroll', measure)
+    }
+  }, [selectedLessonId, screen, homeTab, course])
 
   const activeLesson = useMemo(
     () => lessonTrack.find((lesson) => lesson.id === activeLessonId),
@@ -1099,6 +1249,7 @@ function App() {
 
   function logout() {
     pb.authStore.clear()
+    lastSavedPayloadRef.current = ''
     setGameHydrated(false)
     setScreen('auth')
     setStreak(0)
@@ -1425,8 +1576,17 @@ json.dumps(results)
   }
 
   function closeLesson() {
+    setShowExitModal(true)
+  }
+
+  function confirmCloseLesson() {
+    setShowExitModal(false)
     setFeedbackVisible(false)
     setScreen('home')
+  }
+
+  function cancelCloseLesson() {
+    setShowExitModal(false)
   }
 
   if (screen === 'auth') {
@@ -1504,7 +1664,19 @@ json.dumps(results)
   }
 
   if (screen === 'loading' || !courseLoaded || !gameHydrated) {
-    return <main className="app-shell">Loading curriculum...</main>
+    return (
+      <main className="app-shell app-loading">
+        <section className="loading-panel">
+          <div className="loading-spinner" aria-label="Loading">
+            <span className="loading-brace">{`{`}</span>
+            <span className="loading-brace">{`}`}</span>
+            <span className="loading-brace">{`{`}</span>
+            <span className="loading-brace">{`}`}</span>
+          </div>
+          <p>Loading curriculum... please wait.</p>
+        </section>
+      </main>
+    )
   }
 
   if (screen === 'placement' && currentPlacement) {
@@ -1597,8 +1769,8 @@ json.dumps(results)
                           const locked = !done && (!current || outOfLives)
                           
                           const cycleIndex = index % 8
-                          const offsets = [0, 45, 75, 45, 0, -45, -75, -45]
-                          const translateX = offsets[cycleIndex]
+                            const offsets = [0, 48, 86, 48, 0, -48, -86, -48];
+                            const translateX = offsets[cycleIndex];
 
                           return (
                             <div
@@ -1610,7 +1782,11 @@ json.dumps(results)
                               }}
                             >
                               {selectedLessonId === lesson.id && (
-                                <div className={`lesson-popover ${locked ? 'locked' : ''} ${done ? 'done' : ''} ${current ? 'current' : ''}`}>
+                                <div
+                                  id={`lesson-popover-${lesson.id}`}
+                                  className={`lesson-popover ${locked ? 'locked' : ''} ${done ? 'done' : ''} ${current ? 'current' : ''}`}
+                                  style={{ '--popover-shift-x': `${popoverShiftByLesson[lesson.id] ?? 0}px` } as React.CSSProperties}
+                                >
                                   <div className="popover-content">
                                     <h3 className="popover-title">{lesson.title}</h3>
                                     <p className="popover-concept">Lesson {index + 1} of {unit.lessons.length}</p>
@@ -1730,9 +1906,11 @@ json.dumps(results)
           <button className="close-btn" onClick={closeLesson} aria-label="Close lesson">
             <X size={24} />
           </button>
+
           <div className="lesson-progress">
             <div className="lesson-progress-fill" style={{ width: `${progressPercent}%` }} />
           </div>
+
           <div className="hearts-display" title={`${lives} lives remaining`}>
             {Array.from({ length: MAX_LIVES }).map((_, i) => (
               <span key={i} className={`heart ${i >= lives ? 'lost' : ''}`}>
@@ -1741,6 +1919,19 @@ json.dumps(results)
             ))}
           </div>
         </header>
+
+        {showExitModal && (
+          <div className="modal-overlay">
+            <div className="exit-modal">
+              <h3>Exit lesson?</h3>
+              <p>Your progress on this lesson will be saved, but you’ll return to the roadmap.</p>
+              <div className="modal-actions">
+                <button className="modal-btn modal-btn-primary" type="button" onClick={cancelCloseLesson}>Continue lesson</button>
+                <button className="modal-btn modal-btn-neutral" type="button" onClick={confirmCloseLesson}>Exit now</button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <section className="lesson-body">
           <div className="question-label">{currentQuestion.title}</div>
@@ -2020,8 +2211,6 @@ type TopBarProps = {
 }
 
 function TopBar({ stats, onClose, onLogout }: TopBarProps) {
-  const mascot = STRINGS[(stats.streak + stats.gems) % STRINGS.length]
-
   return (
     <header className={`top-bar ${onLogout ? 'home' : ''}`}>
       <div className="top-bar-left">
@@ -2031,10 +2220,7 @@ function TopBar({ stats, onClose, onLogout }: TopBarProps) {
           </button>
         ) : (
           <div className="logo">
-            <span className="logo-owl" aria-hidden="true">
-              {mascot}
-            </span>
-            <span>Codestar</span>
+            <span className="logo-text">codestarr.org</span>
           </div>
         )}
       </div>

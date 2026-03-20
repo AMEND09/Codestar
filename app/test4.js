@@ -1,4 +1,4 @@
-
+const fs = require("fs");
 function dedupeLessons(lessons) { return [...new Set(lessons)] }
 function parseCompletedLessons(raw) {
   if (Array.isArray(raw)) return raw.filter(value => typeof value === "string");
@@ -35,7 +35,14 @@ function parseCourseProgressMap(raw) {
   return parsed;
 }
 
-const dbStr1 = "{\"courseProgressBySlug\": {\"python-dsa\": {\"startLessonId\": \"u2-l2\", \"completedLessons\": [\"u1-l1\", \"u1-l2\", \"u1-l3\", \"u1-l4\", \"u1-l5\", \"u1-l6\", \"u2-l1\"]}}}";
-
-console.log(JSON.stringify(parseCourseProgressMap(dbStr1)));
+const dbString = JSON.stringify({
+  "courseProgressBySlug": {
+    "python-dsa": {
+      "startLessonId": "u2-l2",
+      "completedLessons": ["u1-l1", "u1-l2", "u1-l3", "u1-l4", "u1-l5", "u1-l6", "u2-l1"]
+    }
+  }
+});
+const mapped = parseCourseProgressMap(dbString);
+console.log(JSON.stringify(mapped));
 
