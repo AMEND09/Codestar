@@ -143,7 +143,7 @@ type AuthMode = 'login' | 'register'
 
 const MAX_LIVES = 5
 const COURSE_PROGRESS_STORAGE_PREFIX = 'codestar_course_progress_v1'
-const PB_URL = (import.meta.env.VITE_POCKETBASE_URL as string | undefined) || 'http://127.0.0.1:8090'
+const PB_URL = (import.meta.env.VITE_POCKETBASE_URL as string | undefined) || 'https://codestarpb.rizzed.mom'
 const pb = new PocketBase(PB_URL)
 
 const DEFAULT_COURSES: AvailableCourse[] = [
