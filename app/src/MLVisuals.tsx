@@ -623,7 +623,7 @@ function polynomialFit(xs: number[], ys: number[], degree: number): number[] {
       }
     }
   }
-  return aug.map((row) => row[d]! / row[aug.indexOf(row)]!)
+  return aug.map((row, i) => row[d]! / row[i]!)
 }
 
 function evalPoly(coeffs: number[], x: number) {
@@ -1065,7 +1065,7 @@ export function BiasVarianceViz() {
   return (
     <div className="viz-container">
       <div className="viz-instructions">
-        Explore the <strong>bias-variance tradeoff</strong>. The optimal model complexity minimises total error.
+        Explore the <strong>bias-variance tradeoff</strong>. The optimal model complexity minimizes total error.
       </div>
 
       <svg viewBox={`0 0 ${W} ${H}`} className="viz-svg">
