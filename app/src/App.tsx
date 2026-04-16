@@ -8,12 +8,14 @@ import 'prismjs/components/prism-python'
 import 'prismjs/themes/prism-tomorrow.css'
 import EditorLib from 'react-simple-code-editor'
 const Editor = (EditorLib as any).default || EditorLib
+import { ML_VISUAL_REGISTRY } from './MLVisuals'
 import './App.css'
 
 type CourseQuestion = {
   id: string
   title: string
   type: string
+  visualType?: string
   prompt: string
   code: string
   functionName?: string
@@ -68,7 +70,8 @@ type PlayQuestion = {
   title: string
   prompt: string
   code: string
-  type: 'multiple_choice' | 'fill_blank' | 'insight' | 'code_challenge' | 'arrange_blocks' | 'match_pairs'
+  type: 'multiple_choice' | 'fill_blank' | 'insight' | 'code_challenge' | 'arrange_blocks' | 'match_pairs' | 'interactive_visual'
+  visualType?: string
   choices?: Array<{ id: string; text: string }>
   correctAnswer?: string
   feedback: string
@@ -161,6 +164,15 @@ const DEFAULT_COURSES: AvailableCourse[] = [
     color: '#1cb0f6',
     price: 500,
     dataPath: '/data/python-basics.json',
+  },
+  {
+    id: 'machine-learning',
+    title: 'Machine Learning',
+    description: 'Interactive ML: regression, neural nets, and more',
+    slug: 'machine-learning',
+    color: '#cc33ff',
+    price: 600,
+    dataPath: '/data/ml-course.json',
   },
 ]
 
@@ -918,6 +930,20 @@ function App() {
       const hasBlank = question.type === 'fill_blank' && question.correctAnswer
       const isArrange = question.type === 'arrange_blocks'
       const isMatch = question.type === 'match_pairs' && question.matchingPairs && question.matchingPairs.length > 0
+      const isViz = question.type === 'interactive_visual' && question.visualType
+
+      if (isViz) {
+        return {
+          id: question.id,
+          title: stripMarkdown(question.title),
+          prompt: stripMarkdown(question.prompt),
+          code: question.code,
+          type: 'interactive_visual' as const,
+          visualType: question.visualType,
+          feedback: stripMarkdown(question.feedback),
+          xp: 10,
+        }
+      }
 
       if (isMatch) {
         return {
@@ -1456,8 +1482,9 @@ json.dumps(results)
   function checkLesson() {
     if (!currentQuestion) return
 
-    if (currentQuestion.type === 'insight') {
+    if (currentQuestion.type === 'insight' || currentQuestion.type === 'interactive_visual') {
       setLessonCorrect((count) => count + 1)
+      setGems((value) => value + currentQuestion.xp)
       const msg = currentQuestion.feedback
       setLessonFeedback(msg)
       setFeedbackCorrect(true)
@@ -1990,6 +2017,10 @@ json.dumps(results)
             <div className="insight-box">Read this pattern carefully, then continue.</div>
           ) : null}
 
+          {currentQuestion.type === 'interactive_visual' ? (
+            <InteractiveVisualBlock visualType={currentQuestion.visualType} />
+          ) : null}
+
           {currentQuestion.type === 'match_pairs' ? (
             <div className="match-wrapper">
               <div className="match-column">
@@ -2125,7 +2156,7 @@ json.dumps(results)
                     matchCompleted.length !== (currentQuestion.matchingPairs?.length ?? 0))
                 }
               >
-                Check
+                {currentQuestion.type === 'interactive_visual' || currentQuestion.type === 'insight' ? 'Continue' : 'Check'}
               </button>
             ) : (
               <button className="primary-btn" type="button" onClick={nextQuestion}>
@@ -2443,6 +2474,17 @@ function SettingsScreen({ userRecord, onLogout }: { userRecord: RecordModel | nu
       </button>
     </div>
   )
+}
+
+function InteractiveVisualBlock({ visualType }: { visualType?: string }) {
+  if (!visualType) {
+    return <div className="insight-box">Interactive visualization not available.</div>
+  }
+  const Component = ML_VISUAL_REGISTRY[visualType]
+  if (!Component) {
+    return <div className="insight-box">Visualization "{visualType}" not found.</div>
+  }
+  return <Component />
 }
 
 export default App
