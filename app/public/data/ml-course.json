@@ -1,0 +1,2219 @@
+{
+  "metadata": {
+    "title": "Codestar: Machine Learning",
+    "subtitle": "Interactive ML \u2014 from linear regression to neural networks",
+    "totalUnits": 8,
+    "totalLessons": 48,
+    "totalXp": 3600,
+    "philosophy": "Learn by exploring. Every concept has an interactive lab."
+  },
+  "placementQuiz": [
+    {
+      "id": "ml-pq-1",
+      "title": "Placement Q1",
+      "type": "multiple_choice",
+      "prompt": "What does supervised learning require that unsupervised learning does not?",
+      "code": "",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Labelled training data",
+          "isCorrect": true
+        },
+        {
+          "key": "B",
+          "text": "Very large datasets",
+          "isCorrect": false
+        },
+        {
+          "key": "C",
+          "text": "A GPU",
+          "isCorrect": false
+        },
+        {
+          "key": "D",
+          "text": "More than 2 features",
+          "isCorrect": false
+        }
+      ],
+      "correctAnswer": "A",
+      "feedback": "Supervised learning needs input-output pairs (labels). Unsupervised learns from unlabelled data."
+    },
+    {
+      "id": "ml-pq-2",
+      "title": "Placement Q2",
+      "type": "multiple_choice",
+      "prompt": "Which metric measures the average squared difference between predictions and actual values?",
+      "code": "",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Accuracy",
+          "isCorrect": false
+        },
+        {
+          "key": "B",
+          "text": "Mean Squared Error (MSE)",
+          "isCorrect": true
+        },
+        {
+          "key": "C",
+          "text": "Precision",
+          "isCorrect": false
+        },
+        {
+          "key": "D",
+          "text": "F1 Score",
+          "isCorrect": false
+        }
+      ],
+      "correctAnswer": "B",
+      "feedback": "MSE = mean((y_pred - y_true)^2). It penalises large errors heavily."
+    },
+    {
+      "id": "ml-pq-3",
+      "title": "Placement Q3",
+      "type": "multiple_choice",
+      "prompt": "A model scores 99% accuracy on training data but 55% on test data. What is happening?",
+      "code": "",
+      "choices": [
+        {
+          "key": "A",
+          "text": "Underfitting - model is too simple",
+          "isCorrect": false
+        },
+        {
+          "key": "B",
+          "text": "Overfitting - model memorised training data",
+          "isCorrect": true
+        },
+        {
+          "key": "C",
+          "text": "The test set is mislabelled",
+          "isCorrect": false
+        },
+        {
+          "key": "D",
+          "text": "The learning rate is too high",
+          "isCorrect": false
+        }
+      ],
+      "correctAnswer": "B",
+      "feedback": "Very high train accuracy with low test accuracy is classic overfitting."
+    },
+    {
+      "id": "ml-pq-4",
+      "title": "Placement Q4",
+      "type": "multiple_choice",
+      "prompt": "In gradient descent, what does the gradient tell you?",
+      "code": "",
+      "choices": [
+        {
+          "key": "A",
+          "text": "The direction of steepest descent",
+          "isCorrect": false
+        },
+        {
+          "key": "B",
+          "text": "The direction of steepest ascent",
+          "isCorrect": true
+        },
+        {
+          "key": "C",
+          "text": "The optimal learning rate",
+          "isCorrect": false
+        },
+        {
+          "key": "D",
+          "text": "The number of steps needed",
+          "isCorrect": false
+        }
+      ],
+      "correctAnswer": "B",
+      "feedback": "The gradient points uphill. We subtract it to move downhill toward the minimum."
+    },
+    {
+      "id": "ml-pq-5",
+      "title": "Placement Q5",
+      "type": "multiple_choice",
+      "prompt": "Which activation function outputs values strictly between 0 and 1?",
+      "code": "",
+      "choices": [
+        {
+          "key": "A",
+          "text": "ReLU",
+          "isCorrect": false
+        },
+        {
+          "key": "B",
+          "text": "Sigmoid",
+          "isCorrect": true
+        },
+        {
+          "key": "C",
+          "text": "Linear",
+          "isCorrect": false
+        },
+        {
+          "key": "D",
+          "text": "Tanh",
+          "isCorrect": false
+        }
+      ],
+      "correctAnswer": "B",
+      "feedback": "Sigmoid maps any real number to (0,1). Tanh maps to (-1,1). ReLU maps to [0,+inf)."
+    }
+  ],
+  "units": [
+    {
+      "id": "ml-u1",
+      "number": 1,
+      "topic": "What is Machine Learning?",
+      "title": "Foundations",
+      "lessons": [
+        {
+          "id": "ml-u1-l1",
+          "index": 0,
+          "title": "Intelligence from Data",
+          "conceptIntroduced": "What ML is",
+          "questions": [
+            {
+              "id": "ml-u1-l1-q1",
+              "title": "Concept",
+              "type": "insight",
+              "prompt": "Machine learning lets computers learn patterns from data instead of being explicitly programmed. A spam filter that improves as it sees more emails is ML; a hard-coded keyword list is not.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "ML = learning patterns from data, not explicit programming."
+            },
+            {
+              "id": "ml-u1-l1-q2",
+              "title": "Check Your Understanding",
+              "type": "multiple_choice",
+              "prompt": "Which of the following is machine learning?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "A rule flagging emails containing 'FREE MONEY' as spam",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "A model trained on millions of emails to predict spam probability",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "A for-loop that sorts a list alphabetically",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "A lookup table of known spam senders",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Learning from data (millions of emails) is the hallmark of ML."
+            },
+            {
+              "id": "ml-u1-l1-q3",
+              "title": "Fill the blank",
+              "type": "fill_blank",
+              "prompt": "In supervised learning, the correct output for each training example is called a ___.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "label",
+              "feedback": "Labels are the ground-truth outputs that supervise the model."
+            }
+          ]
+        },
+        {
+          "id": "ml-u1-l2",
+          "index": 1,
+          "title": "Three Types of ML",
+          "conceptIntroduced": "Supervised, Unsupervised, Reinforcement",
+          "questions": [
+            {
+              "id": "ml-u1-l2-q1",
+              "title": "Match the type",
+              "type": "match_pairs",
+              "prompt": "Match each ML type to its description.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Supervised",
+                  "right": "Learns from labelled examples"
+                },
+                {
+                  "left": "Unsupervised",
+                  "right": "Finds hidden patterns without labels"
+                },
+                {
+                  "left": "Reinforcement",
+                  "right": "Learns by trial, error, and rewards"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "These three paradigms cover the majority of real ML applications."
+            },
+            {
+              "id": "ml-u1-l2-q2",
+              "title": "Which type?",
+              "type": "multiple_choice",
+              "prompt": "A robot earns +1 when it stays upright and -1 when it falls. This is:",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Supervised learning",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Unsupervised learning",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "Reinforcement learning",
+                  "isCorrect": true
+                },
+                {
+                  "key": "D",
+                  "text": "Transfer learning",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "C",
+              "feedback": "Rewards and penalties that guide behaviour = reinforcement learning."
+            }
+          ]
+        },
+        {
+          "id": "ml-u1-l3",
+          "index": 2,
+          "title": "Features & Labels",
+          "conceptIntroduced": "Feature engineering basics",
+          "questions": [
+            {
+              "id": "ml-u1-l3-q1",
+              "title": "Concept",
+              "type": "insight",
+              "prompt": "Features are the measurable inputs to a model (e.g. house size, bedrooms). Labels are the outputs we want to predict (e.g. house price). Choosing good features \u2014 feature engineering \u2014 often matters more than which algorithm you pick.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Features in, labels out. Good features make everything easier."
+            },
+            {
+              "id": "ml-u1-l3-q2",
+              "title": "Identify the feature",
+              "type": "multiple_choice",
+              "prompt": "Building a diabetes prediction model. Which of these is a feature (input), not a label?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Has diabetes: yes/no",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Blood glucose level",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The predicted probability",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The model's loss value",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Blood glucose is a measurable input (feature). Has diabetes = the label."
+            },
+            {
+              "id": "ml-u1-l3-q3",
+              "title": "sklearn fit call",
+              "type": "fill_blank",
+              "prompt": "In sklearn, if X is your feature matrix and y your labels, the training call is model.fit(___, y).",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "X",
+              "feedback": "model.fit(X, y) is the standard sklearn training call."
+            }
+          ]
+        },
+        {
+          "id": "ml-u1-l4",
+          "index": 3,
+          "title": "Train vs Test Split",
+          "conceptIntroduced": "Evaluating generalisation",
+          "questions": [
+            {
+              "id": "ml-u1-l4-q1",
+              "title": "Why split?",
+              "type": "multiple_choice",
+              "prompt": "Why must you evaluate a model on data it has never seen during training?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Training data is usually corrupt",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "To measure generalisation, not memorisation",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Test data trains the model faster",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "sklearn requires it",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Generalisation is the whole point. A model that only works on training data is useless."
+            },
+            {
+              "id": "ml-u1-l4-q2",
+              "title": "Code it",
+              "type": "code_challenge",
+              "prompt": "Implement train_test_split_indices(n, test_frac=0.2) returning (train_size, test_size). test_size = round(n * test_frac).",
+              "code": "def train_test_split_indices(n, test_frac=0.2):\n    # return (train_size, test_size)\n    pass",
+              "functionName": "train_test_split_indices",
+              "tests": [
+                {
+                  "call": "train_test_split_indices(100)",
+                  "expected": "(80, 20)"
+                },
+                {
+                  "call": "train_test_split_indices(50, 0.3)",
+                  "expected": "(35, 15)"
+                },
+                {
+                  "call": "train_test_split_indices(10, 0.1)",
+                  "expected": "(9, 1)"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "test_size = round(n * test_frac); train_size = n - test_size"
+            }
+          ]
+        },
+        {
+          "id": "ml-u1-l5",
+          "index": 4,
+          "title": "Your First ML Model",
+          "conceptIntroduced": "sklearn quickstart",
+          "questions": [
+            {
+              "id": "ml-u1-l5-q1",
+              "title": "sklearn workflow",
+              "type": "arrange_blocks",
+              "prompt": "Arrange these sklearn steps in the correct order.",
+              "code": "from sklearn.linear_model import LinearRegression\nfrom sklearn.model_selection import train_test_split",
+              "rawMarkdown": "Blocks:\n```python\nmodel.fit(X_train, y_train)\nX_train, X_test, y_train, y_test = train_test_split(X, y)\nmodel = LinearRegression()\npredictions = model.predict(X_test)\n```\n*Correct order:*\n```python\nX_train, X_test, y_train, y_test = train_test_split(X, y)\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)\npredictions = model.predict(X_test)\n```",
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Split \u2192 Instantiate \u2192 Fit \u2192 Predict. The standard sklearn pipeline."
+            }
+          ]
+        },
+        {
+          "id": "ml-u1-l6",
+          "index": 5,
+          "title": "Unit Review",
+          "conceptIntroduced": "ML vocabulary recap",
+          "questions": [
+            {
+              "id": "ml-u1-l6-q1",
+              "title": "Vocabulary match",
+              "type": "match_pairs",
+              "prompt": "Match each term to its definition.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Feature",
+                  "right": "Input variable used for prediction"
+                },
+                {
+                  "left": "Label",
+                  "right": "Target output the model learns to predict"
+                },
+                {
+                  "left": "Generalisation",
+                  "right": "Performance on unseen data"
+                },
+                {
+                  "left": "Overfitting",
+                  "right": "Memorising training data, failing on test data"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Solid vocabulary is the foundation of every ML discussion."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml-u2",
+      "number": 2,
+      "topic": "Linear Regression",
+      "title": "Fitting Lines to Data",
+      "lessons": [
+        {
+          "id": "ml-u2-l1",
+          "index": 0,
+          "title": "Drawing the Best Line",
+          "conceptIntroduced": "Interactive regression lab",
+          "questions": [
+            {
+              "id": "ml-u2-l1-q1",
+              "title": "Lab: Linear Regression",
+              "type": "interactive_visual",
+              "visualType": "linear-regression",
+              "prompt": "Drag the data points to see how the regression line and R\u00b2 score change. Try arranging points in a line, then scatter them randomly. What happens to R\u00b2?",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "The regression line minimises the sum of squared residuals. R\u00b2 measures how well it fits."
+            },
+            {
+              "id": "ml-u2-l1-q2",
+              "title": "What does R\u00b2 = 0 mean?",
+              "type": "multiple_choice",
+              "prompt": "When you scattered points randomly, R\u00b2 dropped toward 0. What does R\u00b2 = 0 mean?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "The model perfectly fits the data",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "The model is no better than predicting the mean",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "There are no data points",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The slope is zero",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "R\u00b2 = 1 is perfect; R\u00b2 = 0 means the model explains nothing beyond the mean."
+            }
+          ]
+        },
+        {
+          "id": "ml-u2-l2",
+          "index": 1,
+          "title": "The Regression Equation",
+          "conceptIntroduced": "y = mx + b",
+          "questions": [
+            {
+              "id": "ml-u2-l2-q1",
+              "title": "Slope and intercept",
+              "type": "insight",
+              "prompt": "A linear model is: y_hat = w * x + b\n\nw (weight/slope) \u2014 how much y_hat changes per unit of x\nb (bias/intercept) \u2014 value of y_hat when x = 0\n\nFitting the model means finding the w and b that minimise prediction error on training data.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "w and b are the two parameters we learn."
+            },
+            {
+              "id": "ml-u2-l2-q2",
+              "title": "Predict with the equation",
+              "type": "fill_blank",
+              "prompt": "A model has w = 2.5, b = 10. Predict y_hat when x = 4. Answer: ___",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "20",
+              "feedback": "y_hat = 2.5 x 4 + 10 = 10 + 10 = 20."
+            },
+            {
+              "id": "ml-u2-l2-q3",
+              "title": "Mean Squared Error",
+              "type": "code_challenge",
+              "prompt": "Implement mse(y_true, y_pred) that computes the mean squared error.",
+              "code": "def mse(y_true, y_pred):\n    # Return mean of (y_true[i] - y_pred[i])^2\n    pass",
+              "functionName": "mse",
+              "tests": [
+                {
+                  "call": "mse([3, -0.5, 2, 7], [2.5, 0.0, 2, 8])",
+                  "expected": "0.375"
+                },
+                {
+                  "call": "mse([1, 2, 3], [1, 2, 3])",
+                  "expected": "0.0"
+                },
+                {
+                  "call": "mse([0], [1])",
+                  "expected": "1.0"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "sum((t - p)**2 for t, p in zip(y_true, y_pred)) / len(y_true)"
+            }
+          ]
+        },
+        {
+          "id": "ml-u2-l3",
+          "index": 2,
+          "title": "Multiple Features",
+          "conceptIntroduced": "Multivariate regression",
+          "questions": [
+            {
+              "id": "ml-u2-l3-q1",
+              "title": "Parameter count",
+              "type": "multiple_choice",
+              "prompt": "You have 3 features (x1, x2, x3). How many parameters does a linear model have?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "3 (one weight per feature)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "4 (three weights + one bias)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "6 (weights + their squares)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "1 (just the intercept)",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "y_hat = w1*x1 + w2*x2 + w3*x3 + b \u2014 3 weights + 1 bias = 4 parameters."
+            },
+            {
+              "id": "ml-u2-l3-q2",
+              "title": "Dot product prediction",
+              "type": "code_challenge",
+              "prompt": "Implement predict_linear(X, weights, bias). X is a list of feature vectors. Return a list of predictions using the dot product.",
+              "code": "def predict_linear(X, weights, bias):\n    pass",
+              "functionName": "predict_linear",
+              "tests": [
+                {
+                  "call": "predict_linear([[1, 2], [3, 4]], [0.5, 1.0], 1.0)",
+                  "expected": "[3.5, 6.5]"
+                },
+                {
+                  "call": "predict_linear([[0, 0]], [1, 1], 5.0)",
+                  "expected": "[5.0]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "sum(w * x for w, x in zip(weights, row)) + bias for each row in X"
+            }
+          ]
+        },
+        {
+          "id": "ml-u2-l4",
+          "index": 3,
+          "title": "Interpreting Coefficients",
+          "conceptIntroduced": "Feature importance in linear models",
+          "questions": [
+            {
+              "id": "ml-u2-l4-q1",
+              "title": "Reading coefficients",
+              "type": "insight",
+              "prompt": "In a house-price model: price = 150*sqft + 10000*bedrooms - 5000*age + 50000\n\n\u2022 Each extra sqft adds $150\n\u2022 Each bedroom adds $10,000  \n\u2022 Each year of age reduces price by $5,000\n\u2022 The intercept ($50,000) is the base price\n\nLarger absolute coefficient = stronger influence (when features are on the same scale).",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Coefficients reveal which features matter most to the model."
+            },
+            {
+              "id": "ml-u2-l4-q2",
+              "title": "Which feature matters most?",
+              "type": "multiple_choice",
+              "prompt": "salary = 500*experience + 200*gpa_scaled + 100*projects + 30000. All features are on a 0-10 scale. Which has the strongest influence?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "experience (coefficient 500)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "gpa_scaled (coefficient 200)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "projects (coefficient 100)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The intercept (30000)",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "When features are on the same scale, the largest absolute coefficient = strongest predictor."
+            }
+          ]
+        },
+        {
+          "id": "ml-u2-l5",
+          "index": 4,
+          "title": "R\u00b2 and Model Evaluation",
+          "conceptIntroduced": "Goodness-of-fit metrics",
+          "questions": [
+            {
+              "id": "ml-u2-l5-q1",
+              "title": "Compute R\u00b2",
+              "type": "code_challenge",
+              "prompt": "Implement r_squared(y_true, y_pred). Formula: R\u00b2 = 1 - SS_res / SS_tot, where SS_res = sum((y - y_hat)^2) and SS_tot = sum((y - y_mean)^2).",
+              "code": "def r_squared(y_true, y_pred):\n    pass",
+              "functionName": "r_squared",
+              "tests": [
+                {
+                  "call": "round(r_squared([1,2,3,4,5],[1.1,1.9,3.1,3.9,5.1]),4)",
+                  "expected": "0.9934"
+                },
+                {
+                  "call": "round(r_squared([1,2,3],[1,2,3]),4)",
+                  "expected": "1.0"
+                },
+                {
+                  "call": "round(r_squared([1,2,3],[2,2,2]),4)",
+                  "expected": "0.0"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "SS_res = sum((t-p)**2); mean_y = sum(y_true)/len(y_true); SS_tot = sum((t-mean_y)**2)"
+            }
+          ]
+        },
+        {
+          "id": "ml-u2-l6",
+          "index": 5,
+          "title": "Unit Review",
+          "conceptIntroduced": "Linear regression recap",
+          "questions": [
+            {
+              "id": "ml-u2-l6-q1",
+              "title": "Quick recap",
+              "type": "match_pairs",
+              "prompt": "Match each concept to its role in linear regression.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "MSE",
+                  "right": "Loss function to minimise"
+                },
+                {
+                  "left": "R\u00b2",
+                  "right": "Measures fraction of variance explained"
+                },
+                {
+                  "left": "Bias (b)",
+                  "right": "Intercept \u2014 output when all features = 0"
+                },
+                {
+                  "left": "Weight (w)",
+                  "right": "Slope \u2014 how output changes per feature unit"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Strong foundations here will carry you all the way to neural networks."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml-u3",
+      "number": 3,
+      "topic": "Gradient Descent",
+      "title": "Learning by Climbing Down",
+      "lessons": [
+        {
+          "id": "ml-u3-l1",
+          "index": 0,
+          "title": "The Loss Landscape",
+          "conceptIntroduced": "Gradient descent lab",
+          "questions": [
+            {
+              "id": "ml-u3-l1-q1",
+              "title": "Lab: Gradient Descent",
+              "type": "interactive_visual",
+              "visualType": "gradient-descent",
+              "prompt": "Start the ball at x = 3.5. Press Step to take one gradient descent step. Observe the gradient arrow and position. Reset and try different learning rates.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "GD subtracts the gradient x learning rate from the current parameter at every step."
+            },
+            {
+              "id": "ml-u3-l1-q2",
+              "title": "The update rule",
+              "type": "fill_blank",
+              "prompt": "In gradient descent: x \u2190 x \u2212 \u03b1 \u00b7 \u2207L. The symbol \u03b1 (alpha) is the ___.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "learning rate",
+              "feedback": "The learning rate controls the step size at each iteration."
+            }
+          ]
+        },
+        {
+          "id": "ml-u3-l2",
+          "index": 1,
+          "title": "Learning Rate Effects",
+          "conceptIntroduced": "Choosing learning rate",
+          "questions": [
+            {
+              "id": "ml-u3-l2-q1",
+              "title": "Lab: Learning Rate Comparison",
+              "type": "interactive_visual",
+              "visualType": "learning-rate",
+              "prompt": "Compare three learning rates: too small (slow convergence), just right (smooth descent), and too large (oscillates/diverges). How do their loss curves differ?",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "A rate too large overshoots the minimum. Too small wastes compute. The sweet spot converges efficiently."
+            },
+            {
+              "id": "ml-u3-l2-q2",
+              "title": "What happens with lr = 2.0?",
+              "type": "multiple_choice",
+              "prompt": "For L(x) = x\u00b2, gradient = 2x. Starting at x = 3, with learning rate 2.0, what is x after one step?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "x = 1",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "x = -9",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "x = 0",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "x = 3",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "x \u2190 3 - 2.0 * (2*3) = 3 - 12 = -9. The step overshoots past zero!"
+            }
+          ]
+        },
+        {
+          "id": "ml-u3-l3",
+          "index": 2,
+          "title": "Implementing Gradient Descent",
+          "conceptIntroduced": "GD from scratch",
+          "questions": [
+            {
+              "id": "ml-u3-l3-q1",
+              "title": "GD step for linear regression",
+              "type": "code_challenge",
+              "prompt": "Implement gradient_descent_step(w, b, X, y, lr) that takes ONE GD step on MSE loss. Gradients: dL/dw = (2/n)*sum((w*x+b-y)*x); dL/db = (2/n)*sum(w*x+b-y). Return (new_w, new_b).",
+              "code": "def gradient_descent_step(w, b, X, y, lr):\n    n = len(X)\n    # Compute predictions, gradients, update\n    pass",
+              "functionName": "gradient_descent_step",
+              "tests": [
+                {
+                  "call": "tuple(round(v,4) for v in gradient_descent_step(0.0,0.0,[1.0,2.0,3.0],[2.0,4.0,6.0],0.1))",
+                  "expected": "(0.9333, 0.4)"
+                },
+                {
+                  "call": "tuple(round(v,4) for v in gradient_descent_step(1.0,0.0,[1.0],[1.0],0.1))",
+                  "expected": "(1.0, 0.0)"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "preds=[w*x+b for x in X]; dw=2/n*sum((p-t)*x for p,t,x in zip(preds,y,X)); db=2/n*sum(p-t for p,t in zip(preds,y))"
+            }
+          ]
+        },
+        {
+          "id": "ml-u3-l4",
+          "index": 3,
+          "title": "Stochastic vs Batch GD",
+          "conceptIntroduced": "SGD and mini-batch",
+          "questions": [
+            {
+              "id": "ml-u3-l4-q1",
+              "title": "Batch variants",
+              "type": "match_pairs",
+              "prompt": "Match each gradient descent variant to its description.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Batch GD",
+                  "right": "Uses all N samples per step \u2014 stable but slow"
+                },
+                {
+                  "left": "SGD",
+                  "right": "Uses 1 sample per step \u2014 noisy but fast"
+                },
+                {
+                  "left": "Mini-batch GD",
+                  "right": "Uses k samples per step \u2014 the practical default"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Mini-batch GD (k=32 to 256) is used in virtually every modern deep learning framework."
+            },
+            {
+              "id": "ml-u3-l4-q2",
+              "title": "Why SGD noise can help",
+              "type": "multiple_choice",
+              "prompt": "Stochastic GD (1 sample/step) produces noisy updates. Why can this be beneficial?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Noise makes training faster on a single CPU",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Noise can help escape sharp local minima",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Noise reduces memory usage",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Noise improves the loss function itself",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Random noise acts like small kicks that can bounce the model out of sharp, overfit minima."
+            }
+          ]
+        },
+        {
+          "id": "ml-u3-l5",
+          "index": 4,
+          "title": "Unit Review",
+          "conceptIntroduced": "Gradient descent recap",
+          "questions": [
+            {
+              "id": "ml-u3-l5-q1",
+              "title": "Order the training loop",
+              "type": "arrange_blocks",
+              "prompt": "Arrange the steps of one gradient descent epoch in the correct order.",
+              "code": "",
+              "rawMarkdown": "Blocks:\n```python\nupdate: w = w - lr * gradient\ncompute gradient of loss w.r.t. w\ncompute loss L(w)\nrepeat until convergence\nforward pass: predictions = model(X)\n```\n*Correct order:*\n```python\nforward pass: predictions = model(X)\ncompute loss L(w)\ncompute gradient of loss w.r.t. w\nupdate: w = w - lr * gradient\nrepeat until convergence\n```",
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Forward \u2192 Loss \u2192 Gradient \u2192 Update \u2192 Repeat. This is the training loop."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml-u4",
+      "number": 4,
+      "topic": "Classification",
+      "title": "Sorting Things into Buckets",
+      "lessons": [
+        {
+          "id": "ml-u4-l1",
+          "index": 0,
+          "title": "Decision Boundaries",
+          "conceptIntroduced": "Decision boundary lab",
+          "questions": [
+            {
+              "id": "ml-u4-l1-q1",
+              "title": "Lab: Decision Boundary",
+              "type": "interactive_visual",
+              "visualType": "decision-boundary",
+              "prompt": "Slide the threshold to separate blue dots (class 0) from red dots (class 1). Yellow border = misclassified. Find the threshold that maximises accuracy.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "A decision boundary separates feature space into class regions. Even a single threshold can handle linearly separable data."
+            },
+            {
+              "id": "ml-u4-l1-q2",
+              "title": "What form does a logistic boundary take?",
+              "type": "multiple_choice",
+              "prompt": "In 2D feature space, what form does a logistic regression decision boundary take?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "A curve wrapping each class",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "A straight line",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "A circle",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "A grid of squares",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Logistic regression is a linear classifier \u2014 its boundary is a line in 2D."
+            }
+          ]
+        },
+        {
+          "id": "ml-u4-l2",
+          "index": 1,
+          "title": "Logistic Regression",
+          "conceptIntroduced": "Sigmoid for classification",
+          "questions": [
+            {
+              "id": "ml-u4-l2-q1",
+              "title": "Why sigmoid?",
+              "type": "insight",
+              "prompt": "For classification we want outputs in (0,1) \u2014 probabilities. We apply sigmoid to the linear output z = w*x + b:\n\n  sigma(z) = 1 / (1 + e^(-z))\n\nOutputs > 0.5 \u2192 class 1; below 0.5 \u2192 class 0. The 0.5 cut is the decision boundary.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Sigmoid squashes any real number into (0,1) \u2014 perfect for probabilities."
+            },
+            {
+              "id": "ml-u4-l2-q2",
+              "title": "Compute sigmoid",
+              "type": "code_challenge",
+              "prompt": "Implement sigmoid(z) = 1 / (1 + exp(-z)).",
+              "code": "import math\n\ndef sigmoid(z):\n    pass",
+              "functionName": "sigmoid",
+              "tests": [
+                {
+                  "call": "round(sigmoid(0),4)",
+                  "expected": "0.5"
+                },
+                {
+                  "call": "round(sigmoid(2),4)",
+                  "expected": "0.8808"
+                },
+                {
+                  "call": "round(sigmoid(-2),4)",
+                  "expected": "0.1192"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "return 1 / (1 + math.exp(-z))"
+            }
+          ]
+        },
+        {
+          "id": "ml-u4-l3",
+          "index": 2,
+          "title": "Confusion Matrix",
+          "conceptIntroduced": "Confusion matrix lab",
+          "questions": [
+            {
+              "id": "ml-u4-l3-q1",
+              "title": "Lab: Confusion Matrix",
+              "type": "interactive_visual",
+              "visualType": "confusion-matrix",
+              "prompt": "Adjust the classification threshold and watch TP, FP, TN, FN, precision, and recall change in real time. Notice the precision-recall tradeoff.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "High recall = rarely misses positives. High precision = rarely raises false alarms. You cannot maximise both at once."
+            },
+            {
+              "id": "ml-u4-l3-q2",
+              "title": "TP, FP, TN, FN",
+              "type": "match_pairs",
+              "prompt": "Match each term to its meaning.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "True Positive",
+                  "right": "Predicted positive, actually positive"
+                },
+                {
+                  "left": "False Positive",
+                  "right": "Predicted positive, actually negative"
+                },
+                {
+                  "left": "True Negative",
+                  "right": "Predicted negative, actually negative"
+                },
+                {
+                  "left": "False Negative",
+                  "right": "Predicted negative, actually positive"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "True = model was right. Positive/Negative = what the model predicted."
+            }
+          ]
+        },
+        {
+          "id": "ml-u4-l4",
+          "index": 3,
+          "title": "Precision, Recall & F1",
+          "conceptIntroduced": "Evaluation metrics for classification",
+          "questions": [
+            {
+              "id": "ml-u4-l4-q1",
+              "title": "Precision vs recall",
+              "type": "multiple_choice",
+              "prompt": "A cancer screening model should almost never miss a positive case, even with some false alarms. Which metric should be maximised?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Precision = TP / (TP + FP)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Recall = TP / (TP + FN)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Specificity = TN / (TN + FP)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Accuracy = (TP + TN) / N",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Recall measures how many actual positives we caught. Missing a cancer case (FN) is far worse than a false alarm."
+            },
+            {
+              "id": "ml-u4-l4-q2",
+              "title": "Compute F1",
+              "type": "code_challenge",
+              "prompt": "Implement f1_score(precision, recall) = 2*P*R / (P+R). Return 0.0 if denominator is 0.",
+              "code": "def f1_score(precision, recall):\n    pass",
+              "functionName": "f1_score",
+              "tests": [
+                {
+                  "call": "round(f1_score(0.8, 0.6), 4)",
+                  "expected": "0.6857"
+                },
+                {
+                  "call": "f1_score(1.0, 1.0)",
+                  "expected": "1.0"
+                },
+                {
+                  "call": "f1_score(0.0, 0.0)",
+                  "expected": "0.0"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "denom = precision + recall; return 2*precision*recall/denom if denom > 0 else 0.0"
+            }
+          ]
+        },
+        {
+          "id": "ml-u4-l5",
+          "index": 4,
+          "title": "Unit Review",
+          "conceptIntroduced": "Classification recap",
+          "questions": [
+            {
+              "id": "ml-u4-l5-q1",
+              "title": "Which error matters most?",
+              "type": "multiple_choice",
+              "prompt": "A spam filter trashes flagged emails. Missing a legitimate email is very bad. Which error type costs the most here?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "False Negative (legitimate email classified as spam)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "B",
+                  "text": "False Positive (spam classified as legitimate)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "True Positive",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "True Negative",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "A",
+              "feedback": "A FN here means a real email was trashed \u2014 the costliest error for the user."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml-u5",
+      "number": 5,
+      "topic": "Neural Networks",
+      "title": "Stacking Layers of Learning",
+      "lessons": [
+        {
+          "id": "ml-u5-l1",
+          "index": 0,
+          "title": "Neurons and Layers",
+          "conceptIntroduced": "Neural network forward pass lab",
+          "questions": [
+            {
+              "id": "ml-u5-l1-q1",
+              "title": "Lab: Neural Network",
+              "type": "interactive_visual",
+              "visualType": "neural-network",
+              "prompt": "Adjust the input sliders and watch activations flow through the hidden layer to the output. This is the forward pass \u2014 data flowing from inputs to predictions.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "Each neuron computes a weighted sum of inputs, then applies an activation function. That is all a neural network layer does."
+            },
+            {
+              "id": "ml-u5-l1-q2",
+              "title": "What is the forward pass?",
+              "type": "multiple_choice",
+              "prompt": "In the forward pass of a neural network, what happens?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Gradients are computed and parameters updated",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Input data flows through the network to produce a prediction",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Weights are randomly initialised",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Training data is shuffled",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Forward pass = input \u2192 layers \u2192 output (prediction). Backward pass = gradients and updates."
+            }
+          ]
+        },
+        {
+          "id": "ml-u5-l2",
+          "index": 1,
+          "title": "Activation Functions",
+          "conceptIntroduced": "Activation functions lab",
+          "questions": [
+            {
+              "id": "ml-u5-l2-q1",
+              "title": "Lab: Activation Functions",
+              "type": "interactive_visual",
+              "visualType": "activation-functions",
+              "prompt": "Compare sigmoid, ReLU, and tanh. Drag the input slider to see how each function transforms the same input differently.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "Without activation functions, stacking layers would still produce a linear model. Non-linear activations are what give neural networks their power."
+            },
+            {
+              "id": "ml-u5-l2-q2",
+              "title": "Why are activations non-linear?",
+              "type": "multiple_choice",
+              "prompt": "Why do neural networks need non-linear activation functions?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "To make training faster",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Without them, many layers collapse into a single linear transformation",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "They reduce the number of parameters",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "They prevent overfitting",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "A stack of linear layers is just one linear layer. Non-linearity is what lets networks approximate complex functions."
+            }
+          ]
+        },
+        {
+          "id": "ml-u5-l3",
+          "index": 2,
+          "title": "Forward Pass in Code",
+          "conceptIntroduced": "Implementing a forward pass",
+          "questions": [
+            {
+              "id": "ml-u5-l3-q1",
+              "title": "Build a forward pass",
+              "type": "arrange_blocks",
+              "prompt": "Arrange the operations of a single neural network layer in the correct order.",
+              "code": "",
+              "rawMarkdown": "Blocks:\n```python\noutput = activation(z)\nz = dot(weights, inputs) + bias\nreturn output\ninputs = layer_input\n```\n*Correct order:*\n```python\ninputs = layer_input\nz = dot(weights, inputs) + bias\noutput = activation(z)\nreturn output\n```",
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Linear combination first, then activation \u2014 always in this order."
+            },
+            {
+              "id": "ml-u5-l3-q2",
+              "title": "One layer forward pass",
+              "type": "code_challenge",
+              "prompt": "Implement layer_forward(inputs, weights, bias, activation) where activation is 'relu' or 'sigmoid'. Return the output vector.",
+              "code": "import math\n\ndef layer_forward(inputs, weights, bias, activation):\n    # weights: list of [w1,w2,...] per neuron\n    # inputs: list of input values\n    # Return list of neuron outputs\n    pass",
+              "functionName": "layer_forward",
+              "tests": [
+                {
+                  "call": "layer_forward([1.0, 0.0], [[1.0, 0.0], [0.0, 1.0]], [0.0, 0.0], 'relu')",
+                  "expected": "[1.0, 0.0]"
+                },
+                {
+                  "call": "[round(v,4) for v in layer_forward([0.0], [[1.0]], [0.0], 'sigmoid')]",
+                  "expected": "[0.5]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "z = sum(w*x for w,x in zip(neuron_w, inputs)) + b; sigmoid or relu; return list"
+            }
+          ]
+        },
+        {
+          "id": "ml-u5-l4",
+          "index": 3,
+          "title": "Backpropagation Intuition",
+          "conceptIntroduced": "How networks learn",
+          "questions": [
+            {
+              "id": "ml-u5-l4-q1",
+              "title": "Backprop in plain English",
+              "type": "insight",
+              "prompt": "After a forward pass, we compute the loss. Backpropagation uses the chain rule to compute how much each weight contributed to the error \u2014 propagating gradients backwards from the output to the input.\n\nThe output layer's gradient flows back through hidden layers, getting multiplied by the local derivative at each step. This tells every weight how to adjust to reduce the loss.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Backprop = chain rule applied layer by layer, from output to input."
+            },
+            {
+              "id": "ml-u5-l4-q2",
+              "title": "Vanishing gradients",
+              "type": "multiple_choice",
+              "prompt": "When using sigmoid activations in very deep networks, gradients can become extremely small as they propagate backwards. This is called:",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Gradient explosion",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Vanishing gradient problem",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Weight decay",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Momentum collapse",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Sigmoid squashes outputs to (0,1) \u2014 its derivative is at most 0.25, so multiplying many tiny derivatives causes gradients to vanish."
+            }
+          ]
+        },
+        {
+          "id": "ml-u5-l5",
+          "index": 4,
+          "title": "Unit Review",
+          "conceptIntroduced": "Neural networks recap",
+          "questions": [
+            {
+              "id": "ml-u5-l5-q1",
+              "title": "Neural network vocabulary",
+              "type": "match_pairs",
+              "prompt": "Match each term to its definition.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Forward pass",
+                  "right": "Input flows through layers to produce a prediction"
+                },
+                {
+                  "left": "Backpropagation",
+                  "right": "Gradients flow backwards to update weights"
+                },
+                {
+                  "left": "ReLU",
+                  "right": "Activation: max(0, x) \u2014 popular in hidden layers"
+                },
+                {
+                  "left": "Epoch",
+                  "right": "One complete pass through the training dataset"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "These four concepts are the engine of deep learning."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml-u6",
+      "number": 6,
+      "topic": "Overfitting & Regularisation",
+      "title": "The Generalisation Challenge",
+      "lessons": [
+        {
+          "id": "ml-u6-l1",
+          "index": 0,
+          "title": "Overfitting Explorer",
+          "conceptIntroduced": "Polynomial fitting lab",
+          "questions": [
+            {
+              "id": "ml-u6-l1-q1",
+              "title": "Lab: Overfitting",
+              "type": "interactive_visual",
+              "visualType": "overfitting",
+              "prompt": "Move the degree slider from 1 to 9. Blue dots are training points; orange are test points. Watch how train MSE and test MSE diverge at high degrees.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "When a model is too complex, it memorises the training data and fails on new data. The gap between train and test error is the overfitting signal."
+            },
+            {
+              "id": "ml-u6-l1-q2",
+              "title": "Degree 9 model behaviour",
+              "type": "multiple_choice",
+              "prompt": "When you set degree = 9, the model fits training points almost perfectly but test MSE is high. What is happening?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "The model is underfitting",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "The model is memorising noise in training data",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The model needs more training data",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The polynomial degree is not high enough",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Very high degree polynomials memorise every training point, including noise. They fail to generalise."
+            }
+          ]
+        },
+        {
+          "id": "ml-u6-l2",
+          "index": 1,
+          "title": "Bias-Variance Tradeoff",
+          "conceptIntroduced": "Bias-variance tradeoff lab",
+          "questions": [
+            {
+              "id": "ml-u6-l2-q1",
+              "title": "Lab: Bias-Variance Tradeoff",
+              "type": "interactive_visual",
+              "visualType": "bias-variance",
+              "prompt": "Move the complexity slider. Observe how bias\u00b2 (blue), variance (red), and total error (yellow) change. Find the sweet spot that minimises total error.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "Every model faces this tradeoff. Too simple = high bias. Too complex = high variance. The minimum of total error is the optimal complexity."
+            },
+            {
+              "id": "ml-u6-l2-q2",
+              "title": "Bias-variance relationship",
+              "type": "fill_blank",
+              "prompt": "A model with very high training accuracy but poor test accuracy has high ___ and low ___.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "variance",
+              "feedback": "High variance means the model is too sensitive to training data \u2014 it overfits."
+            }
+          ]
+        },
+        {
+          "id": "ml-u6-l3",
+          "index": 2,
+          "title": "L1 and L2 Regularisation",
+          "conceptIntroduced": "Regularisation techniques",
+          "questions": [
+            {
+              "id": "ml-u6-l3-q1",
+              "title": "What is regularisation?",
+              "type": "insight",
+              "prompt": "Regularisation adds a penalty term to the loss function to discourage large weights:\n\nL2 (Ridge): loss + lambda * sum(w\u00b2)  \u2014 shrinks all weights toward 0\nL1 (Lasso): loss + lambda * sum(|w|) \u2014 drives some weights to exactly 0 (sparse)\n\nThe lambda hyperparameter controls how much you penalise complexity. Higher lambda = simpler model.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Regularisation is a tax on complexity \u2014 it forces the model to stay simple."
+            },
+            {
+              "id": "ml-u6-l3-q2",
+              "title": "L1 vs L2",
+              "type": "multiple_choice",
+              "prompt": "You have 100 features but suspect only 5 are truly relevant. Which regulariser automatically removes irrelevant features?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "L2 (Ridge)",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "L1 (Lasso)",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Dropout",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Batch normalisation",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "L1 pushes weights to exactly zero \u2014 it performs automatic feature selection."
+            }
+          ]
+        },
+        {
+          "id": "ml-u6-l4",
+          "index": 3,
+          "title": "Cross-Validation",
+          "conceptIntroduced": "k-fold cross-validation",
+          "questions": [
+            {
+              "id": "ml-u6-l4-q1",
+              "title": "Why cross-validate?",
+              "type": "multiple_choice",
+              "prompt": "You tune your model using a fixed validation set and achieve great validation accuracy. But on the final test set, accuracy drops. What went wrong?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "The validation set was too large",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "You overfit to the validation set by tuning on it repeatedly",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The test set is harder than the validation set",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The model is underfitting",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "Repeatedly evaluating on the same validation set leaks information. k-fold CV gives a more honest estimate."
+            },
+            {
+              "id": "ml-u6-l4-q2",
+              "title": "k-fold split sizes",
+              "type": "code_challenge",
+              "prompt": "Implement kfold_sizes(n, k) that returns a list of k fold sizes that sum to n. The first (n % k) folds have size floor(n/k)+1; the rest have size floor(n/k).",
+              "code": "def kfold_sizes(n, k):\n    pass",
+              "functionName": "kfold_sizes",
+              "tests": [
+                {
+                  "call": "kfold_sizes(10, 3)",
+                  "expected": "[4, 3, 3]"
+                },
+                {
+                  "call": "kfold_sizes(12, 4)",
+                  "expected": "[3, 3, 3, 3]"
+                },
+                {
+                  "call": "kfold_sizes(11, 4)",
+                  "expected": "[3, 3, 3, 2]"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "base = n // k; extra = n % k; [base+1]*extra + [base]*(k-extra)"
+            }
+          ]
+        },
+        {
+          "id": "ml-u6-l5",
+          "index": 4,
+          "title": "Dropout",
+          "conceptIntroduced": "Regularisation for deep networks",
+          "questions": [
+            {
+              "id": "ml-u6-l5-q1",
+              "title": "What is dropout?",
+              "type": "insight",
+              "prompt": "Dropout randomly turns off neurons during training (sets their output to 0) with probability p. This forces the network to not rely on any single neuron \u2014 each subset of neurons must work together.\n\nAt test time, all neurons are active but outputs are scaled by (1-p) to account for the expected fraction turned off during training.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Dropout creates an ensemble of many sub-networks, reducing overfitting."
+            },
+            {
+              "id": "ml-u6-l5-q2",
+              "title": "Dropout at test time",
+              "type": "multiple_choice",
+              "prompt": "A network trained with dropout p=0.5 on a layer with 100 neurons. At test time, how many neurons are active in that layer?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "50 \u2014 still randomly dropped",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "100 \u2014 all active, outputs scaled by 0.5",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "100 \u2014 all active, no scaling",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "200 \u2014 doubled to compensate",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "At inference time, all neurons activate. Outputs are scaled by (1 - dropout_rate) to match training expectations."
+            }
+          ]
+        },
+        {
+          "id": "ml-u6-l6",
+          "index": 5,
+          "title": "Unit Review",
+          "conceptIntroduced": "Overfitting recap",
+          "questions": [
+            {
+              "id": "ml-u6-l6-q1",
+              "title": "Overfitting vocabulary",
+              "type": "match_pairs",
+              "prompt": "Match each term to its description.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Overfitting",
+                  "right": "High train accuracy, low test accuracy"
+                },
+                {
+                  "left": "Underfitting",
+                  "right": "High bias \u2014 model too simple for the data"
+                },
+                {
+                  "left": "L1 regularisation",
+                  "right": "Drives weights to zero \u2014 feature selection"
+                },
+                {
+                  "left": "Cross-validation",
+                  "right": "Honest evaluation using k data splits"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "These techniques are the practitioner's toolkit for generalisation."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml-u7",
+      "number": 7,
+      "topic": "Trees & Ensembles",
+      "title": "Divide and Conquer",
+      "lessons": [
+        {
+          "id": "ml-u7-l1",
+          "index": 0,
+          "title": "Decision Trees",
+          "conceptIntroduced": "How trees make decisions",
+          "questions": [
+            {
+              "id": "ml-u7-l1-q1",
+              "title": "Decision tree intuition",
+              "type": "insight",
+              "prompt": "A decision tree asks a series of yes/no questions about features to classify data. Each internal node is a split condition; leaves are predictions.\n\nExample: Is age > 30? \u2192 Is income > 50k? \u2192 Predict: will buy = True\n\nTrees are easy to interpret but prone to overfitting (they can memorise the training set by growing very deep).",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Decision trees split the feature space into regions, one question at a time."
+            },
+            {
+              "id": "ml-u7-l1-q2",
+              "title": "Tree depth and overfitting",
+              "type": "multiple_choice",
+              "prompt": "A decision tree with unlimited depth achieves 100% training accuracy. What is almost certainly happening?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "The tree has found a perfect classification rule",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "The tree has memorised the training set \u2014 it will overfit",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "The tree is underfitting",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "The features are perfectly predictive",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "An unpruned tree can create a leaf for every training point. That is perfect memorisation, not learning."
+            }
+          ]
+        },
+        {
+          "id": "ml-u7-l2",
+          "index": 1,
+          "title": "Information Gain",
+          "conceptIntroduced": "Choosing the best splits",
+          "questions": [
+            {
+              "id": "ml-u7-l2-q1",
+              "title": "Entropy and information gain",
+              "type": "insight",
+              "prompt": "To choose which feature to split on, decision trees measure Information Gain:\n\nIG = Entropy(parent) - weighted average Entropy(children)\n\nEntropy H = -sum(p * log2(p)) measures impurity. A pure node (all same class) has H = 0; 50/50 split has H = 1.\n\nWe choose the split that maximises IG \u2014 the split that most reduces uncertainty.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Information gain finds the split that creates the purest child nodes."
+            },
+            {
+              "id": "ml-u7-l2-q2",
+              "title": "Entropy at 50/50",
+              "type": "fill_blank",
+              "prompt": "A node has 50% class A and 50% class B. What is its entropy H? (Round to 1 decimal)",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "1.0",
+              "feedback": "H = -(0.5*log2(0.5) + 0.5*log2(0.5)) = -(0.5*(-1) + 0.5*(-1)) = 1.0"
+            }
+          ]
+        },
+        {
+          "id": "ml-u7-l3",
+          "index": 2,
+          "title": "Random Forests",
+          "conceptIntroduced": "Ensembles of trees",
+          "questions": [
+            {
+              "id": "ml-u7-l3-q1",
+              "title": "Why random forests work",
+              "type": "insight",
+              "prompt": "A random forest trains many decision trees, each on a random subset of the data (bagging) and a random subset of features. Predictions are made by majority vote.\n\nEach tree overfits differently, so averaging their predictions cancels out individual errors \u2014 reducing variance without increasing bias much.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Ensemble = many weak learners voting together to make a strong learner."
+            },
+            {
+              "id": "ml-u7-l3-q2",
+              "title": "Feature subsets in random forests",
+              "type": "multiple_choice",
+              "prompt": "Why does a random forest use a random subset of features at each split?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "To reduce memory usage",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "To decorrelate the trees, ensuring they learn different patterns",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "To speed up training",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "To prevent any single feature from being used",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "If all trees used the same features, they would be correlated and averaging them would not reduce variance."
+            }
+          ]
+        },
+        {
+          "id": "ml-u7-l4",
+          "index": 3,
+          "title": "Bagging vs Boosting",
+          "conceptIntroduced": "Two ensemble strategies",
+          "questions": [
+            {
+              "id": "ml-u7-l4-q1",
+              "title": "Bagging vs Boosting",
+              "type": "match_pairs",
+              "prompt": "Match each ensemble technique to its description.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Bagging",
+                  "right": "Trains independent models in parallel; averages predictions"
+                },
+                {
+                  "left": "Boosting",
+                  "right": "Trains models sequentially; each corrects previous errors"
+                },
+                {
+                  "left": "Random Forest",
+                  "right": "Bagging with random feature subsets on decision trees"
+                },
+                {
+                  "left": "Gradient Boosting",
+                  "right": "Boosting where each tree fits the residual errors"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Bagging reduces variance; boosting reduces bias. Both improve on single models."
+            },
+            {
+              "id": "ml-u7-l4-q2",
+              "title": "XGBoost type",
+              "type": "multiple_choice",
+              "prompt": "XGBoost is one of the most popular ML algorithms for tabular data. What type of ensemble is it?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Bagging",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Gradient boosting",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Stacking",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Random forest",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "XGBoost stands for Extreme Gradient Boosting \u2014 it is a highly optimised gradient boosting framework."
+            }
+          ]
+        },
+        {
+          "id": "ml-u7-l5",
+          "index": 4,
+          "title": "Build a Decision Stump",
+          "conceptIntroduced": "Simple tree from scratch",
+          "questions": [
+            {
+              "id": "ml-u7-l5-q1",
+              "title": "Best threshold finder",
+              "type": "code_challenge",
+              "prompt": "Implement best_split_threshold(values, labels) that finds the threshold minimising total weighted impurity (Gini). Gini impurity = 1 - sum(p_i^2). Try all midpoints between sorted unique values. Return (threshold, gini_score) as a tuple.",
+              "code": "def best_split_threshold(values, labels):\n    sorted_vals = sorted(set(values))\n    best = None\n    best_gini = float('inf')\n    for i in range(len(sorted_vals) - 1):\n        thresh = (sorted_vals[i] + sorted_vals[i+1]) / 2\n        left = [l for v, l in zip(values, labels) if v <= thresh]\n        right = [l for v, l in zip(values, labels) if v > thresh]\n        # Compute weighted Gini\n        pass\n    return (best, best_gini)",
+              "functionName": "best_split_threshold",
+              "tests": [
+                {
+                  "call": "best_split_threshold([1,2,3,4],[0,0,1,1])",
+                  "expected": "(2.5, 0.0)"
+                },
+                {
+                  "call": "best_split_threshold([1,2,3,4,5,6],[0,0,0,1,1,1])",
+                  "expected": "(3.5, 0.0)"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "For each side: gini = 1 - sum((labels.count(c)/len(labels))**2 for c in set(labels)); weighted = (len(left)*gl + len(right)*gr) / len(labels)"
+            }
+          ]
+        },
+        {
+          "id": "ml-u7-l6",
+          "index": 5,
+          "title": "Unit Review",
+          "conceptIntroduced": "Trees and ensembles recap",
+          "questions": [
+            {
+              "id": "ml-u7-l6-q1",
+              "title": "Tree vocabulary",
+              "type": "match_pairs",
+              "prompt": "Match each term to its description.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Entropy",
+                  "right": "Measure of impurity in a node"
+                },
+                {
+                  "left": "Information Gain",
+                  "right": "Reduction in entropy from a split"
+                },
+                {
+                  "left": "Pruning",
+                  "right": "Limiting tree depth to prevent overfitting"
+                },
+                {
+                  "left": "Out-of-bag error",
+                  "right": "Error on samples not used in a bagged tree"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Decision trees and ensembles dominate tabular ML competitions for good reason."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ml-u8",
+      "number": 8,
+      "topic": "Unsupervised Learning",
+      "title": "Finding Structure Without Labels",
+      "lessons": [
+        {
+          "id": "ml-u8-l1",
+          "index": 0,
+          "title": "K-Means Clustering",
+          "conceptIntroduced": "K-means lab",
+          "questions": [
+            {
+              "id": "ml-u8-l1-q1",
+              "title": "Lab: K-Means Clustering",
+              "type": "interactive_visual",
+              "visualType": "kmeans",
+              "prompt": "Press Step to run one K-means iteration. Watch centroids (C1, C2, C3) move toward cluster centres and data points change colour as they are reassigned.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "explored",
+              "feedback": "K-means alternates between: (1) assign each point to the nearest centroid, (2) move each centroid to the mean of its assigned points. Repeat until convergence."
+            },
+            {
+              "id": "ml-u8-l1-q2",
+              "title": "K-means convergence",
+              "type": "fill_blank",
+              "prompt": "K-means converges when the centroids stop ___.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "moving",
+              "feedback": "K-means has converged when no centroid changes position between iterations."
+            }
+          ]
+        },
+        {
+          "id": "ml-u8-l2",
+          "index": 1,
+          "title": "Choosing K",
+          "conceptIntroduced": "The elbow method",
+          "questions": [
+            {
+              "id": "ml-u8-l2-q1",
+              "title": "How to choose K",
+              "type": "insight",
+              "prompt": "K-means requires you to specify K in advance. A common approach is the elbow method:\n\n1. Run K-means for K = 1, 2, ..., 10\n2. Plot the within-cluster sum of squares (WCSS) vs K\n3. Look for an 'elbow' \u2014 the point where adding more clusters stops reducing WCSS significantly\n\nThere is no perfect answer; the elbow is a heuristic.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "The elbow method balances cluster quality against model complexity (number of clusters)."
+            },
+            {
+              "id": "ml-u8-l2-q2",
+              "title": "WCSS and K",
+              "type": "multiple_choice",
+              "prompt": "As K increases from 1 to N (number of data points), WCSS:",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Increases then decreases",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Stays constant",
+                  "isCorrect": false
+                },
+                {
+                  "key": "C",
+                  "text": "Always decreases, reaching 0 at K = N",
+                  "isCorrect": true
+                },
+                {
+                  "key": "D",
+                  "text": "Increases monotonically",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "C",
+              "feedback": "At K = N, each point is its own cluster, so WCSS = 0. More clusters always fit the data better \u2014 the elbow tells us when returns diminish."
+            }
+          ]
+        },
+        {
+          "id": "ml-u8-l3",
+          "index": 2,
+          "title": "PCA Intuition",
+          "conceptIntroduced": "Dimensionality reduction",
+          "questions": [
+            {
+              "id": "ml-u8-l3-q1",
+              "title": "What is PCA?",
+              "type": "insight",
+              "prompt": "Principal Component Analysis (PCA) finds the directions (principal components) in which data varies the most.\n\nThe first PC captures the most variance; the second PC (orthogonal to the first) captures the next most; and so on.\n\nBy projecting data onto the top k PCs, we reduce dimensionality while keeping as much information as possible.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "PCA rotates data to align with directions of maximum variance, then drops the least important ones."
+            },
+            {
+              "id": "ml-u8-l3-q2",
+              "title": "PCA use case",
+              "type": "multiple_choice",
+              "prompt": "You have 500 features but want to visualise your data in 2D. What is the right tool?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Train a neural network",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "PCA \u2014 project onto the top 2 principal components",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Remove all but 2 features manually",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Apply K-means with K = 2",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "PCA is the standard technique for reducing high-dimensional data to 2D or 3D for visualisation."
+            }
+          ]
+        },
+        {
+          "id": "ml-u8-l4",
+          "index": 3,
+          "title": "Anomaly Detection",
+          "conceptIntroduced": "Finding the unusual",
+          "questions": [
+            {
+              "id": "ml-u8-l4-q1",
+              "title": "What is anomaly detection?",
+              "type": "insight",
+              "prompt": "Anomaly detection (also called outlier detection) identifies data points that do not fit the expected pattern \u2014 without needing labelled anomaly examples.\n\nApproaches include:\n\u2022 Statistical methods (z-score, IQR)\n\u2022 Isolation Forest (randomly isolates points \u2014 anomalies isolate faster)\n\u2022 Autoencoder reconstruction error\n\nApplications: fraud detection, network intrusion, manufacturing defects.",
+              "code": "",
+              "choices": [],
+              "correctAnswer": "understood",
+              "feedback": "Anomaly detection finds needles in haystacks \u2014 without being told what the needle looks like."
+            },
+            {
+              "id": "ml-u8-l4-q2",
+              "title": "Why anomaly detection needs no labels",
+              "type": "multiple_choice",
+              "prompt": "Why is unsupervised anomaly detection often preferable to supervised classification?",
+              "code": "",
+              "choices": [
+                {
+                  "key": "A",
+                  "text": "Supervised models are slower to train",
+                  "isCorrect": false
+                },
+                {
+                  "key": "B",
+                  "text": "Anomalies are rare and varied \u2014 labelled examples are scarce",
+                  "isCorrect": true
+                },
+                {
+                  "key": "C",
+                  "text": "Unsupervised models are always more accurate",
+                  "isCorrect": false
+                },
+                {
+                  "key": "D",
+                  "text": "Supervised models cannot handle numerical features",
+                  "isCorrect": false
+                }
+              ],
+              "correctAnswer": "B",
+              "feedback": "You cannot label what you have not seen yet. Anomalies are rare and novel \u2014 unsupervised methods can flag the unknown."
+            }
+          ]
+        },
+        {
+          "id": "ml-u8-l5",
+          "index": 4,
+          "title": "Course Review",
+          "conceptIntroduced": "Machine Learning recap",
+          "questions": [
+            {
+              "id": "ml-u8-l5-q1",
+              "title": "Core concepts review",
+              "type": "match_pairs",
+              "prompt": "Match each concept to its description.",
+              "code": "",
+              "matchingPairs": [
+                {
+                  "left": "Gradient Descent",
+                  "right": "Optimisation by following the gradient of the loss downhill"
+                },
+                {
+                  "left": "Regularisation",
+                  "right": "Penalty on model complexity to improve generalisation"
+                },
+                {
+                  "left": "Backpropagation",
+                  "right": "Chain rule applied backwards to compute weight gradients"
+                },
+                {
+                  "left": "K-Means",
+                  "right": "Iterative clustering into K groups by centroid proximity"
+                }
+              ],
+              "choices": [],
+              "correctAnswer": "",
+              "feedback": "Congratulations \u2014 you have completed the Machine Learning course!"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
