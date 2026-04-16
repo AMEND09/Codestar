@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 
 // ─── Shared helpers ─────────────────────────────────────────────────────────
 
@@ -596,7 +596,6 @@ export function NeuralNetworkViz() {
 // ─── 5. OverfittingViz ───────────────────────────────────────────────────────
 
 function polynomialFit(xs: number[], ys: number[], degree: number): number[] {
-  const n = xs.length
   const d = degree + 1
   const A: number[][] = Array.from({ length: d }, (_, i) =>
     Array.from({ length: d }, (_, j) => xs.reduce((s, x) => s + Math.pow(x, i + j), 0)),
